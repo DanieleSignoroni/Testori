@@ -1,0 +1,27 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YLancioIntModProGesdatec"
+    name="YLancioIntModProGesdatecForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    webFormModifierClass="it.testori.thip.datiTecnici.modpro.web.LancioInterrogazioneModProGesdatecFormModifier"
+    servlet="it.testori.thip.datiTecnici.modpro.web.LancioInterrogazioneModProGesdatecFormActionAdapter"
+    jsLibraryName="it/testori/thip/datiTecnici/modpro/LancioInterrogazioneModProGesdatec.js"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <menubar  name="myMenuBar">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </menubar>
+    <toolbar name="myToolBar" imgwidth="16" imgheight="16">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </toolbar>
+    <textinput name="IdAzienda" classAD="IdAzienda"/>
+    <articolomultisearchform classRD="Articolo" name="Articolo"/>
+	<multisearchform classRD="Versione" name="Versione"/>
+	<configurazionemultisearchform classRD="Configurazione" name="Configurazione"
+						 			 extraRelatedClassAD="IdAzienda, IdConfigurazione"/>
+    <textinput classAD="Priorita" name="Priorita"/>
+  </form>
+</tfml>
+
