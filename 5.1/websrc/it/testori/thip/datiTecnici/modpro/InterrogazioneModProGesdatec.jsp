@@ -121,6 +121,9 @@
 <!--<span class="multisearchform" id="ModelloProduttivoOrig"></span>--></td>
 			</tr>
 			<tr>
+				<td><iframe frameborder="0" height="0px" id="AltezzaPezza" name="AltezzaPezza" style="visibility:hidden" width="0px"></iframe></td>
+			</tr>
+			<tr>
 				<td>
 					<table width="100%">
 						<tr>
@@ -148,6 +151,7 @@
   WebMultiSearchForm YIntModProGesdatecMaterialePrincipale =  
      new com.thera.thermfw.web.WebMultiSearchForm("YIntModProGesdatec", "MaterialePrincipale", false, false, true, 1, null, null); 
   YIntModProGesdatecMaterialePrincipale.setParent(YIntModProGesdatecForm); 
+  YIntModProGesdatecMaterialePrincipale.setOnKeyChange("recuperaAltezzaPezza()"); 
   YIntModProGesdatecMaterialePrincipale.write(out); 
 %>
 <!--<span class="multisearchform" id="MaterialePrincipale"></span>--></td>
@@ -177,10 +181,13 @@
 <!--<span class="multisearchform" id="AttivitaPrincipale"></span>--></td>
 										</tr>
 										<tr>
-											<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "Priorita", null); 
+											<td colspan="2">
+												<table>
+													<tr>
+														<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "Priorita", null); 
    label.setParent(YIntModProGesdatecForm); 
 %><label class="<%=label.getClassType()%>" for="Priorita"><%label.write(out);%></label><%}%></td>
-											<td><% 
+														<td><% 
   WebTextInput YIntModProGesdatecPriorita =  
      new com.thera.thermfw.web.WebTextInput("YIntModProGesdatec", "Priorita"); 
   YIntModProGesdatecPriorita.setParent(YIntModProGesdatecForm); 
@@ -189,12 +196,10 @@
   YIntModProGesdatecPriorita.write(out); 
 %>
 </td>
-										</tr>
-										<tr>
-											<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "AltezzaEffettiva", null); 
+														<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "AltezzaEffettiva", null); 
    label.setParent(YIntModProGesdatecForm); 
 %><label class="<%=label.getClassType()%>" for="AltezzaEffettiva"><%label.write(out);%></label><%}%></td>
-											<td><% 
+														<td><% 
   WebTextInput YIntModProGesdatecAltezzaEffettiva =  
      new com.thera.thermfw.web.WebTextInput("YIntModProGesdatec", "AltezzaEffettiva"); 
   YIntModProGesdatecAltezzaEffettiva.setParent(YIntModProGesdatecForm); 
@@ -203,12 +208,12 @@
   YIntModProGesdatecAltezzaEffettiva.write(out); 
 %>
 </td>
-										</tr>
-										<tr>
-											<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "AltezzaManufatto", null); 
+													</tr>
+													<tr>
+														<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "AltezzaManufatto", null); 
    label.setParent(YIntModProGesdatecForm); 
 %><label class="<%=label.getClassType()%>" for="AltezzaManufatto"><%label.write(out);%></label><%}%></td>
-											<td><% 
+														<td><% 
   WebTextInput YIntModProGesdatecAltezzaManufatto =  
      new com.thera.thermfw.web.WebTextInput("YIntModProGesdatec", "AltezzaManufatto"); 
   YIntModProGesdatecAltezzaManufatto.setParent(YIntModProGesdatecForm); 
@@ -217,12 +222,10 @@
   YIntModProGesdatecAltezzaManufatto.write(out); 
 %>
 </td>
-										</tr>
-										<tr>
-											<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "LunghezzaManufatto", null); 
+														<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "LunghezzaManufatto", null); 
    label.setParent(YIntModProGesdatecForm); 
 %><label class="<%=label.getClassType()%>" for="LunghezzaManufatto"><%label.write(out);%></label><%}%></td>
-											<td><% 
+														<td><% 
   WebTextInput YIntModProGesdatecLunghezzaManufatto =  
      new com.thera.thermfw.web.WebTextInput("YIntModProGesdatec", "LunghezzaManufatto"); 
   YIntModProGesdatecLunghezzaManufatto.setParent(YIntModProGesdatecForm); 
@@ -231,12 +234,12 @@
   YIntModProGesdatecLunghezzaManufatto.write(out); 
 %>
 </td>
-										</tr>
-										<tr>
-											<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "TempoUnitarioAtv", null); 
+													</tr>
+													<tr>
+														<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YIntModProGesdatec", "TempoUnitarioAtv", null); 
    label.setParent(YIntModProGesdatecForm); 
 %><label class="<%=label.getClassType()%>" for="TempoUnitarioAtv"><%label.write(out);%></label><%}%></td>
-											<td><% 
+														<td><% 
   WebTextInput YIntModProGesdatecTempoUnitarioAtv =  
      new com.thera.thermfw.web.WebTextInput("YIntModProGesdatec", "TempoUnitarioAtv"); 
   YIntModProGesdatecTempoUnitarioAtv.setParent(YIntModProGesdatecForm); 
@@ -245,6 +248,9 @@
   YIntModProGesdatecTempoUnitarioAtv.write(out); 
 %>
 </td>
+													</tr>
+												</table>
+											</td>
 										</tr>
 									</table>
 								</fieldset>
@@ -252,11 +258,36 @@
 						</tr>
 						<tr>
 							<td>
-								<table border="0" style="margin: 0 0 0 2;" width="99%">
+								<table border="0" height="300px" style="margin: 0 0 0 2;" width="99%">
+									<tr>
+										<td><!--<span class="ajaxgrid" id="RigheMateriale">--><% 
+  WebAjaxGrid YIntModProGesdatecRigheMateriale =  
+     new com.thera.thermfw.web.WebAjaxGrid("YIntModProGesdatec", "RigheMateriale", 5, new String[]{"IdAzienda", "IdMateriale", "Materiale.DescrizioneArticolo.Descrizione", "IdUnitaMisura", "UnitaMisura.Descrizione.Descrizione", "CoeffImpiego"}, "dependent", null, "it.testori.thip.datiTecnici.modpro.web.InterrogazioneModProMatWebAjaxGridController", true, null,null,"A"); 
+ YIntModProGesdatecRigheMateriale.setParent(YIntModProGesdatecForm); 
+ YIntModProGesdatecRigheMateriale.setNoControlRowKeys(true); 
+ YIntModProGesdatecRigheMateriale.setOrderByClassAD(null); 
+ YIntModProGesdatecRigheMateriale.setOrderByWay("A"); 
+ YIntModProGesdatecRigheMateriale.addOnChange("IdMateriale"); 
+ YIntModProGesdatecRigheMateriale.addOnChange("IdUnitaMisura"); 
+ YIntModProGesdatecRigheMateriale.addHidden("IdAzienda"); 
+ YIntModProGesdatecRigheMateriale.addWidth("IdMateriale", "180"); 
+ YIntModProGesdatecRigheMateriale.addWidth("UnitaMisura.Descrizione.Descrizione", "220"); 
+ YIntModProGesdatecRigheMateriale.addWidth("IdUnitaMisura", "180"); 
+ YIntModProGesdatecRigheMateriale.addWidth("Materiale.DescrizioneArticolo.Descrizione", "220"); 
+ YIntModProGesdatecRigheMateriale.write(out); 
+%>
+<!--</span>--></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table border="0" height="300px" style="margin: 0 0 0 2;" width="99%">
 									<tr>
 										<td><!--<span class="ajaxgrid" id="RigheAttivita">--><% 
   WebAjaxGrid YIntModProGesdatecRigheAttivita =  
-     new com.thera.thermfw.web.WebAjaxGrid("YIntModProGesdatec", "RigheAttivita", 5, new String[]{"IdAzienda", "IdAttivita", "Attivita.Descrizione.Descrizione"}, "dependent" , null, true, null,null,"A"); 
+     new com.thera.thermfw.web.WebAjaxGrid("YIntModProGesdatec", "RigheAttivita", 5, new String[]{"IdAzienda", "IdAttivita", "Attivita.Descrizione.Descrizione", "Quantita"}, "dependent", null, "it.testori.thip.datiTecnici.modpro.web.InterrogazioneModProAtvWebAjaxGridController", true, null,null,"A"); 
  YIntModProGesdatecRigheAttivita.setParent(YIntModProGesdatecForm); 
  YIntModProGesdatecRigheAttivita.setNoControlRowKeys(true); 
  YIntModProGesdatecRigheAttivita.setOrderByClassAD(null); 
@@ -266,28 +297,6 @@
  YIntModProGesdatecRigheAttivita.addWidth("Attivita.Descrizione.Descrizione", "220"); 
  YIntModProGesdatecRigheAttivita.addWidth("IdAttivita", "180"); 
  YIntModProGesdatecRigheAttivita.write(out); 
-%>
-<!--</span>--></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<table border="0" style="margin: 0 0 0 2;" width="99%">
-									<tr>
-										<td><!--<span class="ajaxgrid" id="RigheMateriale">--><% 
-  WebAjaxGrid YIntModProGesdatecRigheMateriale =  
-     new com.thera.thermfw.web.WebAjaxGrid("YIntModProGesdatec", "RigheMateriale", 5, new String[]{"IdAzienda", "IdMateriale", "Materiale.DescrizioneArticolo.Descrizione"}, "dependent" , null, true, null,null,"A"); 
- YIntModProGesdatecRigheMateriale.setParent(YIntModProGesdatecForm); 
- YIntModProGesdatecRigheMateriale.setNoControlRowKeys(true); 
- YIntModProGesdatecRigheMateriale.setOrderByClassAD(null); 
- YIntModProGesdatecRigheMateriale.setOrderByWay("A"); 
- YIntModProGesdatecRigheMateriale.addOnChange("IdMateriale"); 
- YIntModProGesdatecRigheMateriale.addHidden("IdAzienda"); 
- YIntModProGesdatecRigheMateriale.addWidth("IdMateriale", "180"); 
- YIntModProGesdatecRigheMateriale.addWidth("Materiale.DescrizioneArticolo.Descrizione", "220"); 
- YIntModProGesdatecRigheMateriale.write(out); 
 %>
 <!--</span>--></td>
 									</tr>

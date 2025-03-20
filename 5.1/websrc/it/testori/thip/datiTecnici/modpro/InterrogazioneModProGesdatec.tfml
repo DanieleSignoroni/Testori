@@ -20,7 +20,7 @@
     
     <articolomultisearchform classRD="ArticoloPadre" name="ArticoloPadre"/>
 	<multisearchform classRD="ModelloProduttivoOrig" name="ModelloProduttivoOrig"/>
-	<multisearchform classRD="MaterialePrincipale" name="MaterialePrincipale"/>
+	<multisearchform classRD="MaterialePrincipale" name="MaterialePrincipale" onKeyChange="recuperaAltezzaPezza()"/>
 	<multisearchform classRD="AttivitaPrincipale" name="AttivitaPrincipale"/>
 	<multisearchform classRD="PoliticaRiordino" name="PoliticaRiordino"/>
     <textinput classAD="Priorita" name="Priorita"/>
@@ -29,16 +29,22 @@
     <textinput classAD="LunghezzaManufatto" name="LunghezzaManufatto"/>
     <textinput classAD="TempoUnitarioAtv" name="TempoUnitarioAtv"/>
     
-    <ajaxgrid name="RigheAttivita" visiblerows="5" classCD="RigheAttivita" type="dependent" noControlRowKeys="yes">
+    <ajaxgrid name="RigheAttivita" visiblerows="5" classCD="RigheAttivita" type="dependent" noControlRowKeys="yes"
+    	controller="it.testori.thip.datiTecnici.modpro.web.InterrogazioneModProAtvWebAjaxGridController">
 		 <column classAD="IdAzienda"  hidden="yes" ></column>			
 		 <column classAD="IdAttivita" width="180" onChange ="yes"></column>
 		 <column classAD="Attivita.Descrizione.Descrizione" width="220"></column>
+		 <column classAD="Quantita"></column>
 	</ajaxgrid>
 	
-	  <ajaxgrid name="RigheMateriale" visiblerows="5" classCD="RigheMateriale" type="dependent" noControlRowKeys="yes">
+	  <ajaxgrid name="RigheMateriale" visiblerows="5" classCD="RigheMateriale" type="dependent" noControlRowKeys="yes"
+	  	controller="it.testori.thip.datiTecnici.modpro.web.InterrogazioneModProMatWebAjaxGridController">
 		 <column classAD="IdAzienda"  hidden="yes" ></column>			
 		 <column classAD="IdMateriale" width="180" onChange ="yes"></column>
 		 <column classAD="Materiale.DescrizioneArticolo.Descrizione" width="220"></column>
+		 <column classAD="IdUnitaMisura" width="180" onChange ="yes"></column>
+		 <column classAD="UnitaMisura.Descrizione.Descrizione" width="220"></column>
+		 <column classAD="CoeffImpiego"></column>
 	</ajaxgrid>
     
   </form>

@@ -1,0 +1,26 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YPercentualeSfrido"
+    name="YPercentualeSfridoForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    jsLibraryName="it/testori/thip/datiTecnici/modpro/YPercentualeSfrido.js"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <menubar  name="myMenuBar">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </menubar>
+    <toolbar name="myToolBar" imgwidth="16" imgheight="16">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </toolbar>
+    <textinput name="IdAzienda" classAD="IdAzienda"/>
+    <tabbed name="mytabbed" height="100%" width="100%">
+      <tab name="tab1" resourceFile="it.testori.thip.datiTecnici.modpro.resources.YPercentualeSfrido" resourceID="tab1">
+        <textinput name="Lunghezza" classAD="Lunghezza"/>
+        <textinput name="Percentuale" classAD="Percentuale"/>
+      </tab>
+    </tabbed>
+  </form>
+</tfml>
+

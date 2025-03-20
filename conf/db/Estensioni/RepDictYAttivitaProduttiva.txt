@@ -1,0 +1,6 @@
+<B>2025-03-19 12:03:36</B>
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_DROP_YMODPRO_ATV.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>YMODPRO_ATV</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_YMODPRO_ATV.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>

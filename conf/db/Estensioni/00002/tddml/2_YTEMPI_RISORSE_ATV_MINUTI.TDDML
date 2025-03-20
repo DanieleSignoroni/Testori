@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YTEMPI_RISORSE_ATV_MINUTI (YTEMPI0): Tempi risorse attività - Minuti; -->
+  <CreateTable schema="THIPPERS" name="YTEMPI_RISORSE_ATV_MINUTI" shortname="YTEMPI0">
+    <Column name="ID_AZIENDA" shortname="ID_AZIEND0" type="char" length="3" nullable="no"/>
+    <Column name="R_ATTIVITA" shortname="R_ATTIVIT0" type="char" length="15" nullable="no"/>
+    <Column name="TIPO_RISORSA" shortname="TIPO_RISO0" type="char" length="1" nullable="no" default="M"/>
+    <Column name="LIVELLO_RISORSA" shortname="LIVELLO_R0" type="char" length="1" nullable="no" default="-"/>
+    <Column name="ID_RISORSA" shortname="ID_RISORS0" type="char" length="25" nullable="no"/>
+    <Column name="STATO" shortname="STAT0" type="char" length="1" nullable="no"/>
+    <Column name="R_UTENTE_CRZ" shortname="R_UTENTE_0" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_CRZ" shortname="TIMESTAMP0" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="R_UTENTE_AGG" shortname="R_UTENTE_1" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_AGG" shortname="TIMESTAMP1" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="FINO_A" shortname="FINO_A" type="integer" nullable="no"/>
+    <Column name="TEMPO" shortname="TEMPO" type="decimal" length="12" scale="6" nullable="yes"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YTEMPI_RISORSE_I02" tabschema="THIPPERS" tabname="YTEMPI_RISORSE_ATV_MINUTI" shortname="YTEMPI_I02" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="R_ATTIVITA" order="Asc"/>
+    <IndexCol name="TIPO_RISORSA" order="Asc"/>
+    <IndexCol name="LIVELLO_RISORSA" order="Asc"/>
+    <IndexCol name="ID_RISORSA" order="Asc"/>
+    <IndexCol name="FINO_A" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YTEMPI_RISORSE_ATV_MINUTI">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="R_ATTIVITA"/>
+        <ColumnRef name="TIPO_RISORSA"/>
+        <ColumnRef name="LIVELLO_RISORSA"/>
+        <ColumnRef name="ID_RISORSA"/>
+        <ColumnRef name="FINO_A"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YTEMPI_RISORSE_ATV_MINUTI" text="Tempi risorse attività - Minuti">
+      <CommentColumn name="ID_AZIENDA" text="Azienda"/>
+      <CommentColumn name="R_ATTIVITA" text="Attivita"/>
+      <CommentColumn name="TIPO_RISORSA" text="Tipo Risorsa"/>
+      <CommentColumn name="LIVELLO_RISORSA" text="Livello Risorsa"/>
+      <CommentColumn name="ID_RISORSA" text="Risorsa"/>
+      <CommentColumn name="STATO" text="Stato"/>
+      <CommentColumn name="R_UTENTE_CRZ" text="Utente creazione"/>
+      <CommentColumn name="TIMESTAMP_CRZ" text="Timestamp creazione"/>
+      <CommentColumn name="R_UTENTE_AGG" text="Utente ultima modifica"/>
+      <CommentColumn name="TIMESTAMP_AGG" text="Timestamp ultima modifica"/>
+      <CommentColumn name="FINO_A" text="Fino A"/>
+      <CommentColumn name="TEMPO" text="Tempo"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YTEMPI_RISORSE_I02" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YTEMPI_RISORSE_ATV_MINUTI"/>
+</TDDML>

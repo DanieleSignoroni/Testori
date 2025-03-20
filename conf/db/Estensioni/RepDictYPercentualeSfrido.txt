@@ -1,0 +1,8 @@
+<B>2025-03-13 09:34:32</B>
+<BR>Creato un nuovo folder : <B><I>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni</I></B>
+<BR>Il file <B><I>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\TDDML.dtd</I></B> e creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_DROP_YPERCENTUALE_SFRIDO.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>YPERCENTUALE_SFRIDO</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_YPERCENTUALE_SFRIDO.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>

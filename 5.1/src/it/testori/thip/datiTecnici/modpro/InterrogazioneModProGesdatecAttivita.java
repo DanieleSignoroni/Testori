@@ -1,5 +1,7 @@
 package it.testori.thip.datiTecnici.modpro;
 
+import java.math.BigDecimal;
+
 import com.thera.thermfw.common.BusinessObjectAdapter;
 import com.thera.thermfw.persist.Child;
 import com.thera.thermfw.persist.KeyHelper;
@@ -21,6 +23,8 @@ import it.thera.thip.datiTecnici.modpro.Attivita;
 public class InterrogazioneModProGesdatecAttivita extends BusinessObjectAdapter implements Child {
 
 	protected String iIdAzienda;
+	
+	protected BigDecimal iQuantita;
 
 	protected Proxy iAttivita = new Proxy(it.thera.thip.datiTecnici.modpro.Attivita.class);
 
@@ -37,6 +41,14 @@ public class InterrogazioneModProGesdatecAttivita extends BusinessObjectAdapter 
 	public void setIdAzienda(String idAzienda) {
 		this.iIdAzienda = idAzienda;
 		setIdAziendaInternal(idAzienda);
+	}
+	
+	public BigDecimal getQuantita() {
+		return iQuantita;
+	}
+
+	public void setQuantita(BigDecimal iQuantita) {
+		this.iQuantita = iQuantita;
 	}
 
 	protected void setIdAziendaInternal(String idAzienda) {

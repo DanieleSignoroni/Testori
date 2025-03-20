@@ -1,0 +1,7 @@
+<B>2025-03-13 09:34:42</B>
+<BR>Il file <B>YPercentualeSfrido.html</B> è stato generato correttamente nel cartela <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\websrc\it\testori\thip\datiTecnici\modpro</B><BR>Il file <B>YPercentualeSfrido.html</B> è stato copiato nel classpath
+<BR>Il file <B>YPercentualeSfrido.tfml</B> è stato generato correttamente nel cartela <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\websrc\it\testori\thip\datiTecnici\modpro</B><BR>Il file <B>YPercentualeSfrido.tfml</B> è stato copiato nel classpath
+<BR>Il file <B>YPercentualeSfrido.js</B> è stato generato correttamente nel cartela <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\websrc\it\testori\thip\datiTecnici\modpro</B><BR>Il file <B>YPercentualeSfrido.js</B> è stato copiato nel classpath
+<BR>Il file <B>YPercentualeSfrido.properties</B> è stato generato correttamente nel cartela <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\src\it\testori\thip\datiTecnici\modpro\resources</B><BR>Il file <B>it\testori\thip\datiTecnici\modpro\resourcesYPercentualeSfrido.properties</B> è stato copiato nel classpath
+<BR>Il file <B>YPercentualeSfrido.properties</B> è stato generato correttamente nel cartela <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\src\it\testori\thip\datiTecnici\modpro\resources</B><BR>Il file <B>it\testori\thip\datiTecnici\modpro\resourcesYPercentualeSfrido.properties</B> è stato copiato nel classpath
+<BR><B>Generazione HTML/TFML è completata con successo</B><BR>

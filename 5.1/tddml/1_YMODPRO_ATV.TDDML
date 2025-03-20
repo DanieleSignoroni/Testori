@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YMODPRO_ATV (YMODPRO): AttivitaProduttiva; -->
+  <CreateTable schema="THIPPERS" name="YMODPRO_ATV" shortname="YMODPRO">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="ID_MODELLO" shortname="ID_MODELLO" type="integer" nullable="no"/>
+    <Column name="ID_RIGA_ATTIVITA" shortname="ID_RIGA_AT" type="integer" nullable="no"/>
+    <Column name="ATTIVITA_DEFAULT" shortname="ATTIVITA_D" type="char" length="1" nullable="no" default="N"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YMODPRO_ATV_I01" tabschema="THIPPERS" tabname="YMODPRO_ATV" shortname="YMODPR_I01" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="ID_MODELLO" order="Asc"/>
+    <IndexCol name="ID_RIGA_ATTIVITA" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YMODPRO_ATV">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="ID_MODELLO"/>
+        <ColumnRef name="ID_RIGA_ATTIVITA"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YMODPRO_ATV" text="AttivitaProduttiva">
+      <CommentColumn name="ID_AZIENDA" text="IdAzienda"/>
+      <CommentColumn name="ID_MODELLO" text="IdModello"/>
+      <CommentColumn name="ID_RIGA_ATTIVITA" text="Codice"/>
+      <CommentColumn name="ATTIVITA_DEFAULT" text="Attività default"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YMODPRO_ATV_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YMODPRO_ATV"/>
+</TDDML>

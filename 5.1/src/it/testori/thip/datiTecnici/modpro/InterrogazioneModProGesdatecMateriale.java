@@ -1,5 +1,7 @@
 package it.testori.thip.datiTecnici.modpro;
 
+import java.math.BigDecimal;
+
 import com.thera.thermfw.common.BusinessObjectAdapter;
 import com.thera.thermfw.persist.Child;
 import com.thera.thermfw.persist.KeyHelper;
@@ -8,6 +10,7 @@ import com.thera.thermfw.persist.Proxy;
 
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.base.generale.UnitaMisura;
 
 /**
  * <h1>Softre Solutions</h1>
@@ -22,7 +25,10 @@ public class InterrogazioneModProGesdatecMateriale extends BusinessObjectAdapter
 
 	protected String iIdAzienda;
 
+	protected BigDecimal iCoeffImpiego;
+
 	protected Proxy iMateriale = new Proxy(it.thera.thip.base.articolo.Articolo.class);
+	protected Proxy iUnitaMisura = new Proxy(UnitaMisura.class);
 
 	protected Proxy iTestata = new Proxy(InterrogazioneModProGesdatec.class);
 
@@ -37,6 +43,14 @@ public class InterrogazioneModProGesdatecMateriale extends BusinessObjectAdapter
 	public void setIdAzienda(String idAzienda) {
 		this.iIdAzienda = idAzienda;
 		setIdAziendaInternal(idAzienda);
+	}
+
+	public BigDecimal getCoeffImpiego() {
+		return iCoeffImpiego;
+	}
+
+	public void setCoeffImpiego(BigDecimal iCoeffImpiego) {
+		this.iCoeffImpiego = iCoeffImpiego;
 	}
 
 	public void setMateriale(Articolo articolo){
@@ -66,11 +80,38 @@ public class InterrogazioneModProGesdatecMateriale extends BusinessObjectAdapter
 		return objIdArticolo;
 	}
 
+	public UnitaMisura getUnitaMisura(){
+		return (UnitaMisura)iUnitaMisura.getObject();
+	}
+
+	public void setUnitaMisura(UnitaMisura um){
+		iUnitaMisura.setObject(um);
+	}
+
+	public String getUnitaMisurakey(){
+		return iUnitaMisura.getKey();
+	}
+
+	public void setUnitaMisurakey(String key){
+		iUnitaMisura.setKey(key);
+	}
+
+	public String getIdUnitaMisura(){
+		return KeyHelper.getTokenObjectKey(getUnitaMisurakey(), 2);
+	}
+
+	public void setIdUnitaMisura(String idUnitaMisura){
+		String key2 = iUnitaMisura.getKey();
+		iUnitaMisura.setKey(KeyHelper.replaceTokenObjectKey(key2, 2, idUnitaMisura));
+	}
+
 	protected void setIdAziendaInternal(String idAzienda) {
 		String key1 = iMateriale.getKey();
 		iMateriale.setKey(KeyHelper.replaceTokenObjectKey(key1, 1, idAzienda));
 		String key2 = iTestata.getKey();
 		iTestata.setKey(KeyHelper.replaceTokenObjectKey(key2, 1, idAzienda));
+		String key3 = iUnitaMisura.getKey();
+		iUnitaMisura.setKey(KeyHelper.replaceTokenObjectKey(key3, 1, idAzienda));
 	}
 
 	@Override
