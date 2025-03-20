@@ -1,3 +1,0 @@
-<B>2025-03-13 09:34:40</B>
-<BR>Il descrittore di classe <B>YPercentualeSfrido</B> è stato generato correttamente
-<BR><B>La generazione descrittori di classe è completata con successo</B><BR>
