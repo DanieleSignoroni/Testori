@@ -13,7 +13,7 @@ import com.thera.thermfw.web.WebFormModifier;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriNuovo;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
-import it.thera.thip.acquisti.documentoAC.DocumentoAcquisto;
+import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
 import it.thera.thip.cs.ColonneFiltri;
 
 /**
@@ -48,7 +48,21 @@ public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
 					if(docAcqRig != null) {
 						bo.setQuantita(docAcqRig.getQtaInUMPrmMag());
 						char tipoProvenienza = CreaLottiTestoriUtils.ACQUISTO;
-						if(((DocumentoAcquisto)docAcqRig.getTestata()).getCausale().isLavEsterna()) {
+						if(docAcqRig.getLavEsterna()) {
+							tipoProvenienza = CreaLottiTestoriUtils.CONTO_LAVORO;
+						}
+						bo.setIdLotto(CreaLottiTestoriUtils.buildNextIdProgressivoLotto(docAcqRig.getArticolo().getArticoloDatiMagaz().getCodAutLotAcq(),tipoProvenienza));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("OrdineAcquistoRigaPrm")) {
+				try {
+					OrdineAcquistoRigaPrm docAcqRig = (OrdineAcquistoRigaPrm) OrdineAcquistoRigaPrm.elementWithKey(OrdineAcquistoRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						bo.setQuantita(docAcqRig.getQtaInUMPrmMag());
+						char tipoProvenienza = CreaLottiTestoriUtils.ACQUISTO;
+						if(docAcqRig.isLavorazioneEsterna()) {
 							tipoProvenienza = CreaLottiTestoriUtils.CONTO_LAVORO;
 						}
 						bo.setIdLotto(CreaLottiTestoriUtils.buildNextIdProgressivoLotto(docAcqRig.getArticolo().getArticoloDatiMagaz().getCodAutLotAcq(),tipoProvenienza));

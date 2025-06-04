@@ -64,6 +64,8 @@ public class CreaLottiTestoriTestataFormModifier extends WebFormModifier {
 					e.printStackTrace(Trace.excStream);
 				}
 			}
+			String lottoPartenza = bo.getIdLotto();
+			Integer progressivo = Integer.valueOf(lottoPartenza.substring(4));
 			BigDecimal numeroConfezioni = BigDecimal.valueOf(bo.getNumeroConfezioni());
 			BigDecimal qtaPerConfezione = bo.getQuantita().divide(numeroConfezioni, 6, RoundingMode.HALF_UP);
 
@@ -71,11 +73,12 @@ public class CreaLottiTestoriTestataFormModifier extends WebFormModifier {
 				CreaLottiTestoriDettaglio dett = (CreaLottiTestoriDettaglio) Factory.createObject(CreaLottiTestoriDettaglio.class);
 				dett.setQuantita(qtaPerConfezione);
 
-				// ID lotto univoco per ogni dettaglio (es: ID base + progressivo)
-				dett.setIdLotto(bo.getIdLotto() + String.format("_%02d", i + 1));
+				dett.setIdLotto(lottoPartenza.substring(0,4) + String.format("%0" + 5 + "d", progressivo));
 
 				dett.setNumeroRocche(bo.getNumeroRocche());
 				bo.getLottiDettaglio().add(dett);
+
+				progressivo++;
 			}
 
 		}

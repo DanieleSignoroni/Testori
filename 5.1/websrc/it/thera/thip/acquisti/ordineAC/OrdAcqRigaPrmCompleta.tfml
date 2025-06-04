@@ -1,0 +1,663 @@
+<tfml>
+	<form classHdr="OrdineAcquistoRigaPrm"
+		  	name="OrdineAcquistoRigaForm"
+		  	errorList="yes"
+		  	menubar="yes"
+		  	toolbar="yes"
+		  	submitReset="none"
+			servlet="it.thera.thip.acquisti.ordineAC.web.OrdineAcquistoRigaPrmFormActionAdapter"
+		  	header="it.thera.thip.cs.Header.jsp"
+		  	footer="it.thera.thip.cs.Footer.jsp"
+		  	webFormModifierClass="it.thera.thip.acquisti.ordineAC.web.OrdineAcquistoRigaPrmCompletaFormModifier"
+		  	collector="it.thera.thip.acquisti.ordineAC.web.OrdineAcquistoRigaPrmDataCollector"
+		  	jsLibraryName="it/thera/thip/acquisti/ordineAC/OrdineAcquistoRiga.js"
+		  	onLoadPresent="yes"
+	>
+
+
+		<!-- **************************************************************************************************** -->
+		<!-- Menubar -->
+		<menubar  name="myMenuBar">
+			<import file="it/thera/thip/cs/defObjMenu.tfml"/>
+		</menubar>
+
+
+		<!-- **************************************************************************************************** -->
+		<!-- Toolbar -->
+		<toolbar name="myToolBar" imgwidth="16" imgheight="16">
+			<import file="it/thera/thip/cs/defObjMenu.tfml"/>
+		</toolbar>
+
+
+		<!-- **************************************************************************************************** -->
+		<!-- Pannello tabulare principale -->
+		<tabbed name="MainTabbed" height="100%" width="100%">
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Generale -->
+			<tab name="GeneraleTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="GeneraleTab">
+				<!-- Campo Sequenza Riga -->
+				<textinput classAD="SequenzaRiga" name="SequenzaRigaField"/>
+
+				<!-- Combo Stato Avanzamento -->
+				<combobox classAD="StatoAvanzamento" name="StatoAvanzamentoCombo"/>
+
+				<!-- Proxy Causale -->
+				<multisearchform classRD="RCausaleRigaAcquisto" name="CausaleProxy"/>
+
+				<!-- Fix 2029 inizio -->
+				<!-- Check Non Fatturare -->
+				<checkbox classAD="NonFatturare" name="NonFatturareCheck"/>
+				<!-- Fix 2029 fine -->
+
+				<!-- Proxy Magazzino -->
+				<multisearchform classRD="RMagazzino" name="MagazzinoProxy"
+                                onKeyChange="gestioneOrdineCliente()"/><!-- Fix 13681 -->
+
+				<!-- Proxy Magazzino Lavorazione Esterna -->
+				<multisearchform classRD="RMagazzinoLavEsterna" name="MagazzinoLavEsternaProxy"/>
+
+				<!-- Fix 1918 inizio -->
+				<!-- Proxy Catalogo Esterno -->
+				<!-- Fix 3770 aggiunto attributo extraRelatedClassAD -->
+				<multisearchform
+					classRD="RCatalogoEsterno"
+					name="CatalogoEsternoProxy"
+					onKeyFocus="memorizzaCodiciCatalogoEsterno()"
+					onKeyBlur="confrontaCodiciCatalogoEsterno()"
+					onSearchBack="recuperaDatiCatalogoEsterno()"
+					additionalfields="1"
+				 	idCols="15"
+				 	extraRelatedClassAD="IdCatalogo"
+				/>
+				<!-- Fix 1918 fine -->
+
+				<!-- Fix 3147 inizio -->
+				<!-- Check Visualizza Articolo Intestatario -->
+				<checkbox classAD="VisualizzaArtInt" name="VisualizzaArtInt"/>
+				<!-- Proxy Articolo Intestatario -->
+				<multisearchform
+					classRD="RArticoloIntestatario"
+					name="ArticoloIntestatarioProxy"
+					onKeyFocus="memorizzaCodiceArticoloIntestatario()"
+					onKeyBlur="confrontaCodiceArticoloIntestatario()"
+					onSearchBack="recuperaDatiArticoloIntestatario()"
+					onKeyChange="ripulisciNumeratoreArticoloIntestatario()"
+				 	idCols="15"
+					additionalRestrictConditions="LavorazioneEsterna,LavEsterna"
+				 	extraRelatedClassAD="IdArticolo,IdConfigurazione,IdArticoloFornitore"
+				/>
+				<!-- Fix 3147 fine -->
+
+				<!-- Proxy Articolo -->
+				<articolomultisearchform
+					classRD="RArticolo"
+					name="ArticoloProxy"
+					onKeyFocus="memorizzaCodiceArticolo()"
+					onKeyChange="variazioneArticolo()"
+					onKeyBlur="confrontaCodiceArticolo()"
+					onSearchClick="ricercaArticolo()"
+					onSearchBack="recuperaDatiArticolo()"
+					fixedRestrictConditions="DatiComuniEstesi.Stato,V"
+				 	idCols="15"
+					articoliAlternBut="yes"
+				/>
+
+				<!-- Campo Descrizione Articolo -->
+				<textinput classAD="DescrizioneArticolo" name="DescrizioneArticoloField"/>
+
+				<!-- Area DescrizioneExtArticolo Fix14727 RA-->
+				<textarea classAD="DescrizioneExtArticolo" name="DescrizioneExtArticoloArea"/>
+
+				<!-- Proxy Versione Richiesta -->
+				<multisearchform
+					classRD="RVersioneRichiesta"
+					name="VersioneRichiestaProxy"
+					onKeyFocus="memorizzaCodiceVersione()"
+					onKeyBlur="confrontaCodiceVersione()"
+					onSearchBack="recuperaCostoUnitario()"
+				 	idCols="3"
+				/>
+
+				<!-- Operazione -->
+				<textinput classAD="Operazione" name="OperazioneField"/>
+
+				<!-- Proxy Configurazione -->
+				<configurazionemultisearchform
+					classRD="RConfigurazione"
+					name="ConfigurazioneProxy"
+					onKeyFocus="memorizzaCodiceConfigurazione()"
+					onKeyBlur="confrontaCodiceConfigurazione()"
+					onSearchBack="recuperaCostoUnitario()"
+				 	idCols="20"
+					additionalRestrictConditions="IdArticolo,IdArticolo"
+					extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+				/>
+
+                                <!-- Fix 13681 Inizio-->
+                                <!-- Proxy Cliente -->
+                                <multisearchform classRD="Cliente" name="Cliente"/>
+                                <!-- Proxy OrdineVendita -->
+                                <multisearchform classRD="OrdineVendita" name="OrdineVendita"
+                                additionalfields="1" displaytype="id" additionalRestrictConditions="IdCliente,Cliente"/>
+                                <!-- Proxy OrdineVenditaRiga -->
+                                <multisearchform classRD="OrdineVenditaRiga" name="OrdineVenditaRiga"
+                                additionalRestrictConditions="AnnoOrdineCliente,AnnoOrdine; NumeroOrdineCliente,NumeroOrdine"/>
+                                <!-- Fix 13681 -->
+
+				<!-- Numero Ordine Produzione -->
+				<!-- fix 5757 sostituito riferimento con proxy -->
+				<!--<textinput classAD="NumeroOrdProduzione" name="NumeroOrdProduzioneField"/>-->
+				<!-- Proxy AttivitaEsecutiva -->
+				<label name="AttEsecProxyLbl" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="RifOrdPrdLbl"></label>
+				<multisearchform
+					classRD="AttivitaEsecutivaRel"
+					name="AttEsecProxy"
+					additionalfields="2"
+				/>
+
+				<!-- Input a dettaglio riga produzione fix 5909-->
+				<textinput classAD="DettRigaOrdProduzione" name="DettRigaOrdProduzioneField"/>
+
+				<!-- Campo Qta Acquisto -->
+				<textinput
+					classAD="QtaInUMAcq"
+					name="QtaAcquistoField"
+					onChange="variazioneQuantAcquistoRiga(false)"
+				/>
+
+				<label name="LabelGroupBoxQuantita" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="QuantitaGroupBox"></label>
+				<!-- Combo UM Acquisto -->
+				<searchcombobox
+					classRD="RUMRif"
+					name="UMAcqCombo"
+					getAvailableElements="getListaUMRiferimento"
+					cols="20"
+					onChange="variazioneUnitaMisura()"
+				/>
+
+				<!-- Campo Qta Primaria -->
+				<textinput
+					classAD="QtaInUMPrmMag"
+					name="QtaPrimariaField"
+					onChange="variazioneQuantPrimariaMagazzinoRiga(false)"
+				/>
+				<!-- Campo Servizio UM Primaria -->
+				<textinput classAD="ServizioUMPrmMag" name="ServizioUMPrimariaField"/>
+
+				<!-- Campo Qta Secondaria -->
+				<textinput
+					classAD="QtaInUMSecMag"
+					name="QtaSecondariaField"
+					onChange="variazioneQuantSecondariaMagazzinoRiga(false)"
+				/>
+				<!-- Campo Servizio UM Secondaria -->
+				<textinput classAD="ServizioUMSecMag" name="ServizioUMSecondariaField"/>
+
+				<!-- fix 12572 > -->
+				<textinput classAD="NumeroImballo" name="NumeroImballoField" onChange="numeroImballoManuale()"/>
+                <!-- fix 12572 < -->
+
+				<!-- Fix 3246 inizio -->
+				<!-- Check Ricalcolo Quantita Fattore Conversione -->
+				<checkbox classAD="RicalcoloQtaFattoreConv" name="RicalcoloQtaFattoreConv"/>
+				<!-- Fix 3246 fine -->
+
+				<button name="RicalcolaCoefficientePulsante" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="RicalcolaSecondarie"/><!-- Fix 44089 -->
+				<label name="LabelGroupBoxDateConsegna" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="DateConsegnaGroupBox"></label>
+				<!-- Campo Data Consegna Richiesta -->
+				<!-- Fix 2523: sostituito onBlur con onChange -->
+				<textinput
+					classAD="DataConsegnaRichiesta"
+					name="DataConsegnaRichiestaField"
+					onChange="gestDataConsegnaRichiesta()"
+					showCalendarBtn="yes"
+				/>
+				<!-- Campo Settimana Consegna Richiesta -->
+				<textinput classAD="SettConsegnaRichiesta" name="SettConsegnaRichiestaField"/>
+
+				<!-- Campo Data Consegna Confermata -->
+				<!-- Fix 2523: sostituito onBlur con onChange -->
+				<textinput
+					classAD="DataConsegnaConfermata"
+					name="DataConsegnaConfermataField"
+					onChange="gestDataConsegnaConfermata()"
+					showCalendarBtn="yes"
+				/>
+				<!-- Campo Settimana Consegna Confermata -->
+				<textinput classAD="SettConsegnaConfermata" name="SettConsegnaConfermataField"/>
+
+				<!-- Campo Data Consegna Produzione -->
+				<!-- Fix 2523: sostituito onBlur con onChange -->
+				<textinput
+					classAD="DataConsegnaProduzione"
+					name="DataConsegnaProduzioneField"
+					onChange="gestDataConsegnaProduzione()"
+					showCalendarBtn="yes"
+				/>
+				<!-- Campo Settimana Consegna Produzione -->
+				<textinput classAD="SettConsegnaProduzione" name="SettConsegnaProduzioneField"/>
+
+				<!-- Dati Comuni Estesi - Stato -->
+				<subform classCD="DatiComuniEstesi" name="StatoDCECombo"/>
+
+				<!-- fix 4033 ini -->
+                <!-- Pulsante Analisi chimica -->
+ 				<label
+ 					name="AnalisiChimicaPulsanteLabel"
+					resourceID="AnalisiChimicaPulsanteLabel"
+					resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga">
+ 				</label>
+ 				<button name="AnalisiChimicaPulsante"/>
+ 				<!-- fix 4033 fine -->
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Prezzi/Sconti -->
+			<tab
+				name="PrezziScontiTab"
+				resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"
+				resourceID="PrezziScontiTab"
+				onClick="verificaCondizioniRecuperoDatiAcquisto()"
+			>
+
+				<!-- Proxy Listino -->
+				<multisearchform
+					classRD="RListino"
+					name="ListinoProxy"
+					onKeyChange="variazioneListino()"
+					additionalRestrictConditions="ServizioValutaTestata,RValuta;ServizioLavEstListino,LavorazioneEsterna"
+				/>
+
+				<!-- Campo Prezzo -->
+				<textinput
+					classAD="Prezzo"
+			name="PrezzoField" onFocus="memorizzaPrezzo()"
+					onChange="settaggioManualeProvenienzaPrezzo()"
+				/><!-- Fix 42395 -->
+				<!-- Fix 05398  SL ini... -->
+				<formcustomization
+					name="campiFormLivelloInterno1"
+					customizePosition="FORM"
+					customizeName="FormCustomizeLivelloInterno1"
+				/>
+				<!-- Fix 05398  SL fine... -->
+				<!-- Campo Prezzo Extra -->
+				<textinput classAD="PrezzoExtra" name="PrezzoExtraField"/>
+                <!-- Fix 2333 -->
+				<label name="LabelDettaglioPrezzi" resourceFile="it.thera.thip.base.prezziExtra.resources.DocOrdRiga" resourceID="DettaglioPrezzi"></label>
+				<!-- Fine Fix 2333 -->
+
+				<!-- Fix 1495 -->
+				<textinput classAD="DataInizioValiditaLst" name="DataInizioValiditaLstField"/>
+
+				<!-- Pulsante Ricalcola Dati Acquisto -->
+ 				<label
+ 					name="RicalcoloDatiAcqPulsanteLabel"
+					resourceID="RicalcoloDatiAcqPulsanteLabel"
+					resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga">
+ 				</label>
+ 				<button name="RicalcolaDatiAcquistoPulsante" resourceID="RicalcoloDatiAcqPulsanteLabel"
+					resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"/><!-- Fix 44089 -->
+
+				<!-- Combo Riferimento Prezzo -->
+				<combobox classAD="RiferimentoUMPrezzo" name="RiferimentoPrezzoCombo"/>
+
+				<!-- Combo Tipo Prezzo -->
+				<combobox classAD="TipoPrezzo" name="TipoPrezzoCombo"/>
+
+				<!-- Combo Provenienza Prezzo -->
+				<combobox classAD="ProvenienzaPrezzo" name="ProvenienzaPrezzoCombo"/>
+
+				<!-- Campo Sconto 1 Articolo -->
+				<textinput classAD="ScontoArticolo1" name="ScontoArticolo1Field"/>
+				<!-- Campo Sconto 2 Articolo -->
+				<textinput classAD="ScontoArticolo2" name="ScontoArticolo2Field"/>
+				<!-- Campo Maggiorazione -->
+				<textinput classAD="Maggiorazione" name="MaggiorazioneField"/>
+
+				<!-- Proxy Sconto -->
+				<multisearchform classRD="RSconto" name="ScontoProxy"/>
+
+				<!-- Campo Sconto Fornitore -->
+				<textinput classAD="PrcScontoIntestatario" name="ScontoFornitoreField"/>
+				<!-- Campo Sconto Modal. -->
+				<textinput classAD="PrcScontoModalita" name="ScontoModalitaField"/>
+
+				<!-- Proxy Sconto Modal -->
+				<multisearchform classRD="RScontoModalita" name="ScontoModalitaProxy"/>
+
+				<!-- Proxy Assoggettamento IVA -->
+				<multisearchform classRD="RAssoggettamentoIVA" name="AssoggettamentoIVAProxy"/>
+
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Cond.evasione  -->
+			<tab name="CondEvasioneTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="CondEvasioneTab">
+				<!-- Fix 11367 begin -->
+			    <label name="LabelGroupBoxOffertaFornitore" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="LabelGroupBoxOffertaFornitore"></label>
+ 				<textinput classAD="NumOffertaAcqFormattato" name="NumOffertaAcqFormattato"/>
+				<textinput classAD="DataOffertaFornitore" name="DataOffertaFornitore" showCalendarBtn="yes"/>
+				<textinput classAD="RigaOfferta" name="RigaOfferta"/>
+				<!-- Fix 11367 end -->
+				<!-- Fix 21505 ini -->
+			  <label name="LabelGroupBoxRichiestaAcquisto" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="LabelGroupBoxRichiestaAcquisto"></label>
+ 				<textinput classAD="NumRichiestaAcqFormattato" name="NumRichiestaAcqFormattato"/>
+				<textinput classAD="DataRichiestaAcquisto" name="DataRichiestaAcquisto" showCalendarBtn="no"/>
+				<textinput classAD="RigaRda" name="RigaRda"/>
+				<!-- Fix 21505 fni -->
+				<multisearchform classRD="RichiestaAcquistoRiga" name="RichiestaAcquistoRiga" additionalfields="2"/> <!-- Fix 24021  -->
+				<multisearchform classRD="RigaOffertaFornitore" name="RigaOffertaFornitore" additionalfields="2"/> <!-- Fix 24021  -->
+				<!-- Campo Priorita -->
+				<textinput classAD="Priorita" name="PrioritaField"/>
+
+				<!-- Campo Perdita Residuo -->
+				<textinput classAD="PrcPerditaResiduo" name="PerditaResiduoField"/>
+				<!-- Check Riga non Frazionabile -->
+				<checkbox classAD="RigaNonFrazionabile" name="RigaNonFrazionabileCheck"/>
+
+				<!-- Campo Gruppo Consegna -->
+				<textinput classAD="GruppoConsegna" name="GruppoConsegnaField"/>
+
+				<!-- Proxy Blocco Spedizione -->
+				<multisearchform classRD="RBloccoSpedizione" name="BloccoSpedizioneProxy"/>
+
+				<!-- Proxy Blocco Ricezione -->
+				<multisearchform classRD="RBloccoRicezione" name="BloccoRicezioneProxy"/>
+
+				<!-- Proxy Blocco Pianif. -->
+				<multisearchform classRD="RBloccoPianif" name="BloccoPianifProxy"/>
+
+				<!-- Proxy Responsabile Acquisti -->
+				<multisearchform classRD="RResponsabileAcquisti" name="ResponsabileAcquistiProxy"/>
+				<!-- Fix 1659 -->
+ 				<label name="DatiBolla" resourceFile="it.thera.thip.base.comuniVenAcq.resources.ComuniVenAcq" resourceID="DatiBolla"></label>
+				<textinput classAD="DataBolla" name="DataBolla" showCalendarBtn="yes"/>
+				<textinput classAD="NumeroBolla" name="NumeroBolla"/>
+
+				<!-- Fine fix 1659 -->
+
+				<label name="DatiDiTrasporto" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="DatiDiTrasporto"></label>
+				<textinput classAD="PesoNetto" name="PesoNetto"/>
+				<textinput classAD="PesoLordo" name="PesoLordo"/>
+				<textinput classAD="Volume" name="Volume"/>
+				<checkbox classAD="RicalcolaPesiEVolume" name="RicalcoloPesiVol"/>
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Contabil. -->
+			<tab name="ContabilTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="ContabilTab">
+
+				<!-- Proxy Commessa -->
+				<multisearchform classRD="RCommessa" name="CommessaProxy"/>
+
+				<!-- Proxy Centro Ricavo -->
+				<multisearchform classRD="RCentroCosto" name="CentroRicavoProxy"/>
+
+				<!-- Proxy Gruppo Conti Analitica -->
+				<multisearchform classRD="RGruppoContiCA" name="GruppoContiAnaliticaProxy"/>
+
+				<subform classCD="DatiCA" name="DatiCA" formJSPName="it/thera/thip/acquisti/generaleAC/DatiCA.jsp"/>
+				<!-- Fix 8286 - Inizio -->
+        		<label name="RicalcolaDatiCA" resourceID="RicalcolaDatiCA" resourceFile="it.thera.thip.acquisti.documentoAC.resources.DocumentoAcquisto"></label>
+				<!-- Fix 8286 - Fine -->
+
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Commenti/Multimedia  -->
+			<tab name="CommentiMultimediaTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="CommentiMultimediaTab">
+
+				<!-- Area Commenti -->
+				<subform classCD="CommentHandler" name="CommentiArea"/>
+
+				<!-- Proxy Documento MM -->
+				<multisearchform classRD="RDocumentoMM" name="DocumentoMMProxy"/>
+
+				<!-- Area Note -->
+				<textarea classAD="Nota" name="NoteArea"/>
+
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Dettaglio Lotti -->
+			<tab name="LottiTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="LottiTab">
+				<!-- Softre -->
+				<button name="CodificaLottiTestori" resourceFile="it.testori.thip.magazzino.generalemag.resources.LottiTestori" resourceID="btnCreaLotti"/>
+				<!-- Griglia Lotti -->
+				<editgrid name="LottiGrid" visiblerows="6" classCD="Lotti" type="include"><!-- Fix 39398 - visiblerows a 6 -->
+					<column classAD="IdAzienda" />
+					<column classAD="IdArticolo" />
+					<!-- fix 21883 inizio -->
+					<column classAD="IdLotto" />
+		   			<column classAD="RLotto.IdLottoProdotto" hideAsDefault="yes"></column>
+		   			<column classAD="RLotto.IdLottoPrdFormattato"></column>
+		   			<!-- fix 21883 fine -->
+					<column classAD="QtaInUMAcq"/>
+					<column classAD="QtaInUMPrmMag"/>
+					<column classAD="QtaInUMSecMag"/>
+          <!-- Fix 14336 inizio-->
+          <column classAD="QtaPropostaEvasione.QuantitaInUMRif" hideAsDefault="yes" />
+          <column classAD="QtaPropostaEvasione.QuantitaInUMPrm" hideAsDefault="yes" />
+          <column classAD="QtaPropostaEvasione.QuantitaInUMSec" hideAsDefault="yes" />
+          <column classAD="QtaAttesaEvasione.QuantitaInUMRif" hideAsDefault="yes" />
+          <column classAD="QtaAttesaEvasione.QuantitaInUMPrm" hideAsDefault="yes" />
+          <column classAD="QtaAttesaEvasione.QuantitaInUMSec" hideAsDefault="yes" />
+          <!-- Fix 14336  fine-->
+					<column classAD="StatoEvasione"  />
+					<!-- Fix 6002 inizio -->
+					<include nameList="DeleteRow">
+						<actionItem
+							name="GestioneMatricole"
+							action="gestioneMatricole()"
+							disableOnShow="yes"
+							resourceFile="it.thera.thip.magazzino.matricole.resources.LottoMatricola"
+							resourceID="GestioneMatricoleBtn"
+						>
+						</actionItem>
+					</include>
+					<!-- Fix 6002 fine -->
+				</editgrid>
+
+			</tab>
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Spedito  -->
+			<tab name="SpeditoTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="SpeditoTab">
+				<!-- Label delle colonne -->
+			  	<label name="UMAcqLabel" resourceID="UMAcquistoLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="UMPrmLabel" resourceID="UMPrmLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="UMSecLabel" resourceID="UMSecLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+
+				<!-- Label delle righe -->
+				<label name="QtaOrdinataLabel" resourceID="QtaOrdinataLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="QtaPropostaEvasioneLabel" resourceID="QtaPropostaEvasioneLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="QtaAttesaEvasioneLabel" resourceID="QtaAttesaEvasioneLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="QtaRicevutaLabel" resourceID="QtaRicevutaLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+<!--
+				<label name="QtaPrevistaLavEsternaLabel" resourceID="QtaPrevistaLavEsternaLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="QtaSpeditaLavEsternaLabel" resourceID="QtaSpeditaLavEsternaLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="QtaImpiegataLavEsternaLabel" resourceID="QtaImpiegataLavEsternaLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+-->
+
+				<!-- Label di intestazione -->
+				<subform classCD="QuantitaOrdinata" name="QuantitaOrdinataField"/>
+				<subform classCD="QtaPropostaEvasione" name="QtaPropostaEvasioneField"/>
+				<subform classCD="QtaAttesaEvasione" name="QtaAttesaEvasioneField"/>
+				<subform classCD="QuantitaRicevuta" name="QuantitaRicevutaField"/>
+<!--
+				<subform classCD="QuantitaPrevLavEsterna" name="QuantitaPrevistaLavEsternaField"/>
+				<subform classCD="QuantitaSpedLavEsterna" name="QuantitaSpeditaLavEsternaField"/>
+				<subform classCD="QuantitaImpiegLavEsterna" name="QuantitaImpiegLavEsternaField"/>
+-->
+
+				<!-- Combo Stato Evasione -->
+				<combobox classAD="StatoEvasione" name="StatoEvasioneCombo"/>
+
+				<!-- Check Saldo Manuale -->
+				<checkbox classAD="SaldoManuale" name="SaldoManualeCheck"/>
+
+				<!-- Pulsante Salda/Riapri -->
+ 				<label name="LabelGroupBoxOrdine" resourceID="OrdineGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<label name="LabelPulsanteSalda" resourceID="SaldaPulsanteLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<label name="LabelPulsanteRiapri" resourceID="RiapriPulsanteLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<button name="SaldaRiapriPulsante"/>
+
+				<!-- Combo Stato Spedizione Componenti -->
+				<combobox classAD="StatoSpedizioneComp" name="StatoSpedizioneCompCombo"/>
+
+				<!-- Fix 03952 inizio -->
+				<textinput classAD="DataUltimoSollecito" name="DataUltimoSollecito" showCalendarBtn="yes"/>
+				<textinput classAD="NumSollecito" name="NumSollecito"/>
+				<!-- Fix 03952 fine -->
+
+				<!-- Pulsante Salda/Riapri Componenti -->
+ 				<label name="LabelGroupBoxComponenti" resourceID="ComponentiGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<label name="LabelPulsanteSaldaComp" resourceID="SaldaCompPulsanteLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<label name="LabelPulsanteRiapriComp" resourceID="RiapriCompPulsanteLabel" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+ 				<button name="SaldaRiapriComponentePulsante"/>
+
+		  </tab>
+
+
+
+
+			<!-- ************************************************************************************************ -->
+			<!-- Cartella Riepilogo  -->
+			<tab name="RiepilogoTab" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga" resourceID="RiepilogoTab">
+
+				<!-- Label valute -->
+				<label name="LabelGroupBoxValore" resourceID="ValoreGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValoreOrdinato" resourceID="LabelValoreOrdinato" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValoreInEntrata" resourceID="LabelValoreInEntrata" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValoreRicevuto" resourceID="LabelValoreRicevuto" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelGroupBoxCosto" resourceID="CostoGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelCostoOrdinato" resourceID="LabelCostoOrdinato" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelCostoInEntrata" resourceID="LabelCostoInEntrata" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelCostoRicevuto" resourceID="LabelCostoRicevuto" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValutaOrdineVO" resourceID="LabelValutaOrdine" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValutaAziendaVO" resourceID="LabelValutaAzienda" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValutaOrdineCO" resourceID="LabelValutaOrdine" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelValutaAziendaCO" resourceID="LabelValutaAzienda" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelGroupBoxValoreVA" resourceID="ValoreGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+				<label name="LabelGroupBoxScostamento" resourceID="ScostamentoGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>				<label name="LabelGroupBoxCostoVA" resourceID="CostoGroupBox" resourceFile="it.thera.thip.acquisti.ordineAC.resources.OrdineAcquistoRiga"></label>
+
+				<!-- Campo Valore Ordine Ordinato in Valuta Ordine -->
+				<textinput classAD="ValoreOrdinato" name="ValoreOrdinatoValutaOrdineField"/>
+
+				<!-- Campo Valore Ordine In Entrata in Valuta Ordine -->
+				<textinput classAD="ValoreInEntrata" name="ValoreInEntrataValutaOrdineField"/>
+
+				<!-- Campo Valore Ordine Ricevuto in Valuta Ordine -->
+				<textinput classAD="ValoreRicevuto" name="ValoreRicevutoValutaOrdineField"/>
+
+				<!-- Campo Valore Ordine Ordinato in Valuta Azienda -->
+ 				<textinput classAD="ValoreOrdinatoVA" name="ValoreOrdinatoValutaAziendaField"/>
+
+				<!-- Campo Valore Ordine In Entrata in Valuta Azienda -->
+				<textinput classAD="ValoreInEntrataVA" name="ValoreInEntrataValutaAziendaField"/>
+
+				<!-- Campo Valore Ordine Ricevuto in Valuta Azienda -->
+				<textinput classAD="ValoreRicevutoVA" name="ValoreRicevutoValutaAziendaField"/>
+
+				<!-- Campo Costo Unitario -->
+				<textinput classAD="CostoUnitario" name="CostoUnitarioField"/>
+
+				<!-- Campo Costo Ordine Ordinato in Valuta Ordine -->
+				<textinput classAD="CostoOrdinato" name="CostoOrdinatoValutaOrdineField"/>
+
+				<!-- Campo Costo Ordine In Entrata in Valuta Ordine -->
+				<textinput classAD="CostoInEntrata" name="CostoInEntrataValutaOrdineField"/>
+
+				<!-- Campo Costo Ordine Ricevuto in Valuta Ordine -->
+				<textinput classAD="CostoRicevuto" name="CostoRicevutoValutaOrdineField"/>
+
+				<!-- Campo Costo Ordine Ordinato in Valuta Azienda -->
+				<textinput classAD="CostoOrdinatoVA" name="CostoOrdinatoValutaAziendaField"/>
+
+				<!-- Campo Costo Ordine In Entrata in Valuta Azienda -->
+				<textinput classAD="CostoInEntrataVA" name="CostoInEntrataValutaAziendaField"/>
+
+				<!-- Campo Costo Ordine Ricevuto in Valuta Azienda -->
+				<textinput classAD="CostoRicevutoVA" name="CostoRicevutoValutaAziendaField"/>
+
+				<textinput classAD="ValoreImpostaOrd" name="ValoreImpostaOrdField"/>
+				<textinput classAD="ValoreImpostaInEn" name="ValoreImpostaInEnField"/>
+				<textinput classAD="ValoreImpostaRic" name="ValoreImpostaRicField"/>
+ 				<textinput classAD="ValoreImpostaOrdVA" name="ValoreImpostaOrdVAField"/>
+				<textinput classAD="ValoreImpostaInEnVA" name="ValoreImpostaInEnVAField"/>
+				<textinput classAD="ValoreImpostaRicVA" name="ValoreImpostaRicVAField"/>
+
+				<!-- Campo Costo Ordine Ordinato in Valuta Azienda -->
+				<textinput classAD="ScostamentoOrdinatoVA" name="ScostamentoOrdinatoVAField"/>
+
+				<!-- Campo Costo Ordine In Entrata in Valuta Azienda -->
+				<textinput classAD="ScostamentoInEntrataVA" name="ScostamentoInEntrataVAField"/>
+
+				<!-- Campo Costo Ordine Ricevuto in Valuta Azienda -->
+				<textinput classAD="ScostamentoRicevutoVA" name="ScostamentoRicevutoVAField"/>
+
+				<!-- Combo Stato Invio EDI -->
+				<combobox classAD="StatoInvioEDI" name="StatoInvioEDICombo"/>
+
+				<!-- Combo Stato Invio Data Warehouse -->
+				<combobox classAD="StatoInvioDatawarehouse" name="StatoInvioDatawarehouseCombo"/>
+
+				<!-- Combo Stato Invio Logistica -->
+				<combobox classAD="StatoInvioLogistica" name="StatoInvioLogisticaCombo"/>
+
+				<!-- Combo Stato Invio Contabil. Analitica -->
+				<combobox classAD="StatoInvioContAnalitica" name="StatoInvioContabAnaliticaCombo"/>
+
+			</tab>
+
+
+		</tabbed>
+
+
+		<!-- **************************************************************************************************** -->
+		<!-- Campi nascosti -->
+		<textinput classAD="IdAzienda" name="AziendaField"/>
+		<textinput classAD="AnnoOrdine" name="AnnoOrdineField"/>
+		<textinput classAD="NumeroOrdine" name="NumeroOrdineField"/>
+		<textinput classAD="RigaOrdine" name="RigaOrdineField"/>
+		<textinput classAD="DettaglioRigaOrdine" name="DettaglioRigaOrdineField"/>
+		<textinput classAD="TipoRiga" name="TipoRigaField"/>
+	    <textinput classAD="IdSpesa" name="SpesaField"/> <!-- Fix 8286 -->
+		<textinput classAD="IdUMPrm" name="UnitaMisuraPrimariaField"/>
+		<textinput classAD="IdUMSec" name="UnitaMisuraSecondariaField"/>
+		<textinput classAD="IdVersioneSaldi" name="VersioneSaldiField"/>
+		<textinput classAD="ServizioValutaTestata" name="ServizioValutaTestataField"/>
+		<textinput classAD="ServizioValutaAzienda" name="ServizioValutaAziendaField"/>
+		<textinput classAD="ServizioCalcDatiAcquisto" name="ServizioCalcDatiAcquistoField"/>
+		<textinput classAD="ServizioListAcqScaglione" name="ServizioListAcqScaglioneField"/>
+		<textinput classAD="ServizioArticoloConfig" name="ServizioArticoloConfigField"/>
+		<textinput classAD="ServizioIdEsternoConfig" name="ServizioIdEsternoConfigField"/>
+		<textinput classAD="PrezzoListino" name="PrezzoListinoField"/>
+		<textinput classAD="PrezzoExtraListino" name="PrezzoExtraListinoField"/>
+		<textinput classAD="LavorazioneEsterna" name="LavorazioneEsternaField"/>
+		<textinput classAD="TipoLavorazioneEsterna" name="TipoLavorazioneEsternaField"/>
+		<textinput classAD="TipoCostoRiferimento" name="TipoCostoRiferimentoField"/>
+		<!-- Fix 1918 inizio -->
+		<textinput classAD="ServizioCatalEstConfig" name="ServizioCatalEstConfigField"/>
+		<!-- Fix 1918 fine -->
+		<!-- Fix 2384 inizio -->
+		<textinput classAD="ServizioProvenienzaPrezzo" name="ServizioProvenienzaPrezzo"/>
+		<textinput classAD="ServizioRiferimUMPrezzo" name="ServizioRiferimUMPrezzo"/>
+		<!-- Fix 2384 fine -->
+		<!-- Fix 2333 -->
+		<textinput classAD="APrezziExtra" name="APrezziExtraField"/>
+		<!-- Fine Fix 2333 -->
+		<!-- Fix 2844 inizio -->
+		<textinput classAD="IdConfigurazione" name="IdConfigurazioneField"/>
+		<!-- Fix 2844 fine -->
+		<!-- Fix 3770 inizio -->
+		<textinput classAD="IdCatalogoEsterno" name="IdCatalogoEsternoField"/>
+		<!-- Fix 3770 fine -->
+		<!-- Fix 3910 inizio -->
+		<textinput classAD="QtaMinListino" name="QtaMinListinoField"/>
+		<!-- Fix 3910 fine -->
+    <textinput classAD="ControlloRicalCondiz" name="ControlloRicalCondiz"/><!--Fix 23345-->
+	</form>
+</tfml>
