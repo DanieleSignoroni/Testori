@@ -3,10 +3,14 @@ package it.testori.thip.magazzino.generalemag;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thera.thermfw.persist.CopyException;
+import com.thera.thermfw.persist.Copyable;
+import com.thera.thermfw.persist.CopyableHelper;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.Proxy;
 
 import it.thera.thip.base.articolo.Articolo;
+import it.thera.thip.base.azienda.Azienda;
 
 /**
  * <p></p>
@@ -33,6 +37,10 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 
 	@SuppressWarnings("rawtypes")
 	protected List iLottiDettaglio = new ArrayList();
+
+	public CreaLottiTestoriTestata() {
+		setIdAzienda(Azienda.getAziendaCorrente());
+	}
 
 	@SuppressWarnings("rawtypes")
 	public List getLottiDettaglio() {
@@ -80,6 +88,22 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 	public void setIdArticolo(String rArticolo) {
 		String key = iArticolo.getKey();
 		iArticolo.setKey(KeyHelper.replaceTokenObjectKey(key , 2, rArticolo));
+	}
+
+	@Override
+	public void setIdAzienda(String iIdAzienda) {
+		super.setIdAzienda(iIdAzienda);
+		setIdAziendaInternal(iIdAzienda);
+	}
+
+	protected void setIdAziendaInternal(String iIdAzienda) {
+		String k1 = iArticolo.getKey();
+		iArticolo.setKey(KeyHelper.replaceTokenObjectKey(k1, 1, iIdAzienda));
+	}
+
+	@Override
+	public void setEqual(Copyable obj) throws CopyException {
+		CopyableHelper.copyObject(this, obj);
 	}
 
 }

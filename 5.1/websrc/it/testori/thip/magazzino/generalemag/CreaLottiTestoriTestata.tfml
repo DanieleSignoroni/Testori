@@ -1,0 +1,36 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YCreaLottiTestoriTestata"
+    name="YCreaLottiTestoriTestataForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    webFormModifierClass="it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriTestataFormModifier"
+    servlet="it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriTestataFormActionAdapter"
+    jsLibraryName="it/testori/thip/magazzino/generalemag/CreaLottiTestoriTestata.js"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <textinput name="IdAzienda" classAD="IdAzienda"/>
+    <textinput name="IdLotto" classAD="IdLotto"/>
+    <textinput name="Quantita" classAD="Quantita"/>
+    <textinput name="NumeroConfezioni" classAD="NumeroConfezioni"/>
+    <textinput name="NumeroRocche" classAD="NumeroRocche"/>
+    <textinput name="LottoAcquisto" classAD="LottoAcquisto"/>
+    <textinput name="DataScadenza" classAD="DataScadenza" showCalendarBtn="yes"/>
+    <textinput name="ChiaveSelezionato" classAD="ChiaveSelezionato"/>
+    <textarea name="Note" classAD="Note"/>
+    
+    <textinput name="Documento" classAD="Documento"/>
+    <textinput name="Soggetto" classAD="Soggetto"/>
+    <multisearchform name="Articolo" classRD="Articolo"/>
+    
+    <ajaxgrid name="LottiDettaglio" visiblerows="5" classCD="LottiDettaglio" type="dependent" noControlRowKeys="yes"
+    	controller="it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriDettaglioWebAjaxGridController">
+		 <column classAD="IdAzienda"  hidden="yes" ></column>			
+		 <column classAD="IdLotto"></column>
+		 <column classAD="NumeroRocche"></column>
+		 <column classAD="Quantita"></column>
+	</ajaxgrid>
+	
+  </form>
+</tfml>

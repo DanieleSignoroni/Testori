@@ -27,7 +27,7 @@ public class CreaLottiTestoriDettaglio extends BusinessObjectAdapter implements 
 
 	protected String iIdAzienda;
 	protected String iIdLotto;
-	protected Integer iNumeroRocche;
+	protected String iNumeroRocche;
 	protected BigDecimal iQuantita;
 
 	protected Proxy iTestata = new Proxy(CreaLottiTestoriTestata.class);
@@ -48,11 +48,11 @@ public class CreaLottiTestoriDettaglio extends BusinessObjectAdapter implements 
 		this.iIdLotto = iIdLotto;
 	}
 
-	public Integer getNumeroRocche() {
+	public String getNumeroRocche() {
 		return iNumeroRocche;
 	}
 
-	public void setNumeroRocche(Integer iNumeroRocche) {
+	public void setNumeroRocche(String iNumeroRocche) {
 		this.iNumeroRocche = iNumeroRocche;
 	}
 

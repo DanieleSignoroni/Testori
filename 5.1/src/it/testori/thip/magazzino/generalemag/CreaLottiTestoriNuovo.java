@@ -30,7 +30,7 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 
 	protected Integer iNumeroConfezioni;
 
-	protected Integer iNumeroRocche;
+	protected String iNumeroRocche;
 
 	protected String iLottoAcquisto;
 
@@ -66,11 +66,11 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 		this.iNumeroConfezioni = iNumeroConfezioni;
 	}
 
-	public Integer getNumeroRocche() {
+	public String getNumeroRocche() {
 		return iNumeroRocche;
 	}
 
-	public void setNumeroRocche(Integer iNumeroRocche) {
+	public void setNumeroRocche(String iNumeroRocche) {
 		this.iNumeroRocche = iNumeroRocche;
 	}
 
