@@ -18,6 +18,7 @@ import it.testori.thip.magazzino.generalemag.CreaLottiTestoriDettaglio;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriNuovo;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriTestata;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
+import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
 import it.thera.thip.cs.ColonneFiltri;
 
 /**
@@ -55,6 +56,17 @@ public class CreaLottiTestoriTestataFormModifier extends WebFormModifier {
 			if(className.contains("DocumentoAcquistoRigaPrm")) {
 				try {
 					DocumentoAcqRigaPrm docAcqRig = (DocumentoAcqRigaPrm) DocumentoAcqRigaPrm.elementWithKey(DocumentoAcqRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
+						bo.setSoggetto(docAcqRig.getIdFornitore());
+						bo.setArticolo(docAcqRig.getArticolo());
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("OrdineAcquistoRigaPrm")) {
+				try {
+					OrdineAcquistoRigaPrm docAcqRig = (OrdineAcquistoRigaPrm) OrdineAcquistoRigaPrm.elementWithKey(OrdineAcquistoRigaPrm.class, thKey, PersistentObject.NO_LOCK);
 					if(docAcqRig != null) {
 						bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
 						bo.setSoggetto(docAcqRig.getIdFornitore());

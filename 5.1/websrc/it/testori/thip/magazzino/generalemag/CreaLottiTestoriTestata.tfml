@@ -24,7 +24,7 @@
     <textinput name="Soggetto" classAD="Soggetto"/>
     <multisearchform name="Articolo" classRD="Articolo"/>
     
-    <ajaxgrid name="LottiDettaglio" visiblerows="5" classCD="LottiDettaglio" type="dependent" noControlRowKeys="yes"
+    <ajaxgrid name="LottiDettaglio" visiblerows="25" classCD="LottiDettaglio" type="dependent" noControlRowKeys="yes"
     	controller="it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriDettaglioWebAjaxGridController">
 		 <column classAD="IdAzienda"  hidden="yes" ></column>			
 		 <column classAD="IdLotto"></column>

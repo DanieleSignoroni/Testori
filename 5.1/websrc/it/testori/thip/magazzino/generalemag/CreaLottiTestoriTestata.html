@@ -5,27 +5,6 @@
 	<form name="YCreaLottiTestoriTestataForm">
 		<table width="100%" cellspacing="0" cellpadding="0" id="emptyborder">
 			<tr>
-				<td><input type="hidden" name="IdAzienda" id="IdAzienda" /></td>
-			</tr>
-			<tr>
-				<td><input type="hidden" name="ChiaveSelezionato"
-					id="ChiaveSelezionato" /></td>
-			</tr>
-			<tr>
-				<td><input type="hidden" name="IdLotto" id="IdLotto" /></td>
-			</tr>
-			<tr>
-				<td><input type="hidden" name="NumeroConfezioni"
-					id="NumeroConfezioni" /></td>
-			</tr>
-			<tr>
-				<td><input type="hidden" name="LottoAcquisto"
-					id="LottoAcquisto" /></td>
-			</tr>
-			<tr style="display: none;">
-				<td><textarea id="Note" name="Note" rows="3" cols="75"></textarea></td>
-			</tr>
-			<tr>
 				<td>
 					<table>
 						<tr>
@@ -55,15 +34,15 @@
 										<td><label for="Articolo"></label></td>
 									</tr>
 									<tr>
-											<td><span class="multisearchform" id="Articolo" /></td>
-										</tr>
+										<td><span class="multisearchform" id="Articolo" /></td>
+									</tr>
 								</table>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<table height="300px" width="99%" border="0"
-									style="margin: 0 0 0 2;">
+								<table width="99%" border="0" style="margin: 0 0 0 2;"
+									class="resTableSmartGridRighe">
 									<tr>
 										<td><span id="LottiDettaglio" class="ajaxgrid"></span></td>
 									</tr>
@@ -72,6 +51,27 @@
 						</tr>
 					</table>
 				</td>
+			</tr>
+			<tr>
+				<td><input type="hidden" name="IdAzienda" id="IdAzienda" /></td>
+			</tr>
+			<tr>
+				<td><input type="hidden" name="ChiaveSelezionato"
+					id="ChiaveSelezionato" /></td>
+			</tr>
+			<tr>
+				<td><input type="hidden" name="IdLotto" id="IdLotto" /></td>
+			</tr>
+			<tr>
+				<td><input type="hidden" name="NumeroConfezioni"
+					id="NumeroConfezioni" /></td>
+			</tr>
+			<tr>
+				<td><input type="hidden" name="LottoAcquisto"
+					id="LottoAcquisto" /></td>
+			</tr>
+			<tr style="display: none;">
+				<td><textarea id="Note" name="Note" rows="3" cols="75"></textarea></td>
 			</tr>
 			<tr>
 				<td style="height: 0"><span class="errorlist" /></td>

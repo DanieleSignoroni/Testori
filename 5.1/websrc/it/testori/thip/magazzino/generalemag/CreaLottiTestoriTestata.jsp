@@ -96,6 +96,101 @@
 
 		<table cellpadding="0" cellspacing="0" id="emptyborder" width="100%">
 			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<table>
+									<thead>
+										<tr>
+											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Documento", null); 
+   label.setParent(YCreaLottiTestoriTestataForm); 
+%><label class="<%=label.getClassType()%>" for="Documento"><%label.write(out);%></label><%}%></th>
+											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Soggetto", null); 
+   label.setParent(YCreaLottiTestoriTestataForm); 
+%><label class="<%=label.getClassType()%>" for="Soggetto"><%label.write(out);%></label><%}%></th>
+											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Quantita", null); 
+   label.setParent(YCreaLottiTestoriTestataForm); 
+%><label class="<%=label.getClassType()%>" for="Quantita"><%label.write(out);%></label><%}%></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><% 
+  WebTextInput YCreaLottiTestoriTestataDocumento =  
+     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Documento"); 
+  YCreaLottiTestoriTestataDocumento.setParent(YCreaLottiTestoriTestataForm); 
+%>
+<input class="<%=YCreaLottiTestoriTestataDocumento.getClassType()%>" id="<%=YCreaLottiTestoriTestataDocumento.getId()%>" maxlength="<%=YCreaLottiTestoriTestataDocumento.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataDocumento.getName()%>" size="<%=YCreaLottiTestoriTestataDocumento.getSize()%>" type="text"><% 
+  YCreaLottiTestoriTestataDocumento.write(out); 
+%>
+</td>
+											<td><% 
+  WebTextInput YCreaLottiTestoriTestataSoggetto =  
+     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Soggetto"); 
+  YCreaLottiTestoriTestataSoggetto.setParent(YCreaLottiTestoriTestataForm); 
+%>
+<input class="<%=YCreaLottiTestoriTestataSoggetto.getClassType()%>" id="<%=YCreaLottiTestoriTestataSoggetto.getId()%>" maxlength="<%=YCreaLottiTestoriTestataSoggetto.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataSoggetto.getName()%>" size="<%=YCreaLottiTestoriTestataSoggetto.getSize()%>" type="text"><% 
+  YCreaLottiTestoriTestataSoggetto.write(out); 
+%>
+</td>
+											<td><% 
+  WebTextInput YCreaLottiTestoriTestataQuantita =  
+     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Quantita"); 
+  YCreaLottiTestoriTestataQuantita.setParent(YCreaLottiTestoriTestataForm); 
+%>
+<input class="<%=YCreaLottiTestoriTestataQuantita.getClassType()%>" id="<%=YCreaLottiTestoriTestataQuantita.getId()%>" maxlength="<%=YCreaLottiTestoriTestataQuantita.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataQuantita.getName()%>" size="<%=YCreaLottiTestoriTestataQuantita.getSize()%>" type="text"><% 
+  YCreaLottiTestoriTestataQuantita.write(out); 
+%>
+</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "IdArticolo", null); 
+   label.setParent(YCreaLottiTestoriTestataForm); 
+%><label class="<%=label.getClassType()%>" for="Articolo"><%label.write(out);%></label><%}%></td>
+									</tr>
+									<tr>
+										<td><% 
+  WebMultiSearchForm YCreaLottiTestoriTestataArticolo =  
+     new com.thera.thermfw.web.WebMultiSearchForm("YCreaLottiTestoriTestata", "Articolo", false, false, true, 1, null, null); 
+  YCreaLottiTestoriTestataArticolo.setParent(YCreaLottiTestoriTestataForm); 
+  YCreaLottiTestoriTestataArticolo.write(out); 
+%>
+<!--<span class="multisearchform" id="Articolo"></span>--></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table border="0" class="resTableSmartGridRighe" style="margin: 0 0 0 2;" width="99%">
+									<tr>
+										<td><!--<span class="ajaxgrid" id="LottiDettaglio">--><% 
+  WebAjaxGrid YCreaLottiTestoriTestataLottiDettaglio =  
+     new com.thera.thermfw.web.WebAjaxGrid("YCreaLottiTestoriTestata", "LottiDettaglio", 25, new String[]{"IdAzienda", "IdLotto", "NumeroRocche", "Quantita"}, "dependent", null, "it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriDettaglioWebAjaxGridController", true, null,null,"A"); 
+ YCreaLottiTestoriTestataLottiDettaglio.setParent(YCreaLottiTestoriTestataForm); 
+ YCreaLottiTestoriTestataLottiDettaglio.setNoControlRowKeys(true); 
+ YCreaLottiTestoriTestataLottiDettaglio.setOrderByClassAD(null); 
+ YCreaLottiTestoriTestataLottiDettaglio.setOrderByWay("A"); 
+ YCreaLottiTestoriTestataLottiDettaglio.addHidden("IdAzienda"); 
+ YCreaLottiTestoriTestataLottiDettaglio.write(out); 
+%>
+<!--</span>--></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
 				<td><% 
   WebTextInput YCreaLottiTestoriTestataIdAzienda =  
      new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "IdAzienda"); 
@@ -160,101 +255,6 @@
   YCreaLottiTestoriTestataNote.write(out); 
 %>
 </td>
-			</tr>
-			<tr>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<table>
-									<thead>
-										<tr>
-											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Documento", null); 
-   label.setParent(YCreaLottiTestoriTestataForm); 
-%><label class="<%=label.getClassType()%>" for="Documento"><%label.write(out);%></label><%}%></th>
-											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Soggetto", null); 
-   label.setParent(YCreaLottiTestoriTestataForm); 
-%><label class="<%=label.getClassType()%>" for="Soggetto"><%label.write(out);%></label><%}%></th>
-											<th><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "Quantita", null); 
-   label.setParent(YCreaLottiTestoriTestataForm); 
-%><label class="<%=label.getClassType()%>" for="Quantita"><%label.write(out);%></label><%}%></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><% 
-  WebTextInput YCreaLottiTestoriTestataDocumento =  
-     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Documento"); 
-  YCreaLottiTestoriTestataDocumento.setParent(YCreaLottiTestoriTestataForm); 
-%>
-<input class="<%=YCreaLottiTestoriTestataDocumento.getClassType()%>" id="<%=YCreaLottiTestoriTestataDocumento.getId()%>" maxlength="<%=YCreaLottiTestoriTestataDocumento.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataDocumento.getName()%>" size="<%=YCreaLottiTestoriTestataDocumento.getSize()%>" type="text"><% 
-  YCreaLottiTestoriTestataDocumento.write(out); 
-%>
-</td>
-											<td><% 
-  WebTextInput YCreaLottiTestoriTestataSoggetto =  
-     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Soggetto"); 
-  YCreaLottiTestoriTestataSoggetto.setParent(YCreaLottiTestoriTestataForm); 
-%>
-<input class="<%=YCreaLottiTestoriTestataSoggetto.getClassType()%>" id="<%=YCreaLottiTestoriTestataSoggetto.getId()%>" maxlength="<%=YCreaLottiTestoriTestataSoggetto.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataSoggetto.getName()%>" size="<%=YCreaLottiTestoriTestataSoggetto.getSize()%>" type="text"><% 
-  YCreaLottiTestoriTestataSoggetto.write(out); 
-%>
-</td>
-											<td><% 
-  WebTextInput YCreaLottiTestoriTestataQuantita =  
-     new com.thera.thermfw.web.WebTextInput("YCreaLottiTestoriTestata", "Quantita"); 
-  YCreaLottiTestoriTestataQuantita.setParent(YCreaLottiTestoriTestataForm); 
-%>
-<input class="<%=YCreaLottiTestoriTestataQuantita.getClassType()%>" id="<%=YCreaLottiTestoriTestataQuantita.getId()%>" maxlength="<%=YCreaLottiTestoriTestataQuantita.getMaxLength()%>" name="<%=YCreaLottiTestoriTestataQuantita.getName()%>" size="<%=YCreaLottiTestoriTestataQuantita.getSize()%>" type="text"><% 
-  YCreaLottiTestoriTestataQuantita.write(out); 
-%>
-</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<table>
-									<tr>
-										<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YCreaLottiTestoriTestata", "IdArticolo", null); 
-   label.setParent(YCreaLottiTestoriTestataForm); 
-%><label class="<%=label.getClassType()%>" for="Articolo"><%label.write(out);%></label><%}%></td>
-									</tr>
-									<tr>
-											<td><% 
-  WebMultiSearchForm YCreaLottiTestoriTestataArticolo =  
-     new com.thera.thermfw.web.WebMultiSearchForm("YCreaLottiTestoriTestata", "Articolo", false, false, true, 1, null, null); 
-  YCreaLottiTestoriTestataArticolo.setParent(YCreaLottiTestoriTestataForm); 
-  YCreaLottiTestoriTestataArticolo.write(out); 
-%>
-<!--<span class="multisearchform" id="Articolo"></span>--></td>
-										</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<table border="0" height="300px" style="margin: 0 0 0 2;" width="99%">
-									<tr>
-										<td><!--<span class="ajaxgrid" id="LottiDettaglio">--><% 
-  WebAjaxGrid YCreaLottiTestoriTestataLottiDettaglio =  
-     new com.thera.thermfw.web.WebAjaxGrid("YCreaLottiTestoriTestata", "LottiDettaglio", 5, new String[]{"IdAzienda", "IdLotto", "NumeroRocche", "Quantita"}, "dependent", null, "it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriDettaglioWebAjaxGridController", true, null,null,"A"); 
- YCreaLottiTestoriTestataLottiDettaglio.setParent(YCreaLottiTestoriTestataForm); 
- YCreaLottiTestoriTestataLottiDettaglio.setNoControlRowKeys(true); 
- YCreaLottiTestoriTestataLottiDettaglio.setOrderByClassAD(null); 
- YCreaLottiTestoriTestataLottiDettaglio.setOrderByWay("A"); 
- YCreaLottiTestoriTestataLottiDettaglio.addHidden("IdAzienda"); 
- YCreaLottiTestoriTestataLottiDettaglio.write(out); 
-%>
-<!--</span>--></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</table>
-				</td>
 			</tr>
 			<tr>
 				<td style="height: 0"><% 
