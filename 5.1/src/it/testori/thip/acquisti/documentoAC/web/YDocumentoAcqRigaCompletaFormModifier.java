@@ -8,7 +8,6 @@ import com.thera.thermfw.base.ResourceLoader;
 import com.thera.thermfw.web.WebJSTypeList;
 
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
-import it.thera.thip.acquisti.documentoAC.DocumentoAcquisto;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcquistoRiga;
 import it.thera.thip.acquisti.documentoAC.web.DocumentoAcqRigaCompletaFormModifier;
 
@@ -43,11 +42,7 @@ public class YDocumentoAcqRigaCompletaFormModifier extends DocumentoAcqRigaCompl
 		super.writeFormEndElements(out);
 		DocumentoAcquistoRiga docAcqRig =
 				(DocumentoAcquistoRiga)getBODataCollector().getBo();
-		char tipoProvenienza = CreaLottiTestoriUtils.ACQUISTO;
-		if(((DocumentoAcquisto)docAcqRig.getTestata()).getCausale().isLavEsterna()) {
-			tipoProvenienza = CreaLottiTestoriUtils.CONTO_LAVORO;
-		}
-		if(docAcqRig.isOnDB() && CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(docAcqRig.getArticolo(), tipoProvenienza)) {
+		if(docAcqRig.isOnDB() && CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(docAcqRig.getArticolo(), (docAcqRig.getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO))) {
 			out.println("<script>");
 			out.println("function insertAfter(el, referenceNode) { referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);}");
 			out.println("var btn = document.createElement('Button')");

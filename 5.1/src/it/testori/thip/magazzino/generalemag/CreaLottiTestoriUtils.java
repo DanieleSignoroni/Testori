@@ -5,10 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
 
+import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.persist.ConnectionManager;
 
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.thera.thip.base.articolo.Articolo;
+import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.magazzino.generalemag.LottoTM;
 
 /**
@@ -48,22 +50,28 @@ public class CreaLottiTestoriUtils {
 
 	public static String buildNextIdProgressivoLotto(char tipoCodificaLotto, char Provenienza) {
 		String idProgressivo = null;
-		switch (tipoCodificaLotto) {
-		case YArticoloDatiMagaz.FELTRI_MANUFATTI:
-			idProgressivo = getYearSuffix();
-			idProgressivo += MANUFATTI;
-			idProgressivo += Provenienza;
-			break;
-		case YArticoloDatiMagaz.PEZZE:
-			break;
-		case YArticoloDatiMagaz.SUBBI_FELTRI:
-			idProgressivo = getYearSuffix();
-			idProgressivo += PEZZE;
-			idProgressivo += Provenienza;
-			break;
+		try {
+			switch (tipoCodificaLotto) {
+			case YArticoloDatiMagaz.FELTRI_MANUFATTI:
+				idProgressivo = getYearSuffix();
+				idProgressivo += MANUFATTI;
+				idProgressivo += Provenienza;
+				idProgressivo += getMaxLottoId(Azienda.getAziendaCorrente(), idProgressivo, 5);
+				break;
+			case YArticoloDatiMagaz.PEZZE:
+				break;
+			case YArticoloDatiMagaz.SUBBI_FELTRI:
+				idProgressivo = getYearSuffix();
+				idProgressivo += PEZZE;
+				idProgressivo += Provenienza;
+				idProgressivo += getMaxLottoId(Azienda.getAziendaCorrente(), idProgressivo, 5);
+				break;
 
-		default:
-			break;
+			default:
+				break;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace(Trace.excStream);
 		}
 		return idProgressivo;
 	}
@@ -76,7 +84,10 @@ public class CreaLottiTestoriUtils {
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
 					String maxIdLotto = rs.getString(1);
-					if (maxIdLotto != null && maxIdLotto.startsWith(prefisso)) {
+					if(maxIdLotto == null) {
+						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", 1);
+						return suffissoFormattato;
+					}else if (maxIdLotto != null && maxIdLotto.startsWith(prefisso)) {
 						String suffisso = maxIdLotto.substring(prefisso.length());
 						int numero = 0;
 
@@ -87,7 +98,7 @@ public class CreaLottiTestoriUtils {
 						}
 
 						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", numero);
-						return prefisso + suffissoFormattato;
+						return suffissoFormattato;
 					}
 				}
 			}
