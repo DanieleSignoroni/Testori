@@ -94,8 +94,8 @@
   YCreaLottiTestoriTestataForm.writeFormStartElements(out); 
 %>
 
-		<table cellpadding="0" cellspacing="0" id="emptyborder" width="100%">
-			<tr>
+		<table cellpadding="0" cellspacing="0" height="100%" id="emptyborder" width="100%">
+			<tr height="40">
 				<td>
 					<table>
 						<tr>
@@ -168,6 +168,12 @@
 								</table>
 							</td>
 						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table height="100%">
 						<tr>
 							<td>
 								<table border="0" class="resTableSmartGridRighe" style="margin: 0 0 0 2;" width="99%">
