@@ -83,7 +83,7 @@ public class CreaLottiTestoriUtils {
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					String maxIdLotto = rs.getString(1).trim();
+					String maxIdLotto = rs.getString(1);
 					if(maxIdLotto == null) {
 						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", 1);
 						return suffissoFormattato;
@@ -91,7 +91,7 @@ public class CreaLottiTestoriUtils {
 						int numero = 0;
 
 						try {
-							numero = Integer.parseInt(maxIdLotto)+1;
+							numero = Integer.parseInt(maxIdLotto.trim())+1;
 						} catch (NumberFormatException e) {
 							numero = 0;
 						}

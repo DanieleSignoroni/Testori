@@ -185,6 +185,8 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 		lotto.setIdLotto(lt.getIdLotto());
 		lotto.setQtaInUMPrm(lt.getQuantita());
 		lotto.setQtaInUMAcq(lt.getQuantita());
+		lotto.getQtaPropostaEvasione().setQuantitaInUMRif(lt.getQuantita());
+		lotto.getQtaPropostaEvasione().setQuantitaInUMPrm(lt.getQuantita());
 		return lotto;
 	}
 
