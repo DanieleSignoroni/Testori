@@ -31,10 +31,11 @@ public class CreaLottiTestoriNuovoSave extends Save {
 
 	@Override
 	public void afterProcessAction(BODataCollector boDC, ServletEnvironment se) throws ServletException, IOException {
-		//super.afterProcessAction(boDC, se);
 		if(se.isErrorListEmpity()) {
-			String url = "it/testori/thip/magazzino/generalemag/CreaLottiTestoriTestata.jsp";
-			se.getRequest().setAttribute("CreaLottiTestoriNuovo", boDC.getBo());
+			String url = "it/testori/thip/magazzino/generalemag/CreaLottiTestoriCambioJsp.jsp";
+			url += "?jspName=it/testori/thip/magazzino/generalemag/CreaLottiTestoriTestata.jsp";
+			url += "&"+CLASS_NAME+"="+boDC.getClassADCollection().getClassName();
+			se.getRequest().getSession().setAttribute("CreaLottiTestoriNuovo", boDC.getBo());
 			se.sendRequest(getServletContext(), url, false);
 		}else {
 			super.afterProcessAction(boDC, se);

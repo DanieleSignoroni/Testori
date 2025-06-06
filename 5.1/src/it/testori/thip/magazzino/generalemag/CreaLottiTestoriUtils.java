@@ -42,10 +42,10 @@ public class CreaLottiTestoriUtils {
 	public static final char CONTO_LAVORO = 'T';
 	public static final char ACQUISTO = 'F';
 
-	public static final String STMT_MAX_ID_LOTTO = "SELECT MAX("+LottoTM.ID_LOTTO+") "
+	public static final String STMT_MAX_ID_LOTTO = "SELECT MAX(SUBSTRING(ID_LOTTO, 5, 15)) "
 			+ "FROM "+LottoTM.TABLE_NAME+" "
 			+ "WHERE "+LottoTM.ID_AZIENDA+" = ? "
-			+ "  AND SUBSTRING("+LottoTM.ID_LOTTO+", 1, 3) = ? "
+			+ "  AND SUBSTRING("+LottoTM.ID_LOTTO+", 1, 4) = ? "
 			+ "";
 
 	public static String buildNextIdProgressivoLotto(char tipoCodificaLotto, char Provenienza) {
@@ -83,16 +83,15 @@ public class CreaLottiTestoriUtils {
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					String maxIdLotto = rs.getString(1);
+					String maxIdLotto = rs.getString(1).trim();
 					if(maxIdLotto == null) {
 						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", 1);
 						return suffissoFormattato;
-					}else if (maxIdLotto != null && maxIdLotto.startsWith(prefisso)) {
-						String suffisso = maxIdLotto.substring(prefisso.length());
+					}else {
 						int numero = 0;
 
 						try {
-							numero = Integer.parseInt(suffisso);
+							numero = Integer.parseInt(maxIdLotto)+1;
 						} catch (NumberFormatException e) {
 							numero = 0;
 						}

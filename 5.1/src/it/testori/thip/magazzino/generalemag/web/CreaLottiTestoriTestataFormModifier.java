@@ -19,6 +19,7 @@ import it.testori.thip.magazzino.generalemag.CreaLottiTestoriNuovo;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriTestata;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
 import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
+import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.cs.ColonneFiltri;
 
 /**
@@ -44,53 +45,62 @@ public class CreaLottiTestoriTestataFormModifier extends WebFormModifier {
 	public void writeHeadElements(JspWriter out) throws IOException {
 		CreaLottiTestoriTestata bo = (CreaLottiTestoriTestata) getBODataCollector().getBo();
 		if(getMode() == OpenType.NEW) {
-			CreaLottiTestoriNuovo prec = (CreaLottiTestoriNuovo) getServletEnvironment().getRequest().getAttribute("CreaLottiTestoriNuovo");
-			try {
-				bo.setEqual(prec);
-			} catch (CopyException e) {
-				e.printStackTrace(Trace.excStream);
-			}
-			String[] params = bo.getChiaveSelezionato().split(ColonneFiltri.LISTA_SEP);
-			String className = params[0];
-			String thKey = params[1];
-			if(className.contains("DocumentoAcquistoRigaPrm")) {
+			CreaLottiTestoriNuovo prec = (CreaLottiTestoriNuovo) getServletEnvironment().getRequest().getSession().getAttribute("CreaLottiTestoriNuovo");
+			if(prec != null) {
+				getServletEnvironment().getRequest().getSession().removeAttribute("CreaLottiTestoriNuovo");
 				try {
-					DocumentoAcqRigaPrm docAcqRig = (DocumentoAcqRigaPrm) DocumentoAcqRigaPrm.elementWithKey(DocumentoAcqRigaPrm.class, thKey, PersistentObject.NO_LOCK);
-					if(docAcqRig != null) {
-						bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
-						bo.setSoggetto(docAcqRig.getIdFornitore());
-						bo.setArticolo(docAcqRig.getArticolo());
-					}
-				} catch (SQLException e) {
+					bo.setEqual(prec);
+					bo.setIdAzienda(Azienda.getAziendaCorrente());
+				} catch (CopyException e) {
 					e.printStackTrace(Trace.excStream);
 				}
-			}else if(className.contains("OrdineAcquistoRigaPrm")) {
-				try {
-					OrdineAcquistoRigaPrm docAcqRig = (OrdineAcquistoRigaPrm) OrdineAcquistoRigaPrm.elementWithKey(OrdineAcquistoRigaPrm.class, thKey, PersistentObject.NO_LOCK);
-					if(docAcqRig != null) {
-						bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
-						bo.setSoggetto(docAcqRig.getIdFornitore());
-						bo.setArticolo(docAcqRig.getArticolo());
+				String[] params = bo.getChiaveSelezionato().split(ColonneFiltri.LISTA_SEP);
+				String className = params[0];
+				String thKey = params[1];
+				if(className.contains("DocumentoAcquistoRigaPrm")) {
+					try {
+						DocumentoAcqRigaPrm docAcqRig = (DocumentoAcqRigaPrm) DocumentoAcqRigaPrm.elementWithKey(DocumentoAcqRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+						if(docAcqRig != null) {
+							bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
+							bo.setSoggetto(docAcqRig.getIdFornitore());
+							bo.setArticolo(docAcqRig.getArticolo());
+						}
+					} catch (SQLException e) {
+						e.printStackTrace(Trace.excStream);
 					}
-				} catch (SQLException e) {
-					e.printStackTrace(Trace.excStream);
+				}else if(className.contains("OrdineAcquistoRigaPrm")) {
+					try {
+						OrdineAcquistoRigaPrm docAcqRig = (OrdineAcquistoRigaPrm) OrdineAcquistoRigaPrm.elementWithKey(OrdineAcquistoRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+						if(docAcqRig != null) {
+							bo.setDocumento(docAcqRig.getTestata().getNumeroDocumentoFormattato());
+							bo.setSoggetto(docAcqRig.getIdFornitore());
+							bo.setArticolo(docAcqRig.getArticolo());
+						}
+					} catch (SQLException e) {
+						e.printStackTrace(Trace.excStream);
+					}
 				}
-			}
-			String lottoPartenza = bo.getIdLotto();
-			Integer progressivo = Integer.valueOf(lottoPartenza.substring(4));
-			BigDecimal numeroConfezioni = BigDecimal.valueOf(bo.getNumeroConfezioni());
-			BigDecimal qtaPerConfezione = bo.getQuantita().divide(numeroConfezioni, 6, RoundingMode.HALF_UP);
+				String lottoPartenza = bo.getIdLotto();
+				Integer progressivo = Integer.valueOf(lottoPartenza.substring(4));
+				BigDecimal numeroConfezioni = BigDecimal.valueOf(bo.getNumeroConfezioni());
+				BigDecimal qtaPerConfezione = bo.getQuantita().divide(numeroConfezioni, 6, RoundingMode.HALF_UP);
 
-			for (int i = 0; i < numeroConfezioni.intValue(); i++) {
-				CreaLottiTestoriDettaglio dett = (CreaLottiTestoriDettaglio) Factory.createObject(CreaLottiTestoriDettaglio.class);
-				dett.setQuantita(qtaPerConfezione);
+				for (int i = 0; i < numeroConfezioni.intValue(); i++) {
+					CreaLottiTestoriDettaglio dett = (CreaLottiTestoriDettaglio) Factory.createObject(CreaLottiTestoriDettaglio.class);
+					dett.setQuantita(qtaPerConfezione);
 
-				dett.setIdLotto(lottoPartenza.substring(0,4) + String.format("%0" + 5 + "d", progressivo));
+					dett.setIdLotto(lottoPartenza.substring(0,4) + String.format("%0" + 5 + "d", progressivo));
 
-				dett.setNumeroRocche(bo.getNumeroRocche());
-				bo.getLottiDettaglio().add(dett);
+					dett.setNumeroRocche(bo.getNumeroRocche());
+					bo.getLottiDettaglio().add(dett);
 
-				progressivo++;
+					progressivo++;
+				}
+			}else {
+				//.Errore hanno refreshato quindi chiudo
+				out.println("<script>");
+				out.println("window.close();");
+				out.println("</script>");
 			}
 
 		}

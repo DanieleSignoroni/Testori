@@ -143,6 +143,9 @@
   YCreaLottiTestoriTestataQuantita.write(out); 
 %>
 </td>
+											<td>
+												<button id="bottoneConferma" name="bottoneConferma" onclick="conferma()" type="button">Conferma</button>
+											</td>
 										</tr>
 									</tbody>
 								</table>

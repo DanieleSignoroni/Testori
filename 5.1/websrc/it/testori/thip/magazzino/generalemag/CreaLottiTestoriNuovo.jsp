@@ -230,8 +230,7 @@
 									</tr>
 									<tr>
 										<td>
-											<button id="bottoneConferma" name="bottoneConferma" onclick="conferma()" style="width: 125px; display: inline; margin-top: 2.5rem; margin-left: 1rem" type="button">Conferma
-												modifica</button>
+											<button id="bottoneConferma" name="bottoneConferma" onclick="conferma()" style="width: 125px; display: inline; margin-top: 2.5rem; margin-left: 1rem" type="button">Conferma</button>
 										</td>
 									</tr>
 								</table>

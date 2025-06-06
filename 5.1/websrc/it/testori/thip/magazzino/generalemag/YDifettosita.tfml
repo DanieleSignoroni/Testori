@@ -1,0 +1,26 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YDifettosita"
+    name="YDifettositaForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    jsLibraryName="it/testori/thip/magazzino/generalemag/YDifettosita.js"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <menubar  name="myMenuBar">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </menubar>
+    <toolbar name="myToolBar" imgwidth="16" imgheight="16">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </toolbar>
+    <textinput name="IdAzienda" classAD="IdAzienda"/>
+    <tabbed name="mytabbed" height="100%" width="100%">
+      <tab name="tab1" resourceFile="it.testori.thip.magazzino.generalemag.resources.YDifettosita" resourceID="tab1">
+        <textinput name="Codice" classAD="Codice"/>
+        <textinput name="Descrizione" classAD="Descrizione"/>
+      </tab>
+    </tabbed>
+  </form>
+</tfml>
+

@@ -1,7 +1,4 @@
 
-Elaborazione file comandi W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\DROP_YMODPRO_ATV.TDDML.
-DROP TABLE THIPPERS.YMODPRO_ATV
-#ERRORE#
-********** CODICE ERRORE = 3701  **********
-Non è possibile eliminare l'oggetto 'THIPPERS.YMODPRO_ATV' di tipo tabella, perché inesistente o perché non si dispone dell'autorizzazione.
-
+Elaborazione file comandi W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00002\tddml\2_CONSTRAINT.TDDML.
+ALTER TABLE THIPPERS.YDIFETTOSITA_MISURE ADD CONSTRAINT Azienda_2098307502 FOREIGN KEY (ID_AZIENDA)
+        REFERENCES THIP.AZIENDE_ESTESE
