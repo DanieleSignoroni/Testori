@@ -15,6 +15,8 @@ import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
 import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
 import it.thera.thip.cs.ColonneFiltri;
+import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
+import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 
 /**
  * <p></p>
@@ -65,6 +67,28 @@ public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
 						if(docAcqRig.isLavorazioneEsterna()) {
 							tipoProvenienza = CreaLottiTestoriUtils.CONTO_LAVORO;
 						}
+						bo.setIdLotto(CreaLottiTestoriUtils.buildNextIdProgressivoLotto(docAcqRig.getArticolo().getArticoloDatiMagaz().getCodAutLotAcq(),tipoProvenienza));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("AttivitaEsecProdotto")) {
+				try {
+					AttivitaEsecProdotto docAcqRig = (AttivitaEsecProdotto) AttivitaEsecProdotto.elementWithKey(AttivitaEsecProdotto.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						bo.setQuantita(docAcqRig.getQtaRichiestaUMPrm());
+						char tipoProvenienza = CreaLottiTestoriUtils.PRODUZIONE;
+						bo.setIdLotto(CreaLottiTestoriUtils.buildNextIdProgressivoLotto(docAcqRig.getArticolo().getArticoloDatiMagaz().getCodAutLotAcq(),tipoProvenienza));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("DocumentoPrdRigaVersam")) {
+				try {
+					DocumentoPrdRigaVersamento docAcqRig = (DocumentoPrdRigaVersamento) DocumentoPrdRigaVersamento.elementWithKey(DocumentoPrdRigaVersamento.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						bo.setQuantita(docAcqRig.getServizioQta().getQuantitaInUMPrm());
+						char tipoProvenienza = CreaLottiTestoriUtils.PRODUZIONE;
 						bo.setIdLotto(CreaLottiTestoriUtils.buildNextIdProgressivoLotto(docAcqRig.getArticolo().getArticoloDatiMagaz().getCodAutLotAcq(),tipoProvenienza));
 					}
 				} catch (SQLException e) {

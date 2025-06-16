@@ -1,0 +1,140 @@
+<!-- Fix 6285: eliminato campo nascosto IdConfigurazione introdotto con la fix 6002 -->
+
+<tfml>
+
+<generator type="indipendentRowForm"/>
+
+<form classHdr="AttivitaEsecProdotto"
+			errorList="yes"
+			inputFont="Arial,10"
+			menubar="no"
+			name="form"
+			submitReset="none"
+			toolbar="yes"
+			servlet="it.thera.thip.produzione.ordese.web.AttivitaEsecProdottoFormActionAdapter"
+			collector="it.thera.thip.produzione.ordese.web.AttivitaEsecProdottoDC"
+			webFormModifierClass="it.thera.thip.produzione.ordese.web.AttivitaEsecProdottoWebFormModifier"
+			onLoadPresent="yes"
+      >
+
+<toolbar name="myToolBar" imgwidth="16" imgheight="16">
+	<import file="it/thera/thip/produzione/ordese/defobjMenuOrdineEsec.tfml"/>
+</toolbar>
+
+<tabbed name="mytabbed" height="100%" width="100%">
+	<tab name="Tab1" resourceFile="it.thera.thip.cs.resources.Cs" resourceID="DatiGenerali">
+		<textinput classAD="IdAzienda" name="IdAzienda"/>
+		<textinput classAD="IdAnnoOrdine" name="IdAnnoOrdine"/>
+		<textinput classAD="IdNumeroOrdine" name="IdNumeroOrdine"/>
+		<textinput classAD="IdRigaAttivita" name="IdRigaAttivita"/>
+		<textinput classAD="IdRigaProdotto" name="IdRigaProdotto"/>
+		<textinput classAD="IdArticOrdine" name="IdArticOrdine"/>
+		<textinput classAD="NodoDesc" name="NodoDesc"/>
+		<textinput classAD="DescrizioneOrdine" name="DescrizioneOrdine"/>
+		<textinput classAD="DescrizioneRidOrdine" name="DescrizioneRidOrdine"/>
+		<textinput classAD="IdUMSecMagArt" name="IdUMSecMagArt"/>
+		<textinput classAD="QtaBase" name="QtaBase"/>
+		<textinput classAD="IdCommessaArticolo" name="IdCommessaArticolo"/>
+		<textinput classAD="IdCommessaDesc" name="IdCommessaDesc"/>
+		<textinput classAD="IdVersOrdine" name="IdVersOrdine"/>
+		<textinput classAD="IdVersOrdineDesc" name="IdVersOrdineDesc"/>
+		<textinput classAD="IdConfigOrdine" name="IdConfigOrdine"/>
+		<textinput classAD="IdConfigOrdineDesc" name="IdConfigOrdineDesc"/>
+		<combobox classAD="TipoProdotto" name="TipoProdotto" onChange="checkTipoProdotto()"/>
+		<articolomultisearchform classRD="Articolo" name="Articolo" onKeyChange="fillDescrizioneFields()"/>
+		<articolomultisearchform classRD="ArtScelte" name="ArtScelte" onKeyChange="fillAttivitaProdProdFieldsScelte()"/>
+		<multisearchform classRD="Versione" name="Versione"/>
+		<configurazionemultisearchform classRD="Configurazione" name="Configurazione" extraRelatedClassAD="IdAzienda, IdConfigurazione"/>
+		<!--Fix 28762 Inizio-->
+		<!--<multisearchform classRD="Commessa" name="Commessa"/>-->
+		<multisearchform classRD="Commessa" name="Commessa" additionalRestrictConditions="IdCommessaArticolo,IdCommessaAppartenenza" specificDOList="it.thera.thip.base.commessa.web.RicercaCommessaDOList"/>
+		<!--Fix 28762 Fine-->
+		<subform classCD="Descrizione" name="Descrizione"/>
+		<textinput classAD="CoeffProduzione" name="CoeffProduzione"/>
+		<textinput classAD="IdUMTecnica" name="IdUMTecnica"/>
+		<!-- FIX 8137 - inizio -->
+		<!-- Vecchio codice -->
+		<!--<multisearchform classRD="Magazzino" name="Magazzino"/>-->
+		<!-- Nuovo codice -->
+		<multisearchform classRD="Magazzino" name="Magazzino" specificDOList="it.thera.thip.produzione.ordese.web.AttivitaEsecProdottoDOList" additionalRestrictConditions="ClientePresenteInTestata,Foo"/>
+		<!-- FIX 8137 - fine -->
+		<subform classCD="DatiComuniEstesi" name="Stato"/>
+	</tab>
+	<tab name="Tab2" resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="AltriDatiTab">
+		<combobox classAD="AzioneSuDispon" name="AzioneSuDispon"/>
+		<combobox classAD="PoliticaConsVersam" name="PoliticaConsVersam"/>
+		<checkbox classAD="EsponilnBollaVersam" name="EsponiInBollaVersam"/>
+		<checkbox classAD="EsponilnTagliandoldent" name="EsponilnTagliandoldent"/>
+		<textinput classAD="CostoRiferimento" name="CostoRiferimento"/>
+                <!--Fix 21875 Inizio-->
+                <combobox classAD="TipiCicloAmmessi"  name="TipiCicloAmmessi" onChange="checkTipoCiclo();"/>
+                <doublelist name="TipiCicloList"
+                            classCD="TipiCicloList"
+                            visiblerows="3" cols="15"
+                            displayClassAD="IdTipoCicAzn"
+                            resourceFile="it.thera.thip.datiTecnici.modpro.resources.AttivitaProduttiva"
+                            leftResourceId="Disponibili"
+                            rightResourceId="Scelti"
+                            getAvailableElements="getTipoCicloAzElements"/>
+                <!--Fix 21875 Fine-->
+	</tab>
+	<tab name="Tab3" resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="QuantitaEDateTab">
+		<label resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="Quantita" name="QuantitaLabel"/>
+		<textinput classAD="DescrizioneUMPrmMag" name="DescrizioneUMPrmMag"/>
+		<textinput classAD="DescrizioneUMSecMag" name="DescrizioneUMSecMag"/>
+   	 <textinput classAD="QtaRichiestaUMPrm" name="QtaRichiestaUMPrm" onChange="fillQtaSec(false)"/>
+     <textinput classAD="QtaRichiestaUMSec" name="QtaRichiestaUMSec" onChange="fillQtaPrm(false)"/>
+     	<checkbox classAD="RicalcoloQtaFattoreConv" name="RicalcoloQtaFattoreConv"/>
+		<textinput classAD="QtaVersataUMPrm" name="QtaVersataUMPrm"/>
+		<textinput classAD="QtaVersataUMSec" name="QtaVersataUMSec"/>
+		<textinput classAD="QtaResiduaUMPrm" name="QtaResiduaUMPrm"/>
+		<textinput classAD="QtaResiduaUMSec" name="QtaResiduaUMSec"/>
+		<label resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="Date" name="DateLabel"/>
+		<label resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="Settimana" name="SettimanaLabel"/>
+		<textinput classAD="DataPrevistaDispon" name="DataPrevistaDispon" showCalendarBtn="no" onChange="weekNumeroPrevistaDisponDate()"/>
+		<subform classCD="DateVersamenti" name="DateVersamenti" formJSPName="it/thera/thip/produzione/ordese/DateRangeSettVersamenti.jsp"/>
+		<combobox classAD="StatoVersamento" name="StatoVersamento" onChange="enableBattoneSaldaRiapriProdotto();"/>
+		<checkbox classAD="SaldoManuale" name="SaldoManuale" onClick="enableBattoneSaldaRiapriProdotto();"/>
+		<button name="SaldaVersamento" resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="SaldaVersamento" script="ConfermaSaldaVersamento()"/>
+		<button name="RiapriVersamento" resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="RiapriVersamento" script="ConfermaRiapriVersamento()"/>
+	</tab>
+	<tab name="tab4" resourceFile="it.thera.thip.produzione.ordese.resources.AttivitaEsecProdotto" resourceID="LottiTab">
+	<!-- Softre -->
+				<button name="CodificaLottiTestori" resourceFile="it.testori.thip.magazzino.generalemag.resources.LottiTestori" resourceID="btnCreaLotti"/>
+				<!-- Griglia Lotti -->
+		<editgrid classCD="LottiProdotti" name="LottiProdotti" visiblerows="3" type="include">
+			<!-- 21883 inizio-->
+			<!--column classAD="IdLotto"></column-->
+		  <column classAD="IdLotto" hideAsDefault="yes"/>
+		  <column classAD="Lotto.IdLottoProdotto" hideAsDefault="yes"></column>
+		  <column classAD="Lotto.IdLottoPrdFormattato"></column>
+    	<!-- 21883 fine -->	
+			<column classAD="QtaRichiestaUMPrm"></column>
+			<column classAD="QtaVersataUMPrm"></column>
+			<column classAD="StatoLotto"></column>
+			<!-- Fix 6002 inizio -->
+			<include nameList="DeleteRow">
+				<actionItem
+					name="GestioneMatricole"
+					action="gestioneMatricole()"
+					disableOnShow="yes"
+					resourceFile="it.thera.thip.magazzino.matricole.resources.LottoMatricola"
+					resourceID="GestioneMatricoleBtn"
+				>
+				</actionItem>
+			</include>
+			<!-- Fix 6002 fine -->
+		</editgrid>
+	</tab>
+	<tab name="Tab5" resourceFile="it.thera.thip.cs.resources.Cs" resourceID="DescrizioniNLS">
+		<subform classCD="Descrizione" name="DescNLS" formJSPName="it/thera/thip/cs/DescrizioneInLingua.jsp"/>
+	</tab>
+</tabbed>
+
+<!-- FIX 8137 - inizio -->
+<textinput classAD="ClientePresenteInTestata" name="ClientePresenteInTestata"/>
+<!-- FIX 8137 - fine -->
+
+</form>
+
+</tfml>

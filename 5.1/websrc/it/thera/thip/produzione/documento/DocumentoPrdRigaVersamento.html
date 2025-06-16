@@ -1,0 +1,148 @@
+<!-- Fix 6285: eliminato campo nascosto IdConfigurazione introdotto con la fix 6002 -->
+
+<html>
+<head></head>
+<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
+
+<form name="DocumentoPrdRigaVersamForm">
+<table height="100%" width="100%" cellspacing="0" cellpadding="2" id="emptyborder">
+	<tr>
+		<td style="height:0"><span class="menubar" id="myMenuBar"/></td>
+	</tr>
+	<tr>
+		<td style="height:0"><span class="toolbar" id="myToolBar"/></td>
+	</tr>
+	<tr>
+		<td>
+			<span class ="tabbed" id="myTabbed">
+				<span class="tab" id="tabDatiGen">
+					<table border="0" style="margin: 7 7 7 7;" cellspacing="2" cellpadding="2">
+						<tr>
+							<td><input type="hidden" name="IdAzienda" id="IdAzienda"/></td>
+							<td><input type="hidden" id="AnnoDocumento" name="AnnoDocumento"/></td>
+							<td><input type="hidden" id="NumeroDocumento" name="NumeroDocumento"/></td>
+							<td><input type="hidden" id="NumeroRigaDocumento" name="NumeroRigaDocumento"/></td>
+							<td><input type="hidden" id="GesArticoloLotti" name="GesArticoloLotti"/></td>
+						</tr>
+						<tr>
+							<td width="130"><label for="CausaleMagVrs">Causale mag.</label></td>
+							<td nowrap="true" colspan="2"><span class="multisearchform" id="CausaleMagVrs"/></td>
+						</tr>
+						<tr id="vrsDiv">
+							<td><label for="RigaVersamento">Riga versamento</label></td>
+							<td nowrap="true" colspan="2"><span class="multisearchform" id="RigaVersamento"/></td>
+						</tr>
+						<tr>
+							<td><label for="TipoProdotto">Tipo prodotto</label></td>
+							<td><select name="TipoProdotto" id="TipoProdotto" style="width: 210px;"><option></option></select></td>
+						</tr>
+						<tr id="azDispDiv">
+							<td><label for="AzioneSuDisp">Azione su disponibilita</label></td>
+							<td><select name="AzioneSuDisp" id="AzioneSuDisp" style="width: 210px;"><option></option></select></td>
+						</tr>
+						<tr>
+							<td><label for="Articolo">Articolo</label></td>
+							<td nowrap="true" colspan="2"><span class="articolomultisearchform" id="Articolo"/></td>
+						</tr>
+						<tr>
+							<td><label for="Versione">Versione</label></td>
+							<td nowrap="true" colspan="2"><span class="multisearchform" id="Versione"/></td>
+						</tr>
+						<tr>
+							<td><label for="Configurazione">Configurazione</label></td>
+							<td nowrap="true" colspan="2"><span class="configurazionemultisearchform" id="Configurazione"/></td>
+						</tr>
+						<tr>
+							<td><label for="Commessa">Commessa</label></td>
+							<td nowrap="true" colspan="2"><span class="multisearchform" id="Commessa"/></td>
+						</tr>
+						<tr>
+							<td width="50%" colspan="3">
+								<fieldset id="Quantita" name="Quantita">
+									<legend align="top">
+										<label id="QuantitaLabel" name="QuantitaLabel"/>
+									</legend>
+									<table cellspacing="5" cellpadding="0">
+										<tr>
+											<td width="98" nowrap="true"><label for="QuantitaPrm">QuantitaPrm</label></td><!-- Fix 39405 modefica il width -->
+											<td><input type="text" name="QuantitaPrm" id="QuantitaPrm"/></td>
+											<td nowrap="true"><span class="multisearchform" id="UMQuantitaPrm"/></td>
+										</tr>
+										<tr>
+											<td nowrap="true"><label for="QuantitaSec">QuantitaSec</label></td>
+											<td><input type="text" name="QuantitaSec" id="QuantitaSec"/></td>
+											<td nowrap="true"><span class="multisearchform" id="UMQuantitaSec"/></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td colspan="2"><input type="checkbox" id="RicalcoloQtaFattoreConv" name="RicalcoloQtaFattoreConv"/></td>
+											<td></td>
+										</tr>
+									</table>
+								</fieldset>
+							</td>
+							<!-- Inizio 5142 -->
+							<td width="50%">
+							<fieldset name="QuantitaScarto">
+							<legend align="top">
+								<label id="QuantitaScartoLabel" name="QuantitaScartoLabel"/>
+							</legend>
+							<table cellspacing="5" cellpadding="0" border="0">
+								<tr>
+									<td nowrap="true"><label for="QtaScartoPrm">QtaScartoPrm</label></td>
+									<td><input type="text" name="QtaScartoPrm" id="QtaScartoPrm"/></td>
+								</tr>
+								<tr>
+									<td nowrap="true"><label for="QtaScartoSec">QtaScartoSec</label></td>
+									<td><input type="text" name="QtaScartoSec" id="QtaScartoSec"/></td>
+								</tr>
+								<tr><td>&nbsp;</td></tr>
+							</table>
+							</fieldset>
+							</td>
+            				<!-- Fine 5142 -->
+						</tr>
+						<tr>
+							<td nowrap="true"><label for="Magazzino">Magazzino</label></td>
+							<td nowrap="true" colspan="2"><span class="multisearchform" id="Magazzino"/></td>
+						</tr>
+						<tr>
+							<td><label for="CostoRiferimento">CostoRiferimento</label></td>
+							<td><input type="text" name="CostoRiferimento" id="CostoRiferimento"/></td>
+						</tr>
+						<tr id="SaldoVrs">
+							<td><label for="Saldo">Saldo</label></td>
+							<td><select name="Saldo" id="Saldo" style="width: 210px;"><option></option></select></td>
+						</tr>
+					</table>
+				</span>
+				<span class="tab" id="tabLotti">
+				<table cellspacing="2" cellpadding="2" style="padding: 3px; width: 100%">
+							    <tr>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" colspan ="1" id="SezCodificaLottiTestori">
+										<button style="width: 75px" name="CodificaLottiTestori" id="CodificaLottiTestori" 
+										type="button" onClick="codificaLottiTestori()">CodificaLottiTestori</button>
+									</td>
+									</tr>
+									</table>
+					<table width="90%" border="0" style="margin: 7 7 7 7;">
+						<tr>
+							<td valign="top"><span id="LottiGrid" class="editgrid"></span></td>
+						</tr>
+					</table>
+				</span>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td style="height:0"><span class="errorlist"/></td>
+	</tr>
+</table>
+
+</form>
+<script language='JavaScript1.2' type='text/javascript' src='it/thera/thip/produzione/documento/DocumentoPrdLotti.js'></script>
+<script language='JavaScript1.2' type='text/javascript' src='it/thera/thip/produzione/documento/UtilityDocumenti.js'></script>
+</body>
+</html>
