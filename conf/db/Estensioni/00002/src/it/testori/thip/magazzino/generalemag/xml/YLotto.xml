@@ -35,6 +35,61 @@
             <multisearchform name="DifettositaMisure" classRD="DifettositaMisure"/>
           </td>
         </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="Telaio"></label>
+          </td>
+          <td valign="top">
+            <textinput name="Telaio" classAD="Telaio"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="AltezzaMinima"></label>
+          </td>
+          <td valign="top">
+            <textinput name="AltezzaMinima" classAD="AltezzaMinima"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="AltezzaMassima"></label>
+          </td>
+          <td valign="top">
+            <textinput name="AltezzaMassima" classAD="AltezzaMassima"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="PesoKg"></label>
+          </td>
+          <td valign="top">
+            <textinput name="PesoKg" classAD="PesoKg"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="PesoCalcolatoPezzo"></label>
+          </td>
+          <td valign="top">
+            <textinput name="PesoCalcolatoPezzo" classAD="PesoCalcolatoPezzo"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="PesoCalcolatoArrotondato"></label>
+          </td>
+          <td valign="top">
+            <textinput name="PesoCalcolatoArrotondato" classAD="PesoCalcolatoArrotondato"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <checkbox classAD="StEtichetta" name="StEtichetta"/>
+          </td>
+          <td valign="top">
+          </td>
+        </tr>
       </table>
     </tab>
   </formcustomization>

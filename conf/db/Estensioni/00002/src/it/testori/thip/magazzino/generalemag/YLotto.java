@@ -6,7 +6,7 @@
  * null
  *
  * <br></br><b>Copyright (C) : Thera SpA</b>
- * @author Wizard 16/06/2025 at 09:58:05
+ * @author Wizard 16/06/2025 at 15:15:10
  */
 /*
  * Revisions:
@@ -37,6 +37,41 @@ public class YLotto extends Lotto {
   protected BigDecimal iQuantitaOriginale;
 
   /**
+   * Attributo iTelaio
+   */
+  protected String iTelaio;
+
+  /**
+   * Attributo iAltezzaMinima
+   */
+  protected BigDecimal iAltezzaMinima;
+
+  /**
+   * Attributo iAltezzaMassima
+   */
+  protected BigDecimal iAltezzaMassima;
+
+  /**
+   * Attributo iPesoKg
+   */
+  protected BigDecimal iPesoKg;
+
+  /**
+   * Attributo iPesoCalcolatoPezzo
+   */
+  protected BigDecimal iPesoCalcolatoPezzo;
+
+  /**
+   * Attributo iPesoCalcolatoArrotondato
+   */
+  protected BigDecimal iPesoCalcolatoArrotondato;
+
+  /**
+   * Attributo iStEtichetta
+   */
+  protected boolean iStEtichetta = true;
+
+  /**
    * Attributo iDifettosita
    */
   protected Proxy iDifettosita = new Proxy(it.testori.thip.magazzino.generalemag.YDifettosita.class);
@@ -57,6 +92,7 @@ public class YLotto extends Lotto {
    *
    */
   public YLotto() {
+    setStEtichetta(true);
     setCodiceAzienda(Azienda.getAziendaCorrente());
   }
 
@@ -116,6 +152,209 @@ public class YLotto extends Lotto {
    */
   public BigDecimal getQuantitaOriginale() {
     return iQuantitaOriginale;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param telaio
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setTelaio(String telaio) {
+    this.iTelaio = telaio;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return String
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public String getTelaio() {
+    return iTelaio;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param altezzaMinima
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setAltezzaMinima(BigDecimal altezzaMinima) {
+    this.iAltezzaMinima = altezzaMinima;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return BigDecimal
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public BigDecimal getAltezzaMinima() {
+    return iAltezzaMinima;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param altezzaMassima
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setAltezzaMassima(BigDecimal altezzaMassima) {
+    this.iAltezzaMassima = altezzaMassima;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return BigDecimal
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public BigDecimal getAltezzaMassima() {
+    return iAltezzaMassima;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param pesoKg
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setPesoKg(BigDecimal pesoKg) {
+    this.iPesoKg = pesoKg;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return BigDecimal
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public BigDecimal getPesoKg() {
+    return iPesoKg;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param pesoCalcolatoPezzo
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setPesoCalcolatoPezzo(BigDecimal pesoCalcolatoPezzo) {
+    this.iPesoCalcolatoPezzo = pesoCalcolatoPezzo;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return BigDecimal
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public BigDecimal getPesoCalcolatoPezzo() {
+    return iPesoCalcolatoPezzo;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param pesoCalcolatoArrotondato
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setPesoCalcolatoArrotondato(BigDecimal pesoCalcolatoArrotondato) {
+    this.iPesoCalcolatoArrotondato = pesoCalcolatoArrotondato;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return BigDecimal
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public BigDecimal getPesoCalcolatoArrotondato() {
+    return iPesoCalcolatoArrotondato;
+  }
+
+  /**
+   * Valorizza l'attributo. 
+   * @param stEtichetta
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public void setStEtichetta(boolean stEtichetta) {
+    this.iStEtichetta = stEtichetta;
+    setDirty();
+  }
+
+  /**
+   * Restituisce l'attributo. 
+   * @return boolean
+   */
+  /*
+   * Revisions:
+   * Date          Owner      Description
+   * 16/06/2025    Wizard     Codice generato da Wizard
+   *
+   */
+  public boolean getStEtichetta() {
+    return iStEtichetta;
   }
 
   /**

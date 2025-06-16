@@ -27,12 +27,27 @@ public class YLotto extends Lotto {
 
 	protected BigDecimal iQuantitaOriginale;
 
+	protected String iTelaio;
+
+	protected BigDecimal iAltezzaMinima;
+
+	protected BigDecimal iAltezzaMassima;
+
+	protected BigDecimal iPesoKg;
+
+	protected BigDecimal iPesoCalcolatoPezzo;
+
+	protected BigDecimal iPesoCalcolatoArrotondato;
+
+	protected boolean iStEtichetta = true;
+
 	protected Proxy iDifettosita = new Proxy(it.testori.thip.magazzino.generalemag.YDifettosita.class);
 
 	protected Proxy iDifettositamisure = new Proxy(it.testori.thip.magazzino.generalemag.YDifettositaMisure.class);
 
 	public YLotto() {
 		super();
+		setStEtichetta(true);
 		setCodiceAzienda(Azienda.getAziendaCorrente());
 	}
 
@@ -52,6 +67,69 @@ public class YLotto extends Lotto {
 
 	public BigDecimal getQuantitaOriginale() {
 		return iQuantitaOriginale;
+	}
+
+	public void setTelaio(String telaio) {
+		this.iTelaio = telaio;
+		setDirty();
+	}
+
+	public String getTelaio() {
+		return iTelaio;
+	}
+
+	public void setAltezzaMinima(BigDecimal altezzaMinima) {
+		this.iAltezzaMinima = altezzaMinima;
+		setDirty();
+	}
+
+	public BigDecimal getAltezzaMinima() {
+		return iAltezzaMinima;
+	}
+
+	public void setAltezzaMassima(BigDecimal altezzaMassima) {
+		this.iAltezzaMassima = altezzaMassima;
+		setDirty();
+	}
+
+	public BigDecimal getAltezzaMassima() {
+		return iAltezzaMassima;
+	}
+
+	public void setPesoKg(BigDecimal pesoKg) {
+		this.iPesoKg = pesoKg;
+		setDirty();
+	}
+
+	public BigDecimal getPesoKg() {
+		return iPesoKg;
+	}
+
+	public void setPesoCalcolatoPezzo(BigDecimal pesoCalcolatoPezzo) {
+		this.iPesoCalcolatoPezzo = pesoCalcolatoPezzo;
+		setDirty();
+	}
+
+	public BigDecimal getPesoCalcolatoPezzo() {
+		return iPesoCalcolatoPezzo;
+	}
+
+	public void setPesoCalcolatoArrotondato(BigDecimal pesoCalcolatoArrotondato) {
+		this.iPesoCalcolatoArrotondato = pesoCalcolatoArrotondato;
+		setDirty();
+	}
+
+	public BigDecimal getPesoCalcolatoArrotondato() {
+		return iPesoCalcolatoArrotondato;
+	}
+
+	public void setStEtichetta(boolean stEtichetta) {
+		this.iStEtichetta = stEtichetta;
+		setDirty();
+	}
+
+	public boolean getStEtichetta() {
+		return iStEtichetta;
 	}
 
 	public void setDifettosita(YDifettosita difettosita) {
@@ -99,6 +177,16 @@ public class YLotto extends Lotto {
 		return objIdDifettosita;
 	}
 
+	/**
+	 * Valorizza l'attributo. 
+	 * @param difettositamisure
+	 */
+	/*
+	 * Revisions:
+	 * Date          Owner      Description
+	 * 16/06/2025    Wizard     Codice generato da Wizard
+	 *
+	 */
 	public void setDifettositamisure(YDifettositaMisure difettositamisure) {
 		String oldObjectKey = getKey();
 		String codiceAzienda = getCodiceAzienda();
@@ -132,16 +220,6 @@ public class YLotto extends Lotto {
 		return iDifettositamisure.getKey();
 	}
 
-	/**
-	 * Valorizza l'attributo. 
-	 * @param codiceAzienda
-	 */
-	/*
-	 * Revisions:
-	 * Date          Owner      Description
-	 * 16/06/2025    Wizard     Codice generato da Wizard
-	 *
-	 */
 	public void setCodiceAzienda(String codiceAzienda) {
 		super.setCodiceAzienda(codiceAzienda);
 
