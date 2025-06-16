@@ -1,0 +1,6 @@
+<B>2025-06-16 09:43:00</B>
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00002\tddml\2_DROP_YLOTTI.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>YLOTTI</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00002\tddml\2_YLOTTI.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00002\tddml\2_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>

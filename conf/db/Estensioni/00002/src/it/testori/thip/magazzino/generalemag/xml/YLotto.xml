@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<customization>
+  <formcustomization customizePosition="START_TABBED" customizeName="2">
+    <tab name="cust_tab1" resourceFile="it.testori.thip.magazzino.generalemag.resources.YLotto" resourceID="tab1">
+      <table style="width: 100%;">
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="NumeroRocche"></label>
+          </td>
+          <td valign="top">
+            <textinput name="NumeroRocche" classAD="NumeroRocche"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classAD="QuantitaOriginale"></label>
+          </td>
+          <td valign="top">
+            <textinput name="QuantitaOriginale" classAD="QuantitaOriginale"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classRD="Difettosita"></label>
+          </td>
+          <td valign="top">
+            <multisearchform name="Difettosita" classRD="Difettosita"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label classHdr="YLotto" classRD="DifettositaMisure"></label>
+          </td>
+          <td valign="top">
+            <multisearchform name="DifettositaMisure" classRD="DifettositaMisure"/>
+          </td>
+        </tr>
+      </table>
+    </tab>
+  </formcustomization>
+</customization>

@@ -9,3 +9,6 @@
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.acquisti.ordineAC.web.OrdineAcquistoRigaPrmCompletaFormModifier', 'it.testori.thip.acquisti.ordineAC.web.YOrdineAcquistoRigaPrmCompletaFormModifier', '0', 'N', 'N');
  	INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.acquisti.ordineAC.web.OrdineAcquistoRigaPrmFormActionAdapter', 'it.testori.thip.acquisti.ordineAC.web.YOrdineAcquistoRigaPrmFormActionAdapter', '0', 'N', 'N');
 	INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.base.generale.TrasmissioneMovimentiPthLogis', 'it.testori.thip.base.generale.YTrasmissioneMovimentiPthLogis', '0', 'N', 'N');
+	INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.magazzino.generalemag.Lotto', 'it.testori.thip.magazzino.generalemag.YLotto', '0', 'N', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.magazzino.generalemag.LottoTM', 'it.testori.thip.magazzino.generalemag.YLottoTM', '0', 'N', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('Lotto', 'YLotto', '1', 'N', 'N');

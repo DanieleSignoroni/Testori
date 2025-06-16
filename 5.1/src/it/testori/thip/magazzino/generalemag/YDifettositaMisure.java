@@ -1,43 +1,28 @@
-/*
- * @(#)YDifettositaMisure.java
- */
+package it.testori.thip.magazzino.generalemag;
+
+import com.thera.thermfw.common.*;
 
 /**
- * null
+ * <p></p>
  *
- * <br></br><b>Copyright (C) : Thera s.p.a.</b>
- * @author Wizard 06/06/2025 at 12:41:30
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 16/06/2025
+ * </p>
  */
+
 /*
  * Revisions:
- * Date          Owner      Description
- * 06/06/2025    Wizard     Codice generato da Wizard
- *
+ * Number   Date        Owner    Description
+ * 71XXX    16/06/2025  DSSOF3   Prima stesura
  */
-package it.testori.thip.magazzino.generalemag;
-import com.thera.thermfw.persist.*;
-import java.sql.*;
-import it.thera.thip.base.azienda.AziendaEstesa;
-import com.thera.thermfw.common.*;
 
 public class YDifettositaMisure extends YDifettositaMisurePO {
 
-  
-  
-  /**
-   * checkDelete
-   * @return ErrorMessage
-   */
-  /*
-   * Revisions:
-   * Date          Owner      Description
-   * 06/06/2025    Wizard     Codice generato da Wizard
-   *
-   */
-  public ErrorMessage checkDelete() {
-    /**@todo*/
-    return null;
-  }
+	public ErrorMessage checkDelete() {
+		return null;
+	}
 
 }
 
