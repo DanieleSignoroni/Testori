@@ -41,8 +41,7 @@ public class YDocumentoPrdRigaVersamentoModifier extends DocumentoPrdRigaVersame
 		DocumentoPrdRigaVersamento prodotto =
 				(DocumentoPrdRigaVersamento)getBODataCollector().getBo();
 		if(prodotto.isOnDB() &&
-				(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)
-						|| !CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE))) {
+				!CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
 			out.println("<script>");
 			out.println("document.getElementById(\"SezCodificaLottiTestori\").style.display = displayNone;");
 			out.println("</script>");

@@ -1,5 +1,6 @@
 package it.testori.thip.produzione.documento;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,5 +94,79 @@ public class YDocumentoPrdRigaVersamento extends DocumentoPrdRigaVersamento {
 			lotto.setQtaVrsUmSec(getQuantitaUmSec());
 			getLottiColl().add(lotto);
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void aggiornaLottoDummy()
+	{
+		BigDecimal qtaPrmRigaVrs = getQtaVersataUMPrmPrd() == null ? getQuantitaUmPrm() : getQtaVersataUMPrmPrd();
+		BigDecimal qtaSecRigaVrs = getQtaVersataUMSecPrd() == null ? getQuantitaUmSec() : getQtaVersataUMSecPrd();
+		if (getArticolo().isArticLotto()) {
+			BigDecimal sumPrm = new BigDecimal(0);
+			BigDecimal sumSec = new BigDecimal(0);
+			List lottiPrdList = getLottiColl();
+			for (int i = 0; i < lottiPrdList.size(); i++)
+			{
+				DocumentoPrdRigaLottoVrs lotto = (DocumentoPrdRigaLottoVrs)lottiPrdList.get(i);
+				if (!lotto.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+				{
+					sumPrm = sumPrm.add(lotto.getQtaVrsUmPrm());
+					//lotto.insertQuantiteSec();
+					BigDecimal qtaSec = lotto.getQtaVrsUmSec();
+					if (qtaSec != null)
+						sumSec = sumSec.add(qtaSec);
+				}
+			}
+			if (sumPrm.compareTo(qtaPrmRigaVrs) < 0)
+			{
+				BigDecimal diffPrm = qtaPrmRigaVrs.subtract(sumPrm);
+				DocumentoPrdRigaLottoVrs dummy = ricercaLottoProdottoDummy();
+				if (dummy == null)
+					dummy = creaLottoProdottoDummy();
+				dummy.setQtaVrsUmPrm(diffPrm);
+				if (qtaSecRigaVrs != null)
+				{
+					BigDecimal diffSec = qtaSecRigaVrs.subtract(sumSec);
+					dummy.setQtaVrsUmSec(diffSec);
+				}
+			}
+			else if (sumPrm.compareTo(qtaPrmRigaVrs) == 0)
+			{
+				DocumentoPrdRigaLottoVrs dummy = ricercaLottoProdottoDummy();
+				if (dummy != null)
+					lottiPrdList.remove(dummy);
+			}
+		}else if (!getArticolo().isArticLotto()){
+			DocumentoPrdRigaLottoVrs dummy = ricercaLottoProdottoDummy();
+			if (dummy == null) {
+				dummy = creaLottoProdottoDummy();
+				dummy.setQtaVrsUmPrm(qtaPrmRigaVrs);
+				dummy.setQtaVrsUmSec(qtaSecRigaVrs);
+			}
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public DocumentoPrdRigaLottoVrs ricercaLottoProdottoDummy(){
+		List lottiPrdList = getLottiColl();
+		for (int i = 0; i < lottiPrdList.size(); i++)
+		{
+			DocumentoPrdRigaLottoVrs lotto = (DocumentoPrdRigaLottoVrs)lottiPrdList.get(i);
+			if (lotto.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+				return lotto;
+		}
+
+		return null;
+	}
+
+	protected DocumentoPrdRigaLottoVrs creaLottoProdottoDummy() {
+		DocumentoPrdRigaLottoVrs lotto = (DocumentoPrdRigaLottoVrs)Factory.createObject(AttivitaEsecLottiPrd.class);
+		lotto.setIdAzienda(getIdAzienda());
+		lotto.setIdAnnoDoc(getIdAnnoDoc());
+		lotto.setIdNumeroDoc(getIdNumeroDoc());
+		lotto.setIdRigaDoc(getIdRigaDoc());
+		lotto.setIdArticolo(getRArticolo());
+		lotto.setIdLotto(Lotto.LOTTO_DUMMY);
+		return lotto;
 	}
 }

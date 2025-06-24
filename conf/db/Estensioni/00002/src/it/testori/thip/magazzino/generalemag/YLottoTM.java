@@ -6,12 +6,12 @@
  * YLottoTM
  *
  * <br></br><b>Copyright (C) : Thera SpA</b>
- * @author Wizard 16/06/2025 at 15:15:10
+ * @author Wizard 24/06/2025 at 15:05:16
  */
 /*
  * Revisions:
  * Date          Owner      Description
- * 16/06/2025    Wizard     Codice generato da Wizard
+ * 24/06/2025    Wizard     Codice generato da Wizard
  *
  */
 package it.testori.thip.magazzino.generalemag;
@@ -97,7 +97,7 @@ public class YLottoTM extends LottoTM {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    CodeGen     Codice generato da CodeGenerator
+   * 24/06/2025    CodeGen     Codice generato da CodeGenerator
    *
    */
   public YLottoTM() throws SQLException {
@@ -111,7 +111,7 @@ public class YLottoTM extends LottoTM {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    CodeGen     Codice generato da CodeGenerator
+   * 24/06/2025    CodeGen     Codice generato da CodeGenerator
    *
    */
   protected void initialize() throws SQLException {
@@ -126,7 +126,7 @@ public class YLottoTM extends LottoTM {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   protected void initializeRelation() throws SQLException {

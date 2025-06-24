@@ -6,12 +6,12 @@
  * null
  *
  * <br></br><b>Copyright (C) : Thera SpA</b>
- * @author Wizard 16/06/2025 at 15:15:10
+ * @author Wizard 24/06/2025 at 15:05:16
  */
 /*
  * Revisions:
  * Date          Owner      Description
- * 16/06/2025    Wizard     Codice generato da Wizard
+ * 24/06/2025    Wizard     Codice generato da Wizard
  *
  */
 package it.testori.thip.magazzino.generalemag;
@@ -88,7 +88,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public YLotto() {
@@ -103,7 +103,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setNumeroRocche(String numeroRocche) {
@@ -118,7 +118,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getNumeroRocche() {
@@ -132,7 +132,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setQuantitaOriginale(BigDecimal quantitaOriginale) {
@@ -147,7 +147,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getQuantitaOriginale() {
@@ -161,7 +161,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setTelaio(String telaio) {
@@ -176,7 +176,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getTelaio() {
@@ -190,7 +190,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setAltezzaMinima(BigDecimal altezzaMinima) {
@@ -205,7 +205,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getAltezzaMinima() {
@@ -219,7 +219,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setAltezzaMassima(BigDecimal altezzaMassima) {
@@ -234,7 +234,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getAltezzaMassima() {
@@ -248,7 +248,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setPesoKg(BigDecimal pesoKg) {
@@ -263,7 +263,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getPesoKg() {
@@ -277,7 +277,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setPesoCalcolatoPezzo(BigDecimal pesoCalcolatoPezzo) {
@@ -292,7 +292,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getPesoCalcolatoPezzo() {
@@ -306,7 +306,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setPesoCalcolatoArrotondato(BigDecimal pesoCalcolatoArrotondato) {
@@ -321,7 +321,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public BigDecimal getPesoCalcolatoArrotondato() {
@@ -335,7 +335,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setStEtichetta(boolean stEtichetta) {
@@ -350,7 +350,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public boolean getStEtichetta() {
@@ -364,7 +364,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setDifettosita(YDifettosita difettosita) {
@@ -388,7 +388,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public YDifettosita getDifettosita() {
@@ -402,7 +402,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setDifettositaKey(String key) {
@@ -423,7 +423,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getDifettositaKey() {
@@ -437,7 +437,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setIdDifettosita(String idDifettosita) {
@@ -453,7 +453,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getIdDifettosita() {
@@ -469,7 +469,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setDifettositamisure(YDifettositaMisure difettositamisure) {
@@ -493,7 +493,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public YDifettositaMisure getDifettositamisure() {
@@ -507,7 +507,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setDifettositamisureKey(String key) {
@@ -528,7 +528,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getDifettositamisureKey() {
@@ -542,7 +542,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setCodiceAzienda(String codiceAzienda) {
@@ -557,7 +557,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setIdDifettositaMisure(String idDifettositaMisure) {
@@ -573,7 +573,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public String getIdDifettositaMisure() {
@@ -590,7 +590,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   public void setEqual(Copyable obj) throws CopyException {
@@ -607,7 +607,7 @@ public class YLotto extends Lotto {
   /*
    * Revisions:
    * Date          Owner      Description
-   * 16/06/2025    Wizard     Codice generato da Wizard
+   * 24/06/2025    Wizard     Codice generato da Wizard
    *
    */
   protected void setCodiceAziendaInternal(String codiceAzienda) {
