@@ -18,3 +18,4 @@
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.documento.web.DocumentoPrdRigaVersamentoFAA', 'it.testori.thip.produzione.documento.web.YDocumentoPrdRigaVersamentoFAA', '0', 'N', 'N');
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.ordese.AttivitaEsecProdotto', 'it.testori.thip.produzione.ordese.YAttivitaEsecProdotto', '0', 'N', 'N');
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento', 'it.testori.thip.produzione.documento.YDocumentoPrdRigaVersamento', '0', 'N', 'N');
+ 	INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('Articolo', 'YArticolo', '1', 'N', 'N');

@@ -514,6 +514,50 @@ public class CreaLottiTestoriUtils {
 		return false;
 	}
 
+	public static boolean isArticoloGestioneSubbiFeltri(Articolo articolo, char provenienza) {
+		if(articolo == null)
+			return false;
+		switch (provenienza) {
+		case ACQUISTO:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotAcq() == YArticoloDatiMagaz.SUBBI_FELTRI)
+				return true;
+			break;
+		case CONTO_LAVORO:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotCl() == YArticoloDatiMagaz.SUBBI_FELTRI)
+				return true;
+			break;
+		case PRODUZIONE:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotProd() == YArticoloDatiMagaz.SUBBI_FELTRI)
+				return true;
+			break;
+		default:
+			break;
+		}
+		return false;
+	}
+
+	public static boolean isArticoloGestioneFilatiManufatti(Articolo articolo, char provenienza) {
+		if(articolo == null)
+			return false;
+		switch (provenienza) {
+		case ACQUISTO:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotAcq() == YArticoloDatiMagaz.FELTRI_MANUFATTI)
+				return true;
+			break;
+		case CONTO_LAVORO:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotCl() == YArticoloDatiMagaz.FELTRI_MANUFATTI)
+				return true;
+			break;
+		case PRODUZIONE:
+			if(articolo.getArticoloDatiMagaz().getCodAutLotProd() == YArticoloDatiMagaz.FELTRI_MANUFATTI)
+				return true;
+			break;
+		default:
+			break;
+		}
+		return false;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public List creaLottiAutomatici() {
 		List lotti = new ArrayList();

@@ -33,13 +33,16 @@ public class YOrdineAcquistoRigaPrmCompletaFormModifier extends OrdineAcquistoRi
 		super.writeHeadElements(out);
 		out.println(WebJSTypeList.getImportForJSLibrary("it/testori/thip/magazzino/generalemag/CreaLottiTestoriUtils.js", getServletEnvironment().getRequest()));
 	}
-	
+
 	@Override
 	public void writeFormEndElements(JspWriter out) throws IOException {
 		super.writeFormEndElements(out);
 		OrdineAcquistoRiga ordAcqRig =
 				(OrdineAcquistoRiga)getBODataCollector().getBo();
-		if(ordAcqRig.isOnDB() && !CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(ordAcqRig.getArticolo(), (ordAcqRig.isLavorazioneEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO))) {
+		char tipoProvenienza = ordAcqRig.isLavorazioneEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
+		if(ordAcqRig.isOnDB() &&
+				(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(ordAcqRig.getArticolo(), tipoProvenienza)
+						|| !CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(ordAcqRig.getArticolo(), tipoProvenienza))) {
 			out.println("<script>");
 			out.println("document.getElementById(\"SezCodificaLottiTestori\").style.display = displayNone;");
 			out.println("</script>");

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.thera.thermfw.persist.Factory;
 
-import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.magazzino.generalemag.PersDatiMagazzino;
@@ -35,7 +34,7 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 		if(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(getArticolo(), CreaLottiTestoriUtils.PRODUZIONE))
 			super.creaLottiAutomatici();
 		else {
-			if(getArticolo().getArticoloDatiMagaz().getCodAutLotProd() == YArticoloDatiMagaz.SUBBI_FELTRI) {
+			if(CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
 				creaLottiAutomaticiTestori();
 			}
 		}
@@ -75,7 +74,7 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 			lotto.setIdLotto(lt.getCodiceLotto());
 			lotto.setQtaRichiestaUMPrm(getQtaRichiestaLottoAutomaticoUMPrm());
 			lotto.setQtaRichiestaUMSec(getQtaRichiestaLottoAutomaticoUMSec());
-			
+
 			getLottiProdotti().add(lotto);
 		}
 	}

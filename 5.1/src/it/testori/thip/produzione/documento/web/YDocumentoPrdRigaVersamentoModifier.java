@@ -6,7 +6,6 @@ import javax.servlet.jsp.JspWriter;
 
 import com.thera.thermfw.web.WebJSTypeList;
 
-import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.documento.web.DocumentoPrdRigaVersamentoModifier;
@@ -41,8 +40,9 @@ public class YDocumentoPrdRigaVersamentoModifier extends DocumentoPrdRigaVersame
 		super.writeFormEndElements(out);
 		DocumentoPrdRigaVersamento prodotto =
 				(DocumentoPrdRigaVersamento)getBODataCollector().getBo();
-		if(prodotto.isOnDB() && (!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)
-				|| prodotto.getArticolo().getArticoloDatiMagaz().getCodAutLotProd() != YArticoloDatiMagaz.PEZZE)) {
+		if(prodotto.isOnDB() &&
+				(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)
+						|| !CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE))) {
 			out.println("<script>");
 			out.println("document.getElementById(\"SezCodificaLottiTestori\").style.display = displayNone;");
 			out.println("</script>");

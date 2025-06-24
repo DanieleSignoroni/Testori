@@ -42,7 +42,10 @@ public class YDocumentoAcqRigaCompletaFormModifier extends DocumentoAcqRigaCompl
 		super.writeFormEndElements(out);
 		DocumentoAcquistoRiga docAcqRig =
 				(DocumentoAcquistoRiga)getBODataCollector().getBo();
-		if(docAcqRig.isOnDB() && CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(docAcqRig.getArticolo(), (docAcqRig.getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO))) {
+		char tipoProvenienza = docAcqRig.getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
+		if(docAcqRig.isOnDB() &&
+				(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(docAcqRig.getArticolo(), tipoProvenienza)
+						|| !CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(docAcqRig.getArticolo(), tipoProvenienza))) {
 			out.println("<script>");
 			out.println("function insertAfter(el, referenceNode) { referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);}");
 			out.println("var btn = document.createElement('Button')");
