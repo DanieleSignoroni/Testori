@@ -45,39 +45,7 @@ public class YDocumentoPrdRigaVersamento extends DocumentoPrdRigaVersamento {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void creaLottiAutomaticiTestori() {
-		List lottiOrig = new ArrayList();
-		List lottiOrdine = new ArrayList();
-		if (getAttivitaEsecProdotto() != null && usaLottiOrd()) {
-			List lottiRig = getAttivitaEsecProdotto().getLottiProdotti();
-			for (int i = 0; i < lottiRig.size(); i++) {
-				AttivitaEsecLottiPrd lt = (AttivitaEsecLottiPrd) lottiRig.get(i);
-				if (!lt.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
-					lottiOrig.add(lt.getLotto());
-					lottiOrdine.add(lt);
-				}
-			}
-		}
-
-		String idCliente = null;
-		if (getDocumentoPrd().getOrdineEsecutivo() != null)
-			idCliente = getDocumentoPrd().getOrdineEsecutivo().getIdCliente();
-		CreaLottiTestoriUtils pal = CreaLottiTestoriUtils.creaProposizioneAutLotto(PersDatiMagazzino.TIPO_PRD,
-				getIdNumeroDoc(),
-				getIdAnnoDoc(),
-				getDocumentoPrd().getDataDichiarazione(),
-				getIdRigaDoc(),
-				null,
-				getRArticolo(),
-				getRVersione(),
-				getIdEsternoConfig(),
-				getRMagazzino(),
-				getRCommessa(),
-				idCliente,
-				PersDatiMagazzino.CREA_DA_DOCUMENTO,
-				lottiOrig,
-				lottiOrdine,
-				null,
-				getQuantitaUmPrm());
+		CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
 		List lottiAuto = pal.creaLottiAutomatici();
 		for (int j = 0; j < lottiAuto.size(); j++) {
 			Lotto lt = (Lotto) lottiAuto.get(j);
@@ -94,6 +62,43 @@ public class YDocumentoPrdRigaVersamento extends DocumentoPrdRigaVersamento {
 			lotto.setQtaVrsUmSec(getQuantitaUmSec());
 			getLottiColl().add(lotto);
 		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public CreaLottiTestoriUtils getCreaProposizioneAutLottoTestori() {
+		List lottiOrig = new ArrayList();
+		List lottiOrdine = new ArrayList();
+		if (getAttivitaEsecProdotto() != null && usaLottiOrd()) {
+			List lottiRig = getAttivitaEsecProdotto().getLottiProdotti();
+			for (int i = 0; i < lottiRig.size(); i++) {
+				AttivitaEsecLottiPrd lt = (AttivitaEsecLottiPrd) lottiRig.get(i);
+				if (!lt.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
+					lottiOrig.add(lt.getLotto());
+					lottiOrdine.add(lt);
+				}
+			}
+		}
+
+		String idCliente = null;
+		if (getDocumentoPrd().getOrdineEsecutivo() != null)
+			idCliente = getDocumentoPrd().getOrdineEsecutivo().getIdCliente();
+		return CreaLottiTestoriUtils.creaProposizioneAutLotto(PersDatiMagazzino.TIPO_PRD,
+				getIdNumeroDoc(),
+				getIdAnnoDoc(),
+				getDocumentoPrd().getDataDichiarazione(),
+				getIdRigaDoc(),
+				null,
+				getRArticolo(),
+				getRVersione(),
+				getIdEsternoConfig(),
+				getRMagazzino(),
+				getRCommessa(),
+				idCliente,
+				PersDatiMagazzino.CREA_DA_DOCUMENTO,
+				lottiOrig,
+				lottiOrdine,
+				null,
+				getQuantitaUmPrm());
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -28,6 +28,16 @@ import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
  * 71XXX    16/06/2025  DSSOF3   Prima stesura
  */
 public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
+	
+	protected boolean iGeneraLottiTsAuto = false;
+	
+	public boolean isGeneraLottiTestoriAutomatici() {
+		return iGeneraLottiTsAuto;
+	}
+
+	public void setGeneraLottiTestoriAutomatici(boolean iGeneraLottiTestoriAutomatici) {
+		this.iGeneraLottiTsAuto = iGeneraLottiTestoriAutomatici;
+	}
 
 	@Override
 	public void creaLottiAutomatici() {
@@ -42,25 +52,7 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void creaLottiAutomaticiTestori() {
-		List lottiOrig = new ArrayList();
-
-		CreaLottiTestoriUtils pal = CreaLottiTestoriUtils.creaProposizioneAutLotto(PersDatiMagazzino.TIPO_PRD,
-				getIdNumeroOrdine(),
-				getIdAnnoOrdine(),
-				getAttivitaEsecutiva().getOrdineEsecutivo().getDataOrdine(),
-				getIdRigaProdotto(),
-				getIdRigaAttivita(),
-				getIdArticolo(),
-				getIdVersione(),
-				getIdEsternoConfig(),
-				getIdMagazzinoVrs(),
-				getIdCommessa(),
-				getAttivitaEsecutiva().getOrdineEsecutivo().getIdCliente(),
-				PersDatiMagazzino.CREA_DA_ORDINE,
-				lottiOrig,
-				null,
-				null,
-				getQtaResiduaUMPrm());
+		CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
 		List lottiAuto = pal.creaLottiAutomatici();
 		for (int j = 0; j < lottiAuto.size(); j++) {
 			Lotto lt = (Lotto) lottiAuto.get(j);
@@ -77,5 +69,28 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 
 			getLottiProdotti().add(lotto);
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public CreaLottiTestoriUtils getCreaProposizioneAutLottoTestori() {
+		List lottiOrig = new ArrayList();
+
+		return CreaLottiTestoriUtils.creaProposizioneAutLotto(PersDatiMagazzino.TIPO_PRD,
+				getIdNumeroOrdine(),
+				getIdAnnoOrdine(),
+				getAttivitaEsecutiva().getOrdineEsecutivo().getDataOrdine(),
+				getIdRigaProdotto(),
+				getIdRigaAttivita(),
+				getIdArticolo(),
+				getIdVersione(),
+				getIdEsternoConfig(),
+				getIdMagazzinoVrs(),
+				getIdCommessa(),
+				getAttivitaEsecutiva().getOrdineEsecutivo().getIdCliente(),
+				PersDatiMagazzino.CREA_DA_ORDINE,
+				lottiOrig,
+				null,
+				null,
+				getQtaResiduaUMPrm());
 	}
 }

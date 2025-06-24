@@ -1,13 +1,11 @@
 package it.testori.thip.magazzino.generalemag;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.persist.CopyException;
 import com.thera.thermfw.persist.Copyable;
@@ -17,10 +15,12 @@ import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.persist.Proxy;
 
+import it.testori.thip.acquisti.documentoAC.YDocumentoAcqRigaPrm;
+import it.testori.thip.acquisti.ordineAC.YOrdineAcquistoRigaPrm;
 import it.testori.thip.produzione.documento.YDocumentoPrdRigaVersamento;
+import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaLottoPrm;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
-import it.thera.thip.acquisti.documentoAC.DocumentoAcquisto;
 import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaLottoPrm;
 import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
 import it.thera.thip.base.articolo.Articolo;
@@ -29,10 +29,7 @@ import it.thera.thip.base.comuniVenAcq.DocumentoOrdineRigaLotto;
 import it.thera.thip.base.comuniVenAcq.QuantitaInUMRif;
 import it.thera.thip.base.documenti.StatoAvanzamento;
 import it.thera.thip.cs.ColonneFiltri;
-import it.thera.thip.datiTecnici.configuratore.Configurazione;
-import it.thera.thip.datiTecnici.configuratore.ConfigurazioneRicEnh;
 import it.thera.thip.magazzino.generalemag.Lotto;
-import it.thera.thip.magazzino.generalemag.PersDatiMagazzino;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaLottoVrs;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
@@ -142,26 +139,13 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 				while(iterLotti.hasNext()) {
 					CreaLottiTestoriDettaglio dettaglio = (CreaLottiTestoriDettaglio) iterLotti.next();
 
-					Date dataApertura = TimeUtils.getCurrentDate();
-					char tipo = PersDatiMagazzino.TIPO_ACQ;
-					if(docAcqRig.getCausaleRiga().isLavEsterna())
-						tipo = PersDatiMagazzino.TIPO_CL;
-					char ambito = PersDatiMagazzino.CREA_DA_DOCUMENTO;
-					String numeroDocFormattato = docAcqRig.getTestata().getNumeroDocumentoFormattato();
-					String idAnnoDocOrd = docAcqRig.getAnnoDocumento();
-					String idNumeroDocOrd = docAcqRig.getNumeroDocumento();
-					Integer numRiga = docAcqRig.getNumeroRigaDocumento();
-					Integer numRigaPadre = null;
-					Date dataDocOrd = docAcqRig.getTestata().getDataDocumento();
-					String idFornitore = ((DocumentoAcquisto)docAcqRig.getTestata()).getIdFornitore();
-					Integer versione = docAcqRig.getIdVersioneRcs();
-					String idEsternoConfig = docAcqRig.getIdEsternoConfig();
-					String idMagazzino = docAcqRig.getIdMagazzino();
-					boolean creaSaldi = true;
-					Lotto lotto = creaLotto(dettaglio.getIdLotto(),versione,idEsternoConfig,idMagazzino,creaSaldi
-							,dataApertura,tipo,ambito,numeroDocFormattato,idAnnoDocOrd,idNumeroDocOrd,numRiga,numRigaPadre,
-							dataDocOrd,idFornitore);
-					if(lotto != null) {
+					CreaLottiTestoriUtils pal = ((YDocumentoAcqRigaPrm)docAcqRig).getCreaProposizioneAutLottoTestori();
+					pal.setGeneraCodiceLottoAutomatico(false);
+					pal.setIdLotto(dettaglio.getIdLotto());
+
+					List lottiAuto = pal.creaLottiAutomatici();
+					if(lottiAuto != null && !lottiAuto.isEmpty()) {
+						Lotto lotto = (Lotto) lottiAuto.get(0);
 						//lotto.setNumeroRocche(getNumeroRocche());
 						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
@@ -179,6 +163,7 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 
 					docAcqRig.getRigheLotto().add(rl);
 				}
+				((YDocumentoAcqRigaPrm)docAcqRig).controllaProponiPresenzaLottoDummy();
 				int rc = docAcqRig.save();
 				if(rc < 0)
 					return rc;
@@ -191,26 +176,13 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 				while(iterLotti.hasNext()) {
 					CreaLottiTestoriDettaglio dettaglio = (CreaLottiTestoriDettaglio) iterLotti.next();
 
-					Date dataApertura = TimeUtils.getCurrentDate();
-					char tipo = PersDatiMagazzino.TIPO_ACQ;
-					if(docAcqRig.getCausaleRiga().isLavEsterna())
-						tipo = PersDatiMagazzino.TIPO_CL;
-					char ambito = PersDatiMagazzino.CREA_DA_ORDINE;
-					String numeroDocFormattato = docAcqRig.getTestata().getNumeroDocumentoFormattato();
-					String idAnnoDocOrd = docAcqRig.getAnnoDocumento();
-					String idNumeroDocOrd = docAcqRig.getNumeroDocumento();
-					Integer numRiga = docAcqRig.getNumeroRigaDocumento();
-					Integer numRigaPadre = null;
-					Date dataDocOrd = docAcqRig.getTestata().getDataDocumento();
-					String idFornitore = ((DocumentoAcquisto)docAcqRig.getTestata()).getIdFornitore();
-					Integer versione = docAcqRig.getIdVersioneRcs();
-					String idEsternoConfig = docAcqRig.getIdEsternoConfig();
-					String idMagazzino = docAcqRig.getIdMagazzino();
-					boolean creaSaldi = true;
-					Lotto lotto = creaLotto(dettaglio.getIdLotto(),versione,idEsternoConfig,idMagazzino,creaSaldi
-							,dataApertura,tipo,ambito,numeroDocFormattato,idAnnoDocOrd,idNumeroDocOrd,numRiga,numRigaPadre,
-							dataDocOrd,idFornitore);
-					if(lotto != null) {
+					CreaLottiTestoriUtils pal = ((YOrdineAcquistoRigaPrm)docAcqRig).getCreaProposizioneAutLottoTestori();
+					pal.setGeneraCodiceLottoAutomatico(false);
+					pal.setIdLotto(dettaglio.getIdLotto());
+
+					List lottiAuto = pal.creaLottiAutomatici();
+					if(lottiAuto != null && !lottiAuto.isEmpty()) {
+						Lotto lotto = (Lotto) lottiAuto.get(0);
 						//lotto.setNumeroRocche(getNumeroRocche());
 						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
@@ -242,24 +214,13 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 					while(iterLotti.hasNext()) {
 						CreaLottiTestoriDettaglio dettaglio = (CreaLottiTestoriDettaglio) iterLotti.next();
 
-						Date dataApertura = TimeUtils.getCurrentDate();
-						char tipo = PersDatiMagazzino.TIPO_PRD;
-						char ambito = PersDatiMagazzino.CREA_DA_ORDINE;
-						String numeroDocFormattato = prodotto.getAttivitaEsecutiva().getOrdineEsecutivo().getNumeroOrdFmt();
-						String idAnnoDocOrd = prodotto.getIdAnnoOrdine();
-						String idNumeroDocOrd = prodotto.getIdNumeroOrdine();
-						Integer numRiga = prodotto.getIdRigaProdotto();
-						Integer numRigaPadre = prodotto.getIdRigaAttivita();
-						Date dataDocOrd = prodotto.getAttivitaEsecutiva().getOrdineEsecutivo().getDataOrdine();
-						String idFornitore = null;
-						Integer versione = prodotto.getIdVersione();
-						String idEsternoConfig = prodotto.getIdConfigOrdine();
-						String idMagazzino = prodotto.getIdMagazzinoVrs();
-						boolean creaSaldi = true;
-						Lotto lotto = creaLotto(dettaglio.getIdLotto(),versione,idEsternoConfig,idMagazzino,creaSaldi
-								,dataApertura,tipo,ambito,numeroDocFormattato,idAnnoDocOrd,idNumeroDocOrd,numRiga,numRigaPadre,
-								dataDocOrd,idFornitore);
-						if(lotto != null) {
+						CreaLottiTestoriUtils pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
+						pal.setGeneraCodiceLottoAutomatico(false);
+						pal.setIdLotto(dettaglio.getIdLotto());
+
+						List lottiAuto = pal.creaLottiAutomatici();
+						if(lottiAuto != null && !lottiAuto.isEmpty()) {
+							Lotto lotto = (Lotto) lottiAuto.get(0);
 							//lotto.setNumeroRocche(getNumeroRocche());
 							//lotto.setQuantitaOriginale(dettaglio.getQuantita());
 							lotto.setLottoAcquisto(getLottoAcquisto());
@@ -293,24 +254,13 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 				while(iterLotti.hasNext()) {
 					CreaLottiTestoriDettaglio dettaglio = (CreaLottiTestoriDettaglio) iterLotti.next();
 
-					Date dataApertura = TimeUtils.getCurrentDate();
-					char tipo = PersDatiMagazzino.TIPO_PRD;
-					char ambito = PersDatiMagazzino.CREA_DA_ORDINE;
-					String numeroDocFormattato = docPrdRigVrs.getDocumentoPrd().getNumeroDocFormattato();
-					String idAnnoDocOrd = docPrdRigVrs.getAnnoDocumento();
-					String idNumeroDocOrd = docPrdRigVrs.getNumeroDocumento();
-					Integer numRiga = docPrdRigVrs.getIdRigaDoc();
-					Integer numRigaPadre = null;
-					Date dataDocOrd = docPrdRigVrs.getDocumentoPrd().getDataDichiarazione();
-					String idFornitore = null;
-					Integer versione = docPrdRigVrs.getIdVersioneRcs();
-					String idEsternoConfig = docPrdRigVrs.getIdEsternoConfig();
-					String idMagazzino = docPrdRigVrs.getIdMagazzino();
-					boolean creaSaldi = true;
-					Lotto lotto = creaLotto(dettaglio.getIdLotto(),versione,idEsternoConfig,idMagazzino,creaSaldi
-							,dataApertura,tipo,ambito,numeroDocFormattato,idAnnoDocOrd,idNumeroDocOrd,numRiga,numRigaPadre,
-							dataDocOrd,idFornitore);
-					if(lotto != null) {
+					CreaLottiTestoriUtils pal = ((YDocumentoPrdRigaVersamento)docPrdRigVrs).getCreaProposizioneAutLottoTestori();
+					pal.setGeneraCodiceLottoAutomatico(false);
+					pal.setIdLotto(dettaglio.getIdLotto());
+
+					List lottiAuto = pal.creaLottiAutomatici();
+					if(lottiAuto != null && !lottiAuto.isEmpty()) {
+						Lotto lotto = (Lotto) lottiAuto.get(0);
 						//lotto.setNumeroRocche(getNumeroRocche());
 						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
@@ -469,96 +419,6 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 		lotto.setQtaInUMPrmMag(lt.getQuantita());
 		lotto.setQtaInUMRif(lt.getQuantita());
 		return lotto;
-	}
-
-	public Lotto creaLotto(String idLotto, Integer versione, 
-			String idEsternoConfig, String idMagazzino, boolean creaSaldi,
-			Date dataApertura, char tipo, char ambito, String numeroDocFormattato,
-			String idAnnoDocOrd, String idNumeroDocOrd, Integer numRiga, Integer numRigaPadre,
-			Date dataDocOrd, String idFornitore) {
-
-		try {
-			//...Creo un nuovo lotto con il nuovo codice
-			Lotto lotto = (Lotto) Factory.createObject(Lotto.class);
-			lotto.setCodiceAzienda(getIdAzienda());
-			lotto.setCodiceArticolo(getIdArticolo());
-			lotto.setCodiceLotto(idLotto);
-			lotto.setDataApertura(dataApertura);
-
-			java.sql.Date dataScadenza = calcolaDataScadenzaLotto(dataApertura, lotto.getArticolo().getArticoloDatiMagaz().getGiorniValidita());
-			lotto.setDataScadenza(dataScadenza);
-			if(lotto.getArticolo().getArticoloDatiMagaz() != null)
-				lotto.setGiorniScadenza(lotto.getArticolo().getArticoloDatiMagaz().getGiorniValidita());
-
-			//...Se devo gestire la creazione automatica dei saldi
-			lotto.setMagazzino(idMagazzino);
-			lotto.setCheckCreaSaldi(creaSaldi);
-			lotto.setCheckTuttiSaldi(false);
-			lotto.setCheckTuttiMagazzini(false);
-			String idRifDocFmt = numeroDocFormattato; //Fix 22277
-			if(creaSaldi) {
-				if (versione != null)
-					lotto.setVersione(versione);
-				if (idEsternoConfig != null && !idEsternoConfig.equals("")) { //Fix 4322
-					//Fix 4290 inizio
-					Configurazione cfg = ConfigurazioneRicEnh.recuperaConfigurazione(getIdAzienda(), getIdArticolo(), idEsternoConfig);
-					lotto.setConfigurazione(cfg);
-					//Fix 4290 fine
-				}
-				else
-					lotto.setIdConfigurazione(Configurazione.CONFIGURAZIONE_DUMMY);
-			}
-			//...fine
-
-			//...Inserisco i riferimenti all'ordine o al documento che ha generato il lotto
-			if(tipo == PersDatiMagazzino.TIPO_ACQ) {
-				lotto.setRifDocAcq(idAnnoDocOrd + "/" + idNumeroDocOrd);
-				lotto.setRifRigaDocAcq("" + numRiga);
-				lotto.setDataDocAcq(dataDocOrd);
-				//Fix 5151 - inizio
-				lotto.setCodiceFornitore(idFornitore);
-				//Fix 5151 - inizio
-				lotto.setRifDocAcqFmt(idRifDocFmt);//Fix 22277
-
-			}
-			else if(tipo == PersDatiMagazzino.TIPO_PRD) {
-				if(ambito == CreaLottiTestoriUtils.CREA_DA_DOCUMENTO) {
-					lotto.setRifDocProd(idAnnoDocOrd + "/" + idNumeroDocOrd);
-					lotto.setRifRigaDocProd("" + numRiga); //...Codice riga prodotto
-					lotto.setDataDocProd(dataDocOrd);
-				}
-				else if(ambito == CreaLottiTestoriUtils.CREA_DA_ORDINE) {
-					lotto.setRifDocProd(idAnnoDocOrd + "/" + idNumeroDocOrd);
-					lotto.setRifRigaDocProd("" + numRigaPadre); //...Codice riga attivita
-					lotto.setRifRigaSecProd("" + numRiga); //...Codice riga prodotto
-					lotto.setDataDocProd(dataDocOrd);
-				}
-
-				lotto.setRifDocProdFmt(idRifDocFmt);//Fix 22277
-			}
-			else if(tipo == PersDatiMagazzino.TIPO_CL) {
-				lotto.setRifDocCLav(idAnnoDocOrd + "/" + idNumeroDocOrd);
-				lotto.setRifRigaDocCLav("" + numRiga);
-				lotto.setDataDocCLav(dataDocOrd);
-				//Fix 5151 - inizio
-				lotto.setCodiceFornitore(idFornitore);
-				//Fix 5151 - fine
-				lotto.setRifDocCLavFmt(idRifDocFmt);//Fix 22277
-			}
-
-			return lotto;
-		}
-		catch (Exception ex) {
-			ex.printStackTrace(Trace.excStream);
-			return null;
-		}
-	}
-
-	protected java.sql.Date calcolaDataScadenzaLotto(Date dataApertura, Integer giorniVal) {
-		java.sql.Date dataScadenza = null;
-		if(giorniVal != null)
-			dataScadenza = TimeUtils.addDays(dataApertura, giorniVal.intValue());
-		return dataScadenza;
 	}
 
 	@Override

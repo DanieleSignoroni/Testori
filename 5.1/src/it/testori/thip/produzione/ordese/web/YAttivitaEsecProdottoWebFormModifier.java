@@ -33,6 +33,7 @@ public class YAttivitaEsecProdottoWebFormModifier extends AttivitaEsecProdottoWe
 	public void writeHeadElements(JspWriter out) throws IOException {
 		super.writeHeadElements(out);
 		out.println(WebJSTypeList.getImportForJSLibrary("it/testori/thip/magazzino/generalemag/CreaLottiTestoriUtils.js", getServletEnvironment().getRequest()));
+		out.println(WebJSTypeList.getImportForJSLibrary("it/testori/thip/produzione/ordese/YAttivitaEsecProdotto.js", getServletEnvironment().getRequest()));
 	}
 
 	@Override
@@ -44,6 +45,10 @@ public class YAttivitaEsecProdottoWebFormModifier extends AttivitaEsecProdottoWe
 				!CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
 			out.println("<script>");
 			out.println("document.getElementById(\"SezCodificaLottiTestori\").style.display = displayNone;");
+			out.println("</script>");
+		}else if(prodotto.isOnDB() && CreaLottiTestoriUtils.isArticoloGestionePezze(prodotto.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
+			out.println("<script>");
+			out.println(" var creaLottiTestoriAutomatico = true;");
 			out.println("</script>");
 		}
 	}
