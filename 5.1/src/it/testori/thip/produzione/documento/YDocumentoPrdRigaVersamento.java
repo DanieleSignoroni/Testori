@@ -1,6 +1,7 @@
 package it.testori.thip.produzione.documento;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,20 @@ import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
  */
 public class YDocumentoPrdRigaVersamento extends DocumentoPrdRigaVersamento {
 
+	protected boolean iGeneraLottiTsAuto;
+
+	public boolean isGeneraLottiTsAuto() {
+		return iGeneraLottiTsAuto;
+	}
+
+	public void setGeneraLottiTsAuto(boolean iGeneraLottiTsAuto) {
+		this.iGeneraLottiTsAuto = iGeneraLottiTsAuto;
+	}
+
+	public YDocumentoPrdRigaVersamento() {
+		setGeneraLottiTsAuto(false);
+	}
+	
 	@Override
 	public void creaLottiAutomatici() {
 		if(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(getArticolo(), CreaLottiTestoriUtils.PRODUZIONE))
@@ -41,6 +56,15 @@ public class YDocumentoPrdRigaVersamento extends DocumentoPrdRigaVersamento {
 				creaLottiAutomaticiTestori();
 			}
 		}
+	}
+	
+	@Override
+	public int save() throws SQLException {
+		if(isOnDB() && isGeneraLottiTsAuto()) {
+			creaLottiAutomaticiTestori();
+		}
+		int rc = super.save();
+		return rc;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

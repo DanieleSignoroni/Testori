@@ -1,18 +1,23 @@
 package it.testori.thip.acquisti.documentoAC;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.persist.Factory;
 
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaLottoPrm;
+import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaLottoSec;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
+import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaSec;
 import it.thera.thip.base.comuniVenAcq.DocumentoRigaLotto;
 import it.thera.thip.base.comuniVenAcq.QuantitaInUMRif;
 import it.thera.thip.base.documenti.StatoAvanzamento;
+import it.thera.thip.cs.ThipException;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.magazzino.generalemag.PersDatiMagazzino;
 
@@ -34,13 +39,40 @@ import it.thera.thip.magazzino.generalemag.PersDatiMagazzino;
 
 public class YDocumentoAcqRigaPrm extends DocumentoAcqRigaPrm {
 
+	protected boolean iGeneraLottiTsAuto;
+
+	public boolean isGeneraLottiTsAuto() {
+		return iGeneraLottiTsAuto;
+	}
+
+	public void setGeneraLottiTsAuto(boolean iGeneraLottiTsAuto) {
+		this.iGeneraLottiTsAuto = iGeneraLottiTsAuto;
+	}
+
+	public YDocumentoAcqRigaPrm() {
+		setGeneraLottiTsAuto(false);
+	}
+
+	@Override
+	public int save() throws SQLException {
+		if(isOnDB() && isGeneraLottiTsAuto()) {
+			creaLottiAutomaticiTestori();
+		}
+		int rc = super.save();
+		return rc;
+	}
+
 	@Override
 	protected void creaLottiAutomatici() {
 		char tipoProvenienza = getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
 		if(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(getArticolo(), tipoProvenienza)) {
 			super.creaLottiAutomatici();
 		}else if(CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(getArticolo(), tipoProvenienza)) {
-			creaLottiAutomaticiTestori();
+			try {
+				creaLottiAutomaticiTestori();
+			} catch (ThipException e) {
+				e.printStackTrace(Trace.excStream);
+			}
 		}else {
 			controllaProponiPresenzaLottoDummy();
 			setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
@@ -48,7 +80,25 @@ public class YDocumentoAcqRigaPrm extends DocumentoAcqRigaPrm {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void creaLottiAutomaticiTestori() {
+	protected void creaLottiAutomaticiTestori() throws ThipException {
+		char tipoProvenienza = getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
+		//.Controllo che sulla riga secondaria sia presente un lotto non DUMMY
+		if(CreaLottiTestoriUtils.isArticoloGestionePezze(getArticolo(), tipoProvenienza)) {
+			boolean trovato = false;
+			Iterator iterRigheSec = getRigheSecondarie().iterator();
+			while(iterRigheSec.hasNext()) {
+				DocumentoAcqRigaSec rigaSec = (DocumentoAcqRigaSec) iterRigheSec.next();
+				Iterator iterLots = rigaSec.getRigheLotto().iterator();
+				while(iterLots.hasNext()) {
+					DocumentoAcqRigaLottoSec rl = (DocumentoAcqRigaLottoSec) iterLots.next();
+					if(!rl.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+						trovato = true;
+				}
+			}
+			if(!trovato) {
+				throw new ThipException("Per poter creare il lotto della riga primaria va prima indicato il lotto sulla riga secondaria");
+			}
+		}
 		CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
 		List lottiAuto = pal.creaLottiAutomatici();
 		if(lottiAuto != null && !lottiAuto.isEmpty()) {

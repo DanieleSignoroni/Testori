@@ -146,8 +146,8 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 					List lottiAuto = pal.creaLottiAutomatici();
 					if(lottiAuto != null && !lottiAuto.isEmpty()) {
 						Lotto lotto = (Lotto) lottiAuto.get(0);
-						//lotto.setNumeroRocche(getNumeroRocche());
-						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
+						((YLotto)lotto).setNumeroRocche(getNumeroRocche());
+						((YLotto)lotto).setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
 						lotto.setDataScadenza(getDataScadenza());
 						lotto.setNote(getNote());
@@ -183,8 +183,8 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 					List lottiAuto = pal.creaLottiAutomatici();
 					if(lottiAuto != null && !lottiAuto.isEmpty()) {
 						Lotto lotto = (Lotto) lottiAuto.get(0);
-						//lotto.setNumeroRocche(getNumeroRocche());
-						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
+						((YLotto)lotto).setNumeroRocche(getNumeroRocche());
+						((YLotto)lotto).setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
 						lotto.setDataScadenza(getDataScadenza());
 						lotto.setNote(getNote());
@@ -221,8 +221,8 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 						List lottiAuto = pal.creaLottiAutomatici();
 						if(lottiAuto != null && !lottiAuto.isEmpty()) {
 							Lotto lotto = (Lotto) lottiAuto.get(0);
-							//lotto.setNumeroRocche(getNumeroRocche());
-							//lotto.setQuantitaOriginale(dettaglio.getQuantita());
+							((YLotto)lotto).setNumeroRocche(getNumeroRocche());
+							((YLotto)lotto).setQuantitaOriginale(dettaglio.getQuantita());
 							lotto.setLottoAcquisto(getLottoAcquisto());
 							lotto.setDataScadenza(getDataScadenza());
 							lotto.setNote(getNote());
@@ -261,8 +261,8 @@ public class CreaLottiTestoriTestata extends CreaLottiTestoriNuovo {
 					List lottiAuto = pal.creaLottiAutomatici();
 					if(lottiAuto != null && !lottiAuto.isEmpty()) {
 						Lotto lotto = (Lotto) lottiAuto.get(0);
-						//lotto.setNumeroRocche(getNumeroRocche());
-						//lotto.setQuantitaOriginale(dettaglio.getQuantita());
+						((YLotto)lotto).setNumeroRocche(getNumeroRocche());
+						((YLotto)lotto).setQuantitaOriginale(dettaglio.getQuantita());
 						lotto.setLottoAcquisto(getLottoAcquisto());
 						lotto.setDataScadenza(getDataScadenza());
 						lotto.setNote(getNote());

@@ -31,22 +31,14 @@ public class YAttivitaEsecProdottoFormActionAdapter extends AttivitaEsecProdotto
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String CREA_LOTTI_AUTOMATICO = "CREA_LOTTI_TESTORI_AUTO";
-
 	@Override
 	protected void otherActions(ClassADCollection cadc, ServletEnvironment se) throws ServletException, IOException {
 		String azione = getAzione(se);
 		if(azione.equals(CreaLottiTestoriUtils.CREA_LOTTI_NUOVO)) {
 			creaLottiTestoriNuovo(cadc,se);
-		}else if(azione.equals(CREA_LOTTI_AUTOMATICO)) {
-			creaLottiTestoriAutomatico(cadc,se);
 		}else {
 			super.otherActions(cadc, se);
 		}
-	}
-
-	protected void creaLottiTestoriAutomatico(ClassADCollection cadc, ServletEnvironment se) throws ServletException, IOException {
-		se.sendRequest(getServletContext(), se.getServletPath() + "it.testori.thip.produzione.ordese.web.CreaLottiAutomaticiTestori", true);
 	}
 
 	protected void creaLottiTestoriNuovo(ClassADCollection cadc, ServletEnvironment se) throws ServletException, IOException {

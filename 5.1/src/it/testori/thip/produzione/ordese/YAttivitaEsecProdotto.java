@@ -1,15 +1,23 @@
 package it.testori.thip.produzione.ordese;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.persist.Factory;
 
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
+import it.thera.thip.base.articolo.ArticoloDatiIdent;
+import it.thera.thip.cs.ThipException;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.magazzino.generalemag.PersDatiMagazzino;
+import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
 import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
+import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
+import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 
 /**
  *
@@ -28,15 +36,28 @@ import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
  * 71XXX    16/06/2025  DSSOF3   Prima stesura
  */
 public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
-	
-	protected boolean iGeneraLottiTsAuto = false;
-	
-	public boolean isGeneraLottiTestoriAutomatici() {
+
+	protected boolean iGeneraLottiTsAuto;
+
+	public boolean isGeneraLottiTsAuto() {
 		return iGeneraLottiTsAuto;
 	}
 
-	public void setGeneraLottiTestoriAutomatici(boolean iGeneraLottiTestoriAutomatici) {
-		this.iGeneraLottiTsAuto = iGeneraLottiTestoriAutomatici;
+	public void setGeneraLottiTsAuto(boolean iGeneraLottiTsAuto) {
+		this.iGeneraLottiTsAuto = iGeneraLottiTsAuto;
+	}
+
+	public YAttivitaEsecProdotto() {
+		setGeneraLottiTsAuto(false);
+	}
+
+	@Override
+	public int save() throws SQLException {
+		if(isOnDB() && isGeneraLottiTsAuto()) {
+			creaLottiAutomaticiTestori();
+		}
+		int rc = super.save();
+		return rc;
 	}
 
 	@Override
@@ -45,13 +66,40 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 			super.creaLottiAutomatici();
 		else {
 			if(CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
-				creaLottiAutomaticiTestori();
+				try {
+					creaLottiAutomaticiTestori();
+				} catch (ThipException e) {
+					e.printStackTrace(Trace.excStream);
+				}
 			}
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void creaLottiAutomaticiTestori() {
+	protected void creaLottiAutomaticiTestori() throws ThipException {
+
+		//.Controllo che l'ordine esecutivo abbia un materiale semi-lavorato con un lotto gia' indicato
+		if(CreaLottiTestoriUtils.isArticoloGestionePezze(getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
+			boolean trovato = false;
+			Iterator iterAtv = getAttivitaEsecutiva().getOrdineEsecutivo().getAttivitaEsecutive().iterator();
+			while(iterAtv.hasNext()) {
+				AttivitaEsecutiva atvEsec = (AttivitaEsecutiva) iterAtv.next();
+				Iterator iterMats = atvEsec.getMateriali().iterator();
+				while(iterMats.hasNext()) {
+					AttivitaEsecMateriale mat = (AttivitaEsecMateriale) iterMats.next();
+					if(mat.getArticolo().getTipoParte() == ArticoloDatiIdent.SEMIFINITO) {
+						Iterator iterLots = mat.getLottiMateriali().iterator();
+						while(iterLots.hasNext()) {
+							AttivitaEsecLottiMat lottoMat = (AttivitaEsecLottiMat) iterLots.next();
+							if(!lottoMat.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+								trovato = true;
+						}
+					}
+				}
+			}
+			if(!trovato)
+				throw new ThipException("Per poter creare il lotto del prodotto finito va prima indicato il lotto sul materiale");
+		}
 		CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
 		List lottiAuto = pal.creaLottiAutomatici();
 		for (int j = 0; j < lottiAuto.size(); j++) {
