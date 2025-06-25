@@ -80,34 +80,47 @@ public class YOrdineAcquistoRigaPrm extends OrdineAcquistoRigaPrm {
 		//.Controllo che sulla riga secondaria sia presente un lotto non DUMMY
 		if(CreaLottiTestoriUtils.isArticoloGestionePezze(getArticolo(), tipoProvenienza)) {
 			boolean trovato = false;
+			String idLottoComponente = null;
 			Iterator iterRigheSec = getRigheSecondarie().iterator();
 			while(iterRigheSec.hasNext()) {
 				OrdineAcquistoRigaSec rigaSec = (OrdineAcquistoRigaSec) iterRigheSec.next();
 				Iterator iterLots = rigaSec.getRigheLotto().iterator();
 				while(iterLots.hasNext()) {
 					OrdineAcquistoRigaLottoSec rl = (OrdineAcquistoRigaLottoSec) iterLots.next();
-					if(!rl.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+					if(!rl.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
 						trovato = true;
+						idLottoComponente = rl.getIdLotto();
+					}
 				}
 			}
 			if(!trovato) {
 				throw new ThipException("Per poter creare il lotto della riga primaria va prima indicato il lotto sulla riga secondaria");
+			}else {
+				String idLottoTeorico = CreaLottiTestoriUtils.getYearSuffix();
+				idLottoTeorico += CreaLottiTestoriUtils.PEZZE;
+				idLottoTeorico += tipoProvenienza;
+				if(idLottoComponente.startsWith(idLottoTeorico)) {
+
+				}else {
+					//Exc.?
+				}
 			}
-		}
-		CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
-		List lottiAuto = pal.creaLottiAutomatici();
-		if(lottiAuto != null && !lottiAuto.isEmpty()) {
-			getRigheLotto().clear();
-			for (int j = 0; j < lottiAuto.size(); j++) {
-				Lotto lt = (Lotto)lottiAuto.get(j);
-				OrdineRigaLotto lotto = creaLotto();
-				lotto.setFather(this);
-				lotto.setIdArticolo(lt.getCodiceArticolo());
-				lotto.setIdLotto(lt.getCodiceLotto());
-				lotto.getQuantitaOrdinata().setQuantitaInUMRif(getQuantitaOrdinata().getQuantitaInUMRif());
-				lotto.getQuantitaOrdinata().setQuantitaInUMPrm(getQuantitaOrdinata().getQuantitaInUMPrm());
-				lotto.getQuantitaOrdinata().setQuantitaInUMSec(getQuantitaOrdinata().getQuantitaInUMSec());
-				getRigheLotto().add(lotto);
+		}else {
+			CreaLottiTestoriUtils pal = getCreaProposizioneAutLottoTestori();
+			List lottiAuto = pal.creaLottiAutomatici();
+			if(lottiAuto != null && !lottiAuto.isEmpty()) {
+				getRigheLotto().clear();
+				for (int j = 0; j < lottiAuto.size(); j++) {
+					Lotto lt = (Lotto)lottiAuto.get(j);
+					OrdineRigaLotto lotto = creaLotto();
+					lotto.setFather(this);
+					lotto.setIdArticolo(lt.getCodiceArticolo());
+					lotto.setIdLotto(lt.getCodiceLotto());
+					lotto.getQuantitaOrdinata().setQuantitaInUMRif(getQuantitaOrdinata().getQuantitaInUMRif());
+					lotto.getQuantitaOrdinata().setQuantitaInUMPrm(getQuantitaOrdinata().getQuantitaInUMPrm());
+					lotto.getQuantitaOrdinata().setQuantitaInUMSec(getQuantitaOrdinata().getQuantitaInUMSec());
+					getRigheLotto().add(lotto);
+				}
 			}
 		}
 	}

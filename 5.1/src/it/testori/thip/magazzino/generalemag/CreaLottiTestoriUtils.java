@@ -85,6 +85,12 @@ public class CreaLottiTestoriUtils {
 			+ "  AND SUBSTRING("+LottoTM.ID_LOTTO+", 1, 4) = ? "
 			+ "";
 
+	public static final String STMT_MAX_ID_LOTTO_PEZZE = "SELECT MAX(CAST(SUBSTRING(ID_LOTTO, ?, ?) AS INT)) "
+			+ "FROM "+LottoTM.TABLE_NAME+" "
+			+ "WHERE "+LottoTM.ID_AZIENDA+" = ? "
+			+ "  AND "+LottoTM.ID_LOTTO+" LIKE ? "
+			+ "";
+
 	protected String iNumeroDocOrd;
 
 	protected String iAnnoDocOrd;
@@ -498,6 +504,43 @@ public class CreaLottiTestoriUtils {
 		return null;
 	}
 
+	public static String getMaxProgressivoPezzeFromLotto(String idAzienda,
+			String idLotto,
+			int lunghezzaSuffisso
+			) throws SQLException {
+		try (PreparedStatement stmt = ConnectionManager.getCurrentConnection().prepareStatement(STMT_MAX_ID_LOTTO_PEZZE)) {
+			stmt.setString(1, idAzienda);
+			stmt.setInt(2, idLotto.length());
+			if(lunghezzaSuffisso > 0)
+				stmt.setInt(2, idLotto.length()+lunghezzaSuffisso);
+			else
+				stmt.setInt(2, idLotto.length());
+			stmt.setString(3, "%"+idLotto);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String maxIdLotto = rs.getString(1);
+					//					if(maxIdLotto == null) {
+					//						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", 1);
+					//						return suffissoFormattato;
+					//					}else {
+					//						int numero = 0;
+					//
+					//						try {
+					//							numero = Integer.parseInt(maxIdLotto.trim())+1;
+					//						} catch (NumberFormatException e) {
+					//							numero = 0;
+					//						}
+					//
+					//						String suffissoFormattato = String.format("%0" + lunghezzaSuffisso + "d", numero);
+					//						return suffissoFormattato;
+					//					}
+					return maxIdLotto;
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * @return le due cifre significative dell'anno corrente
 	 */
@@ -577,7 +620,7 @@ public class CreaLottiTestoriUtils {
 		}
 		return false;
 	}
-	
+
 	public static boolean isArticoloGestionePezze(Articolo articolo, char provenienza) {
 		if(articolo == null)
 			return false;

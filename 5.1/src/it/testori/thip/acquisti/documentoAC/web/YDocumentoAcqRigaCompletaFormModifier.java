@@ -8,8 +8,10 @@ import com.thera.thermfw.base.ResourceLoader;
 import com.thera.thermfw.web.WebJSTypeList;
 
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
+import it.thera.thip.acquisti.documentoAC.DocumentoAcquisto;
 import it.thera.thip.acquisti.documentoAC.DocumentoAcquistoRiga;
 import it.thera.thip.acquisti.documentoAC.web.DocumentoAcqRigaCompletaFormModifier;
+import it.thera.thip.base.comuniVenAcq.AzioneMagazzino;
 
 /**
  * <p></p>
@@ -38,7 +40,8 @@ public class YDocumentoAcqRigaCompletaFormModifier extends DocumentoAcqRigaCompl
 				(DocumentoAcquistoRiga)getBODataCollector().getBo();
 		char tipoProvenienza = docAcqRig.getLavEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
 		boolean creaAuto = false;
-		if(docAcqRig.isOnDB() && CreaLottiTestoriUtils.isArticoloGestionePezze(docAcqRig.getArticolo(), tipoProvenienza)) {
+		if(docAcqRig.isOnDB() && CreaLottiTestoriUtils.isArticoloGestionePezze(docAcqRig.getArticolo(), tipoProvenienza)
+				&& ((DocumentoAcquisto)docAcqRig.getTestata()).getCausale().getAzioneMagazzino() == AzioneMagazzino.ENTRATA) { //.Entrata da C/Lav
 			creaAuto = true;
 		}
 		out.println("<script>");

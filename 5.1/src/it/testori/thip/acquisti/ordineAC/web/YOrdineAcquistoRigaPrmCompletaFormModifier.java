@@ -50,9 +50,11 @@ public class YOrdineAcquistoRigaPrmCompletaFormModifier extends OrdineAcquistoRi
 		OrdineAcquistoRiga ordAcqRig =
 				(OrdineAcquistoRiga)getBODataCollector().getBo();
 		char tipoProvenienza = ordAcqRig.isLavorazioneEsterna() ? CreaLottiTestoriUtils.CONTO_LAVORO : CreaLottiTestoriUtils.ACQUISTO;
+		
+		//.Se non e' gestione filati-manufatti o pezze allora nascondo il bottone
 		if(ordAcqRig.isOnDB() &&
-				(!CreaLottiTestoriUtils.isArticoloGestioneLottiTestori(ordAcqRig.getArticolo(), tipoProvenienza)
-						|| !CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(ordAcqRig.getArticolo(), tipoProvenienza))) {
+				(!CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(ordAcqRig.getArticolo(), tipoProvenienza)
+						&& !CreaLottiTestoriUtils.isArticoloGestionePezze(ordAcqRig.getArticolo(), tipoProvenienza))) {
 			out.println("<script>");
 			out.println("document.getElementById(\"SezCodificaLottiTestori\").style.display = displayNone;");
 			out.println("</script>");
