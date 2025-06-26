@@ -48,7 +48,7 @@ public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
 				try {
 					DocumentoAcqRigaPrm docAcqRig = (DocumentoAcqRigaPrm) DocumentoAcqRigaPrm.elementWithKey(DocumentoAcqRigaPrm.class, thKey, PersistentObject.NO_LOCK);
 					if(docAcqRig != null) {
-						bo.setQuantita(docAcqRig.getQtaInUMPrmMag());
+						bo.setQuantita(docAcqRig.getServizioQta().getQuantitaInUMPrm());
 						char tipoProvenienza = CreaLottiTestoriUtils.ACQUISTO;
 						if(docAcqRig.getLavEsterna()) {
 							tipoProvenienza = CreaLottiTestoriUtils.CONTO_LAVORO;
