@@ -32,9 +32,9 @@
 <!ATTLIST UserCode
       TYPE (methods | attributes | classes) #IMPLIED>
 <!ENTITY templateVersion "1.0">
-<!ENTITY className "YLotto">
+<!ENTITY className "YAttivitaEsecutiva">
 <!ENTITY bracesPosition "Up">
 <!ENTITY blockIndent "2">
-<!ENTITY ref1 "YLottoTM">
-<!ENTITY ref2 "YLotto">
+<!ENTITY ref1 "YAttivitaEsecutivaTM">
+<!ENTITY ref2 "YAttivitaEsecutiva">
 <!ENTITY ref3 "">
