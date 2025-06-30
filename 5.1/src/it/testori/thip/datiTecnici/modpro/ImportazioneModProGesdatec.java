@@ -1,30 +1,39 @@
-package it.testori.thip.base.datiTecnici;
+package it.testori.thip.datiTecnici.modpro;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.batch.BatchRunnable;
+import com.thera.thermfw.collector.BODataCollector;
 import com.thera.thermfw.persist.CachedStatement;
 import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.PersistentObject;
+import com.thera.thermfw.rs.errors.ErrorUtils;
 import com.thera.thermfw.security.Authorizable;
 
-import it.testori.thip.datiTecnici.modpro.InterrogazioneModProGesdatec;
-import it.testori.thip.datiTecnici.modpro.InterrogazioneModProGesdatecAttivita;
-import it.testori.thip.datiTecnici.modpro.InterrogazioneModProGesdatecMateriale;
-import it.testori.thip.datiTecnici.modpro.YTempiRisorseAttivita;
-import it.testori.thip.datiTecnici.modpro.YTempiRisorseAtvMinuti;
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.generale.PersDatiGen;
-import it.thera.thip.datiTecnici.modpro.AttivitaProdMateriale;
-import it.thera.thip.datiTecnici.modpro.AttivitaProdRisorsa;
-import it.thera.thip.datiTecnici.modpro.AttivitaProduttiva;
 import it.thera.thip.datiTecnici.modpro.ModelloProduttivo;
 import it.thera.thip.datiTecnici.modpro.ModproEsplosione;
 
@@ -46,11 +55,23 @@ import it.thera.thip.datiTecnici.modpro.ModproEsplosione;
 
 public class ImportazioneModProGesdatec extends BatchRunnable implements Authorizable {
 
+	protected String iTemporaryFileName;
+
+	protected File file = null;
+
+	public String getTemporaryFileName() {
+		return iTemporaryFileName;
+	}
+
+	public void setTemporaryFileName(String iTemporaryFileName) {
+		this.iTemporaryFileName = iTemporaryFileName;
+	}
+
 	@Override
 	protected boolean run() {
 		boolean ok = true;
 		try {
-
+			ok = runImportazione();
 		}catch (Exception e) {
 			output.println("Eccezione non gesita, controllare log applicazione");
 			e.printStackTrace(Trace.excStream);
@@ -59,16 +80,140 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 		return ok;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected boolean runImportazione() {
+		boolean ok = true;
+		List<InterrogazioneModProGesdatec> dati = runEstrazioneDati();
+		for (Iterator<InterrogazioneModProGesdatec> iterator = dati.iterator(); iterator.hasNext();) {
+			InterrogazioneModProGesdatec intt = (InterrogazioneModProGesdatec) iterator.next();
+
+			BODataCollector bodcIntt = (BODataCollector)Factory.createObject(BODataCollector.class);
+			bodcIntt.setAutoCommit(true);
+			bodcIntt.initialize("YIntModProGesdatec");
+
+			intt.setIdAzienda(Azienda.getAziendaCorrente());
+			bodcIntt.setBo(intt);
+
+			int save = bodcIntt.save();
+
+			if(save == BODataCollector.ERROR) {
+				output.println("Impossibile importare il modello produttivo per l'articolo : "+intt.getIdArticoloLancio());
+				output.println(ErrorUtils.getInstance().toJSON(bodcIntt.getErrorList().getErrors()).toString());
+			}else {
+
+			}
+		}
+		return ok;
+	}
+
+	protected List<InterrogazioneModProGesdatec> runEstrazioneDati() {
+		List<InterrogazioneModProGesdatec> dati = new ArrayList<InterrogazioneModProGesdatec>();
+		Map<String, InterrogazioneModProGesdatec> testateMap = new HashMap<>();
+
+		try (FileInputStream fileInputStream = new FileInputStream(getTemporaryFileName());
+				Workbook workbook = WorkbookFactory.create(fileInputStream)) {
+
+			Sheet TESTATA = workbook.getSheet("TESTATA");
+			Sheet MATERIALI = workbook.getSheet("MATERIALI");
+			Sheet ATTIVITA = workbook.getSheet("ATTIVITA");
+
+			// STEP 1: Creazione Testate
+			for (int i = 1; i <= TESTATA.getLastRowNum(); i++) {
+				Row row = TESTATA.getRow(i);
+				if (row == null) continue;
+
+				String codPadre = getString(row, 0);
+				String codMateriale = getString(row, 1);
+				String idAtvPrincipale = getString(row, 2);
+
+				try {
+					InterrogazioneModProGesdatec testata = creaInterrogazioneModelloProduttivoGesdatec(codPadre, codMateriale, idAtvPrincipale);
+					if(testata != null) {
+						BigDecimal tempoMin = getBigDecimal(row, 3);
+						BigDecimal tempoSec = getBigDecimal(row, 4);
+
+						if (tempoMin != null)
+							testata.setTempoUnitarioAtv(tempoMin);
+						if (tempoSec != null)
+							testata.setTempoUnitarioAtvSecondi(tempoSec.intValue());
+
+						testateMap.put(codPadre, testata);
+					}
+				}catch (IllegalArgumentException e) {
+					continue;
+				}
+			}
+
+			// STEP 2: Materiali
+			for (int i = 1; i <= MATERIALI.getLastRowNum(); i++) {
+				Row row = MATERIALI.getRow(i);
+				if (row == null) continue;
+
+				String codPadre = getString(row, 0);
+				String codMateriale = getString(row, 1);
+				BigDecimal coeff = getBigDecimal(row, 2);
+
+				InterrogazioneModProGesdatec testata = testateMap.get(codPadre);
+				if (testata != null) {
+					InterrogazioneModProGesdatecMateriale materiale = creaInterrogazioneModProGesdatecMateriale(testata, codMateriale, coeff);
+					testata.getRigheMateriale().add(materiale);
+				}
+			}
+
+			// STEP 3: Attività
+			for (int i = 1; i <= ATTIVITA.getLastRowNum(); i++) {
+				Row row = ATTIVITA.getRow(i);
+				if (row == null) continue;
+
+				String codPadre = getString(row, 0);
+				String codAttivita = getString(row, 1);
+				BigDecimal qta = getBigDecimal(row, 2);
+
+				InterrogazioneModProGesdatec testata = testateMap.get(codPadre);
+				if (testata != null) {
+					InterrogazioneModProGesdatecAttivita attivita = creaInterrogazioneModProGesdatecAttivita(testata, codAttivita, qta);
+					testata.getRigheAttivita().add(attivita);
+				}
+			}
+
+			dati.addAll(testateMap.values());
+
+		} catch (IOException | EncryptedDocumentException | InvalidFormatException e) {
+			e.printStackTrace(Trace.excStream);
+			return null;
+		}
+		return dati;
+	}
+
+	private String getString(Row row, int cellIdx) {
+		Cell cell = row.getCell(cellIdx);
+		return (cell != null) ? cell.toString().trim() : null;
+	}
+
+	private BigDecimal getBigDecimal(Row row, int cellIdx) {
+		Cell cell = row.getCell(cellIdx);
+		if (cell != null && cell.getCellTypeEnum() == CellType.NUMERIC) {
+			return BigDecimal.valueOf(cell.getNumericCellValue());
+		}
+		return null;
+	}
+
+
 	//@SuppressWarnings("rawtypes")
 	public static InterrogazioneModProGesdatec creaInterrogazioneModelloProduttivoGesdatec(String idCodiceArticoloPadre, String idMaterialePrincipale,
-			String idAttivitaPrincipale) {
+			String idAttivitaPrincipale) throws IllegalArgumentException {
 		InterrogazioneModProGesdatec intt = (InterrogazioneModProGesdatec) Factory.createObject(InterrogazioneModProGesdatec.class);
+		intt.setIdAzienda(Azienda.getAziendaCorrente());
 		intt.setArticoloPadre(getArticoloCurrentCompany(idCodiceArticoloPadre));
 		intt.setMaterialePrincipale(getArticoloCurrentCompany(idMaterialePrincipale));
 		char[] tipi = new char[3]; 
 		tipi[0] = ModelloProduttivo.PRODUZIONE;
 		tipi[1] = ModelloProduttivo.ATTREZZAGGIO;
 		tipi[2] = ModelloProduttivo.RILAVORAZIONE;
+
+		if(intt.getArticoloPadre() == null || intt.getMaterialePrincipale() == null) {
+			throw new IllegalArgumentException("Campi obbligatori non rispettati, articolo padre e materiale");
+		}
 
 		ModelloProduttivo modProOriginale = null;
 		try {
