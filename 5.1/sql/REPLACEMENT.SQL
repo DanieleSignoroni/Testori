@@ -2,3 +2,6 @@
 # Class name : REPLACEMENT
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.raccoltaDati.web.RilevDatiPrdTSWebFormModifier', 'it.testori.thip.produzione.raccoltaDati.web.YRilevDatiPrdTSWebFormModifier', '0', 'N', 'N');
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it/thera/thip/produzione/raccoltaDati/DichiarazioneVersamenti.js', 'it/testori/thip/produzione/raccoltaDati/YDichiarazioneVersamenti.js', '2', 'N', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('AttivitaEsecMateriale', 'YAttivitaEsecMateriale', '1', 'N', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.ordese.AttivitaEsecMateriale', 'it.testori.thip.produzione.ordese.YAttivitaEsecMateriale', '0', 'N', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.ordese.web.AttivitaEsecMaterialeWebFormModifier', 'it.testori.thip.produzione.ordese.web.YAttivitaEsecMaterialeWebFormModifier', '0', 'N', 'N');
