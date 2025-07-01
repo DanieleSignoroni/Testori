@@ -96,7 +96,7 @@ public class YCodificatore extends Codificatore {
 		return rc;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void ricerca() {
 		//.Se contiene la ricerca con range...
@@ -112,60 +112,84 @@ public class YCodificatore extends Codificatore {
 					}
 					cleaned.append(blocco);
 				}else {
-					bloccoRange = blocco;
+					if(bloccoRange == null)
+						bloccoRange = blocco;
+					else
+						bloccoRange += "|" + blocco;
 				}
 			}
-			cleaned.append("|");
-			String nuovaSintesi = cleaned.toString();
+			String nuovaSintesi = "";
+			if(!cleaned.toString().isEmpty()) {
+				cleaned.append("|");
+				nuovaSintesi = cleaned.toString();
+			}else {
+				blocchi = bloccoRange.split("\\|");
+				for (String blocco : blocchi) {
+					nuovaSintesi += blocco.substring(0,blocco.indexOf("?")+2) + "|";
+				}
+			}
 			iSintesiCodif = nuovaSintesi;
 
-			String chiaveSchemaVariabile = bloccoRange.substring(0,bloccoRange.indexOf("?"));
-			String rangeStr = bloccoRange.substring(bloccoRange.indexOf("?")+1,bloccoRange.length());
-			String[] rangeValori = KeyHelper.unpackObjectKey(rangeStr);
+			List risultato = new ArrayList();
 
-			if(!iSintesiCodif.isEmpty())
-				super.ricerca();
+			blocchi = bloccoRange.split("\\|");
+			for(String blocco : blocchi) {
+				String chiaveSchemaVariabile = blocco.substring(0,blocco.indexOf("?"));
+				try {
+					YVariabileSchemaCodifica varRange = (YVariabileSchemaCodifica) 
+							YVariabileSchemaCodifica.elementWithKey(YVariabileSchemaCodifica.class, chiaveSchemaVariabile, PersistentObject.NO_LOCK);
+					if(varRange != null) {
+						String rangeStr = blocco.substring(blocco.indexOf("?")+1,blocco.length());
+						String[] rangeValori = KeyHelper.unpackObjectKey(rangeStr);
 
-			try {
-				YVariabileSchemaCodifica varRange = (YVariabileSchemaCodifica) 
-						YVariabileSchemaCodifica.elementWithKey(YVariabileSchemaCodifica.class, chiaveSchemaVariabile, PersistentObject.NO_LOCK);
-				if(varRange != null) {
-					Short posiz = varRange.getPosizInCod();
-					Short lunghezza = varRange.getLunghezzaCod();
+						//.Se la sintesi contiene range vuol dire che ho scelto solo il range a video
+						if(iSintesiCodif.contains("Range")) {
+							iSintesiCodif = iSintesiCodif.replace("Range", ((ValoreVariabileCodifica)varRange.getValori().get(0)).getValoreVariabile());
 
-					String rangeDa = rangeValori[0];
-					String rangeA = rangeValori[1];
+							//.E quindi devo costruire io la query di ricerca perche' sara' solo schema/variabile=% 
+						}
 
-					// Clona la lista per evitare ConcurrentModificationException
-					Iterator iterator = iRisultatoRicerca.iterator();
-					while (iterator.hasNext()) {
-						Articolo articolo = (Articolo) iterator.next();
-						String idArticolo = articolo.getIdArticolo();
+						if(!iSintesiCodif.isEmpty())
+							super.ricerca();
 
-						// Calcolo la sottostringa alla posizione indicata
-						int pos = posiz.intValue() - 1;
-						int len = lunghezza.intValue();
+						Short posiz = varRange.getPosizInCod();
+						Short lunghezza = varRange.getLunghezzaCod();
 
-						// Sicurezza: controllo che la stringa sia abbastanza lunga
-						if (idArticolo.length() >= (pos + len)) {
-							String sottoStringa = idArticolo.substring(pos, pos + len);
+						String rangeDa = rangeValori[0];
+						String rangeA = rangeValori[1];
 
-							// Confronto (se sono numeri, puoi fare il parse)
-							if (sottoStringa.compareTo(rangeDa) < 0 || sottoStringa.compareTo(rangeA) > 0) {
-								// Fuori dal range => rimuovo
+						// Clona la lista per evitare ConcurrentModificationException
+						Iterator iterator = iRisultatoRicerca.iterator();
+						while (iterator.hasNext()) {
+							Articolo articolo = (Articolo) iterator.next();
+							String idArticolo = articolo.getIdArticolo();
+
+							// Calcolo la sottostringa alla posizione indicata
+							int pos = posiz.intValue() - 1;
+							int len = lunghezza.intValue();
+
+							// Sicurezza: controllo che la stringa sia abbastanza lunga
+							if (idArticolo.length() >= (pos + len)) {
+								String sottoStringa = idArticolo.substring(pos, pos + len);
+
+								// Confronto (se sono numeri, puoi fare il parse)
+								if (sottoStringa.compareTo(rangeDa) < 0 || sottoStringa.compareTo(rangeA) > 0) {
+									// Fuori dal range => rimuovo
+									iterator.remove();
+								}
+							} else {
+								// id troppo corto => rimuovo
 								iterator.remove();
 							}
-						} else {
-							// id troppo corto => rimuovo
-							iterator.remove();
 						}
+						risultato.addAll(iRisultatoRicerca);
+
 					}
-
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
 				}
-			} catch (SQLException e) {
-				e.printStackTrace(Trace.excStream);
 			}
-
+			iRisultatoRicerca = risultato;
 		}else {
 			super.ricerca();
 		}
