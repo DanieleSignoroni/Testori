@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ import com.thera.thermfw.security.Authorizable;
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.generale.PersDatiGen;
+import it.thera.thip.datiTecnici.modpro.AttivitaProdMateriale;
+import it.thera.thip.datiTecnici.modpro.AttivitaProdRisorsa;
+import it.thera.thip.datiTecnici.modpro.AttivitaProduttiva;
 import it.thera.thip.datiTecnici.modpro.ModelloProduttivo;
 import it.thera.thip.datiTecnici.modpro.ModproEsplosione;
 
@@ -93,14 +97,21 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 
 			intt.setIdAzienda(Azienda.getAziendaCorrente());
 			bodcIntt.setBo(intt);
+			try {
+				int save = bodcIntt.save();
 
-			int save = bodcIntt.save();
-
-			if(save == BODataCollector.ERROR) {
-				output.println("Impossibile importare il modello produttivo per l'articolo : "+intt.getIdArticoloLancio());
-				output.println(ErrorUtils.getInstance().toJSON(bodcIntt.getErrorList().getErrors()).toString());
-			}else {
-
+				if(save == BODataCollector.ERROR) {
+					output.println();
+					output.println("----------->");
+					output.println("Impossibile importare il modello produttivo per l'articolo : "+intt.getIdArticoloLancio());
+					output.println(ErrorUtils.getInstance().toJSON(bodcIntt.getErrorList().getErrors()).toString());
+					output.println("<-----------");
+				}else {
+					output.println("Creato correttamente il modello produttivo "+KeyHelper.formatKeyString(bodcIntt.getBo().getKey()));
+				}
+			}catch (ArithmeticException e) {
+				output.println("Impossibile calcolare il coefficiente di impiego per il modello produttivo dell'articolo : "+intt.getIdArticoloLancio());
+				e.printStackTrace(Trace.excStream);
 			}
 		}
 		return ok;
@@ -172,6 +183,11 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 				InterrogazioneModProGesdatec testata = testateMap.get(codPadre);
 				if (testata != null) {
 					InterrogazioneModProGesdatecAttivita attivita = creaInterrogazioneModProGesdatecAttivita(testata, codAttivita, qta);
+					if(attivita.getAttivita() == null) {
+						output.println("-> Modello : "+codPadre+" l'attivita con codice : " + codAttivita+ " non esiste");
+						testateMap.remove(codPadre);
+						break;
+					}
 					testata.getRigheAttivita().add(attivita);
 				}
 			}
@@ -187,7 +203,7 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 
 	private String getString(Row row, int cellIdx) {
 		Cell cell = row.getCell(cellIdx);
-		return (cell != null) ? cell.toString().trim() : null;
+		return (cell != null) ? cell.getStringCellValue() : null;
 	}
 
 	private BigDecimal getBigDecimal(Row row, int cellIdx) {
@@ -200,6 +216,7 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 
 
 	//@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes")
 	public static InterrogazioneModProGesdatec creaInterrogazioneModelloProduttivoGesdatec(String idCodiceArticoloPadre, String idMaterialePrincipale,
 			String idAttivitaPrincipale) throws IllegalArgumentException {
 		InterrogazioneModProGesdatec intt = (InterrogazioneModProGesdatec) Factory.createObject(InterrogazioneModProGesdatec.class);
@@ -214,6 +231,7 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 		if(intt.getArticoloPadre() == null || intt.getMaterialePrincipale() == null) {
 			throw new IllegalArgumentException("Campi obbligatori non rispettati, articolo padre e materiale");
 		}
+		intt.setInizialeMateriale(String.valueOf(intt.getMaterialePrincipale().getIdArticolo().charAt(0)));
 
 		ModelloProduttivo modProOriginale = null;
 		try {
@@ -225,13 +243,15 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 		} catch (SQLException e) {
 			e.printStackTrace(Trace.excStream);
 		}
+
+		intt.setAltezzaEffettiva(intt.getMaterialePrincipale().getAltezza());
 		intt.setAltezzaManufatto(intt.getArticoloPadre().getArticoloDatiTecnici().getLunghezza());
 		intt.setLunghezzaManufatto(intt.getArticoloPadre().getArticoloDatiTecnici().getLarghezza());
 
 		if(idAttivitaPrincipale != null)
 			intt.setIdAttivitaPrincipale(idAttivitaPrincipale);
 
-		/*if(modProOriginale != null) {
+		if(modProOriginale != null) {
 			Iterator iterAtvs = modProOriginale.getAttivita().iterator();
 			while(iterAtvs.hasNext()) {
 				AttivitaProduttiva attivita = (AttivitaProduttiva) iterAtvs.next();
@@ -312,7 +332,7 @@ public class ImportazioneModProGesdatec extends BatchRunnable implements Authori
 				}
 			}
 			intt.setPriorita(modProOriginale.getPriorita());
-		}*/
+		}
 
 		intt.setModelloProduttivoOrig(modProOriginale);
 
