@@ -59,6 +59,6 @@ getSintesi = function getSintesi(valore) {
 
 		return getSchemaKey() + fsep + idVariabile + fsep + idValore + "?" + rangeInizio + fsep + reangeFine + "|";
 	} else {
-		oldgetSintesi(valore);
+		return oldgetSintesi(valore);
 	}
 }
