@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YVARIABILI_COD (YVARIAB): VariabileSchemaCodifica; -->
+  <CreateTable schema="THIPPERS" name="YVARIABILI_COD" shortname="YVARIAB">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="ID_SCHEMA_COD" shortname="ID_SCHEMA_" type="char" length="15" nullable="no"/>
+    <Column name="ID_VARIABILE_COD" shortname="ID_VARIABI" type="char" length="15" nullable="no"/>
+    <Column name="RICERCA_CON_RANGE" shortname="RICERCA_CO" type="char" length="1" nullable="no" default="N"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YVARIABILI_COD_I01" tabschema="THIPPERS" tabname="YVARIABILI_COD" shortname="YVARIA_I01" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="ID_SCHEMA_COD" order="Asc"/>
+    <IndexCol name="ID_VARIABILE_COD" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YVARIABILI_COD">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="ID_SCHEMA_COD"/>
+        <ColumnRef name="ID_VARIABILE_COD"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YVARIABILI_COD" text="VariabileSchemaCodifica">
+      <CommentColumn name="ID_AZIENDA" text="Codice Azienda"/>
+      <CommentColumn name="ID_SCHEMA_COD" text="Codice schema"/>
+      <CommentColumn name="ID_VARIABILE_COD" text="Codice variabile"/>
+      <CommentColumn name="RICERCA_CON_RANGE" text="Ricerca con range"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YVARIABILI_COD_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YVARIABILI_COD"/>
+</TDDML>

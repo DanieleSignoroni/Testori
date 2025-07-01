@@ -1,0 +1,2 @@
+
+Elaborazione file comandi W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00001\tddml\1_CONSTRAINT.TDDML.

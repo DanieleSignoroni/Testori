@@ -1,0 +1,3 @@
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('it.thera.thip.base.codificatore.VariabileSchemaCodifica', 'it.testori.thip.base.codificatore.YVariabileSchemaCodifica', '0', 'Y', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('it.thera.thip.base.codificatore.VariabileSchemaCodificaTM', 'it.testori.thip.base.codificatore.YVariabileSchemaCodificaTM', '0', 'Y', 'N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('VariabileSchemaCodifica', 'YVariabileSchemaCodifica', '1', 'Y', 'N');
