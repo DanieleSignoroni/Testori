@@ -12,7 +12,10 @@ import java.util.Set;
 
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.persist.CachedStatement;
+import com.thera.thermfw.persist.KeyHelper;
+import com.thera.thermfw.persist.PersistentObject;
 
+import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.codificatore.Codificatore;
 import it.thera.thip.base.codificatore.ValoreVariabileCodifica;
@@ -93,6 +96,7 @@ public class YCodificatore extends Codificatore {
 		return rc;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void ricerca() {
 		//.Se contiene la ricerca con range...
@@ -100,17 +104,68 @@ public class YCodificatore extends Codificatore {
 			String[] blocchi = iSintesiCodif.split("\\|");
 			StringBuilder cleaned = new StringBuilder();
 
+			String bloccoRange = null;
 			for (String blocco : blocchi) {
 				if (!blocco.contains("Range")) {
 					if (cleaned.length() > 0) {
 						cleaned.append("|");
 					}
 					cleaned.append(blocco);
+				}else {
+					bloccoRange = blocco;
 				}
 			}
 			cleaned.append("|");
 			String nuovaSintesi = cleaned.toString();
 			iSintesiCodif = nuovaSintesi;
+
+			String chiaveSchemaVariabile = bloccoRange.substring(0,bloccoRange.indexOf("?"));
+			String rangeStr = bloccoRange.substring(bloccoRange.indexOf("?")+1,bloccoRange.length());
+			String[] rangeValori = KeyHelper.unpackObjectKey(rangeStr);
+
+			if(!iSintesiCodif.isEmpty())
+				super.ricerca();
+
+			try {
+				YVariabileSchemaCodifica varRange = (YVariabileSchemaCodifica) 
+						YVariabileSchemaCodifica.elementWithKey(YVariabileSchemaCodifica.class, chiaveSchemaVariabile, PersistentObject.NO_LOCK);
+				if(varRange != null) {
+					Short posiz = varRange.getPosizInCod();
+					Short lunghezza = varRange.getLunghezzaCod();
+
+					String rangeDa = rangeValori[0];
+					String rangeA = rangeValori[1];
+
+					// Clona la lista per evitare ConcurrentModificationException
+					Iterator iterator = iRisultatoRicerca.iterator();
+					while (iterator.hasNext()) {
+						Articolo articolo = (Articolo) iterator.next();
+						String idArticolo = articolo.getIdArticolo();
+
+						// Calcolo la sottostringa alla posizione indicata
+						int pos = posiz.intValue() - 1;
+						int len = lunghezza.intValue();
+
+						// Sicurezza: controllo che la stringa sia abbastanza lunga
+						if (idArticolo.length() >= (pos + len)) {
+							String sottoStringa = idArticolo.substring(pos, pos + len);
+
+							// Confronto (se sono numeri, puoi fare il parse)
+							if (sottoStringa.compareTo(rangeDa) < 0 || sottoStringa.compareTo(rangeA) > 0) {
+								// Fuori dal range => rimuovo
+								iterator.remove();
+							}
+						} else {
+							// id troppo corto => rimuovo
+							iterator.remove();
+						}
+					}
+
+				}
+			} catch (SQLException e) {
+				e.printStackTrace(Trace.excStream);
+			}
+
 		}else {
 			super.ricerca();
 		}
