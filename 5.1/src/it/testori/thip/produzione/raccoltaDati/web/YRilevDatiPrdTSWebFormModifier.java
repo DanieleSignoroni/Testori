@@ -60,25 +60,9 @@ public class YRilevDatiPrdTSWebFormModifier extends RilevDatiPrdTSWebFormModifie
 					out.println(" var creaLottiTestoriAutomatico"+i+" = "+gesLottiTestori+";");
 					if(CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(bo.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
 						out.println("document.getElementById('CreaLottoBut"+i+"').style.display=displayNone;");
-					}
-				}
-			}
-			if(!CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(bo.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
-				out.println("document.getElementById('CreaLottiFilatiManufatti').style.display = displayNone;");
-			}
-		} catch (Exception e) {
-			e.printStackTrace(Trace.excStream);
-		}
-	}
-
-	@Override
-	public void displayRiprendiRilevazioneSospesa(JspWriter out, RilevDatiPrdTS bo) throws IOException {
-		super.displayRiprendiRilevazioneSospesa(out, bo);
-		try {
-			if (bo != null  && bo.getIdProdotto1() != null) {
-				for (int i = 1; i < 21; i++) {
-					if(CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(bo.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
-						out.println("document.getElementById('CreaLottoBut"+i+"').style.display=displayNone;");
+					}else if(CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(bo.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)
+							|| CreaLottiTestoriUtils.isArticoloGestionePezze(bo.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)) {
+						out.println("document.getElementById('CreaLottoBut"+i+"').style.display=displayBlock;");
 					}
 				}
 			}
