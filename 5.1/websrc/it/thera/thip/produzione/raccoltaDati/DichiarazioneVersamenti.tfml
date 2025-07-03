@@ -1,0 +1,683 @@
+<tfml>
+
+  <form name="RilevDatiPrdTSForm"
+  classHdr="RilevDatiPrdTS"
+  errorList="no"
+  menubar="no"
+  toolbar="no"
+  submitReset="none"
+  servlet="it.thera.thip.produzione.raccoltaDati.web.RilevDatiPrdTSFormActionAdapter"
+  jsLibraryName="it/thera/thip/produzione/raccoltaDati/DichiarazioneVersamenti.js"
+  webFormModifierClass="it.thera.thip.produzione.raccoltaDati.web.RilevDatiPrdTSWebFormModifier"
+  onLoadPresent="yes">
+
+  <textinput name="DescrizioneOperatore" classAD="DescrizioneOperatore"/>
+  <textinput name="BollaLavorazione" classAD="BollaLavorazione"/>
+  <label name="BollaCucita" resourceFile="it.thera.thip.produzione.raccoltaDati.resources.RilevDatiPrdTS"
+    resourceID="LabelBollaCucita"/> <!--Fix 14722-->
+  <textinput name="DescrizioneBolla" classAD="DescrizioneBolla"/>
+  <textinput name="IdArticolo" classAD="IdArticolo"/>
+  <textinput name="DescrizioneArticolo" classAD="DescrizioneArticolo"/>
+  <textinput name="IdOperatore" classAD="IdOperatore"/>
+  <textinput name="TipoTimbratura" classAD="TipoTimbratura"/>
+  <textinput name="IdCausaleRilevazione" classAD="IdCausaleRilevazione"/>
+  <textinput name="IdAnnoOrdine" classAD="IdAnnoOrdine"/>
+  <textinput name="IdNumeroOrdine" classAD="IdNumeroOrdine"/>
+  <textinput name="IdRigaAttivita" classAD="IdRigaAttivita"/>
+  <textinput name="TipoRisorsa" classAD="TipoRisorsa"/>
+  <textinput name="LivelloRisorsa" classAD="LivelloRisorsa"/>
+  <textinput name="IdRisorsa" classAD="IdRisorsa"/>
+  <textinput name="IdAmbiente" classAD="IdAmbiente"/>
+  <textinput name="IdMacchina" classAD="IdMacchina"/>
+  <textinput name="TipoBolla" classAD="TipoBolla"/>
+  <textinput name="Tempo" classAD="Tempo"/>
+  <textinput name="Note" classAD="Note"/> <!--Fix 15866 -->
+  <textinput name="Quantita" classAD="Quantita"/> <!--Fix 17241 -->
+  <textinput name="QuantitaSec" classAD="QuantitaSec"/> <!--Fix 17241 -->
+  <textinput name="QtaScarto" classAD="QtaScarto"/> <!--Fix 17550 -->
+  <textinput name="QtaScartoSec" classAD="QtaScartoSec"/> <!--Fix 17550 -->
+  <!--Fix 14722 inizio-->
+  <textinput name="IdAnnoBolla" classAD="IdAnnoBolla"/>
+  <textinput name="IdNumeroBolla" classAD="IdNumeroBolla"/>
+  <!--Fix 14722 fine-->
+  <textinput name="CurrentNumPag" classAD="CurrentNumPag"/><!-- Fix 18536 -->
+  <textinput name="OraFine" classAD="OraFine"/><!-- Fix 19148 -->
+  <textinput name="DataFine" classAD="DataFine"/> <!-- Fix 30440 -->
+  <textinput name="StampaBolla" classAD="StampaBolla"/><!-- Fix 30900 -->
+  <!-- line n°1 -->
+  <articolomultisearchform name="Prodotto1" classRD="Prodotto1" editbutton="no" idCols="25"
+  extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(1)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(1)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione1" classRD="ProdottoVersione1" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1" onSearchBack="verificaDatiArticoli(1)"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig1" classRD="ProdottoConfig1" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto1" classRD="LottoProdotto1"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine1,DescrizioneLotto;IdNumeroOrdine1,DescrizioneLotto;IdRigaAttivita1,DescrizioneLotto;
+  IdVersionePrd1,DescrizioneLotto;IdEsternoConfigPrd1,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs1" classRD="MagazzinoVrs1" editbutton="no"/>
+  <textinput name="DescrizioneProdotto1" classAD="DescrizioneProdotto1"/>
+  <textinput name="QtaVrsUMPrm1" classAD="QtaVrsUMPrm1" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(1);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm1" classAD="QtaScartoUMPrm1" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(1);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd1" classAD="IdUMPrmPrd1"/>
+  <textinput name="QtaVrsUMSec1" classAD="QtaVrsUMSec1" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(1);recuperaQtaArrotondateSec(1);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec1" classAD="QtaScartoUMSec1" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(1);recuperaQtaScartoArrotondateSec(1);"/><!--Fix 15250--> <!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd1" classAD="IdUMSecPrd1"/>
+  <checkbox name="RicalcoloQuantitaVers1" classAD="RicalcoloQuantitaVers1"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine1" classRD="ProdottoOrdine1" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto1,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita1" classAD="IdRigaAttivita1"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut1" script="creaLotto(1)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°2 -->
+  <articolomultisearchform name="Prodotto2" classRD="Prodotto2" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(2)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(2)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione2" classRD="ProdottoVersione2" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig2" classRD="ProdottoConfig2" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto2" classRD="LottoProdotto2"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine2,DescrizioneLotto;IdNumeroOrdine2,DescrizioneLotto;IdRigaAttivita2,DescrizioneLotto;
+  IdVersionePrd2,DescrizioneLotto;IdEsternoConfigPrd2,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs2" classRD="MagazzinoVrs2" editbutton="no"/>
+  <textinput name="DescrizioneProdotto2" classAD="DescrizioneProdotto2"/>
+  <textinput name="QtaVrsUMPrm2" classAD="QtaVrsUMPrm2" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(2);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm2" classAD="QtaScartoUMPrm2" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(2);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd2" classAD="IdUMPrmPrd2"/>
+  <textinput name="QtaVrsUMSec2" classAD="QtaVrsUMSec2" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(2);recuperaQtaArrotondateSec(2);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec2" classAD="QtaScartoUMSec2" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(2);recuperaQtaScartoArrotondateSec(2);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd2" classAD="IdUMSecPrd2"/>
+  <checkbox name="RicalcoloQuantitaVers2" classAD="RicalcoloQuantitaVers2"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine2" classRD="ProdottoOrdine2" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto2,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita2" classAD="IdRigaAttivita2"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut2" script="creaLotto(2)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°3 -->
+  <articolomultisearchform name="Prodotto3" classRD="Prodotto3" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(3)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(3)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione3" classRD="ProdottoVersione3" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig3" classRD="ProdottoConfig3" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto3" classRD="LottoProdotto3"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine3,DescrizioneLotto;IdNumeroOrdine3,DescrizioneLotto;IdRigaAttivita3,DescrizioneLotto;
+  IdVersionePrd3,DescrizioneLotto;IdEsternoConfigPrd3,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs3" classRD="MagazzinoVrs3" editbutton="no"/>
+  <textinput name="DescrizioneProdotto3" classAD="DescrizioneProdotto3"/>
+  <textinput name="QtaVrsUMPrm3" classAD="QtaVrsUMPrm3" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(3);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm3" classAD="QtaScartoUMPrm3" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(3);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd3" classAD="IdUMPrmPrd3"/>
+  <textinput name="QtaVrsUMSec3" classAD="QtaVrsUMSec3" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(3);recuperaQtaArrotondateSec(3);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec3" classAD="QtaScartoUMSec3" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(3);recuperaQtaScartoArrotondateSec(3);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd3" classAD="IdUMSecPrd3"/>
+  <checkbox name="RicalcoloQuantitaVers3" classAD="RicalcoloQuantitaVers3"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine3" classRD="ProdottoOrdine3" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto3,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita3" classAD="IdRigaAttivita3"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut3" script="creaLotto(3)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°4 -->
+  <articolomultisearchform name="Prodotto4" classRD="Prodotto4" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(4)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(4)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione4" classRD="ProdottoVersione4" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig4" classRD="ProdottoConfig4" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto4" classRD="LottoProdotto4"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine4,DescrizioneLotto;IdNumeroOrdine4,DescrizioneLotto;IdRigaAttivita4,DescrizioneLotto;
+  IdVersionePrd4,DescrizioneLotto;IdEsternoConfigPrd4,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs4" classRD="MagazzinoVrs4" editbutton="no"/>
+  <textinput name="DescrizioneProdotto4" classAD="DescrizioneProdotto4"/>
+  <textinput name="QtaVrsUMPrm4" classAD="QtaVrsUMPrm4" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(4);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm4" classAD="QtaScartoUMPrm4" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(4);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd4" classAD="IdUMPrmPrd4"/>
+  <textinput name="QtaVrsUMSec4" classAD="QtaVrsUMSec4" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(4);recuperaQtaArrotondateSec(4);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec4" classAD="QtaScartoUMSec4" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(4);recuperaQtaScartoArrotondateSec(4);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd4" classAD="IdUMSecPrd4"/>
+  <checkbox name="RicalcoloQuantitaVers4" classAD="RicalcoloQuantitaVers4"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine4" classRD="ProdottoOrdine4" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto4,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita4" classAD="IdRigaAttivita4"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut4" script="creaLotto(4)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°5 -->
+  <articolomultisearchform name="Prodotto5" classRD="Prodotto5" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(5)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(5)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione5" classRD="ProdottoVersione5" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig5" classRD="ProdottoConfig5" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto5" classRD="LottoProdotto5"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine5,DescrizioneLotto;IdNumeroOrdine5,DescrizioneLotto;IdRigaAttivita5,DescrizioneLotto;
+  IdVersionePrd5,DescrizioneLotto;IdEsternoConfigPrd5,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs5" classRD="MagazzinoVrs5" editbutton="no"/>
+  <textinput name="DescrizioneProdotto5" classAD="DescrizioneProdotto5"/>
+  <textinput name="QtaVrsUMPrm5" classAD="QtaVrsUMPrm5" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(5);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm5" classAD="QtaScartoUMPrm5" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(5);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd5" classAD="IdUMPrmPrd5"/>
+  <textinput name="QtaVrsUMSec5" classAD="QtaVrsUMSec5" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(5);recuperaQtaArrotondateSec(5);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec5" classAD="QtaScartoUMSec5" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(5);recuperaQtaScartoArrotondateSec(5);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd5" classAD="IdUMSecPrd5"/>
+  <checkbox name="RicalcoloQuantitaVers5" classAD="RicalcoloQuantitaVers5"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine5" classRD="ProdottoOrdine5" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto5,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita5" classAD="IdRigaAttivita5"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut5" script="creaLotto(5)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°6 -->
+  <articolomultisearchform name="Prodotto6" classRD="Prodotto6" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(6)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(6)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione6" classRD="ProdottoVersione6" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig6" classRD="ProdottoConfig6" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto6" classRD="LottoProdotto6"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine6,DescrizioneLotto;IdNumeroOrdine6,DescrizioneLotto;IdRigaAttivita6,DescrizioneLotto;
+  IdVersionePrd6,DescrizioneLotto;IdEsternoConfigPrd6,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs6" classRD="MagazzinoVrs6" editbutton="no"/>
+  <textinput name="DescrizioneProdotto6" classAD="DescrizioneProdotto6"/>
+  <textinput name="QtaVrsUMPrm6" classAD="QtaVrsUMPrm6" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(6);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm6" classAD="QtaScartoUMPrm6" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(6);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd6" classAD="IdUMPrmPrd6"/>
+  <textinput name="QtaVrsUMSec6" classAD="QtaVrsUMSec6" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(6);recuperaQtaArrotondateSec(6);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec6" classAD="QtaScartoUMSec6" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(6);recuperaQtaScartoArrotondateSec(6);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd6" classAD="IdUMSecPrd6"/>
+  <checkbox name="RicalcoloQuantitaVers6" classAD="RicalcoloQuantitaVers6"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine6" classRD="ProdottoOrdine6" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto6,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita6" classAD="IdRigaAttivita6"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut6" script="creaLotto(6)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°7 -->
+  <articolomultisearchform name="Prodotto7" classRD="Prodotto7" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(7)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(7)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione7" classRD="ProdottoVersione7" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig7" classRD="ProdottoConfig7" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto7" classRD="LottoProdotto7"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine7,DescrizioneLotto;IdNumeroOrdine7,DescrizioneLotto;IdRigaAttivita7,DescrizioneLotto;
+  IdVersionePrd7,DescrizioneLotto;IdEsternoConfigPrd7,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs7" classRD="MagazzinoVrs7" editbutton="no"/>
+  <textinput name="DescrizioneProdotto7" classAD="DescrizioneProdotto7"/>
+  <textinput name="QtaVrsUMPrm7" classAD="QtaVrsUMPrm7" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(7);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm7" classAD="QtaScartoUMPrm7" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(7);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd7" classAD="IdUMPrmPrd7"/>
+  <textinput name="QtaVrsUMSec7" classAD="QtaVrsUMSec7" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(7);recuperaQtaArrotondateSec(7);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec7" classAD="QtaScartoUMSec7" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(7);recuperaQtaScartoArrotondateSec(7);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd7" classAD="IdUMSecPrd7"/>
+  <checkbox name="RicalcoloQuantitaVers7" classAD="RicalcoloQuantitaVers7"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine7" classRD="ProdottoOrdine7" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto7,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita7" classAD="IdRigaAttivita7"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut7" script="creaLotto(7)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°8 -->
+  <articolomultisearchform name="Prodotto8" classRD="Prodotto8" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(8)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(8)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione8" classRD="ProdottoVersione8" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig8" classRD="ProdottoConfig8" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto8" classRD="LottoProdotto8"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine8,DescrizioneLotto;IdNumeroOrdine8,DescrizioneLotto;IdRigaAttivita8,DescrizioneLotto;
+  IdVersionePrd8,DescrizioneLotto;IdEsternoConfigPrd8,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs8" classRD="MagazzinoVrs8" editbutton="no"/>
+  <textinput name="DescrizioneProdotto8" classAD="DescrizioneProdotto8"/>
+  <textinput name="QtaVrsUMPrm8" classAD="QtaVrsUMPrm8" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(8);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm8" classAD="QtaScartoUMPrm8" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(8);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd8" classAD="IdUMPrmPrd8"/>
+  <textinput name="QtaVrsUMSec8" classAD="QtaVrsUMSec8" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(8);recuperaQtaArrotondateSec(8);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec8" classAD="QtaScartoUMSec8" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(8);recuperaQtaScartoArrotondateSec(8);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd8" classAD="IdUMSecPrd8"/>
+  <checkbox name="RicalcoloQuantitaVers8" classAD="RicalcoloQuantitaVers8"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine8" classRD="ProdottoOrdine8" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto8,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita8" classAD="IdRigaAttivita8"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut8" script="creaLotto(8)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°9 -->
+  <articolomultisearchform name="Prodotto9" classRD="Prodotto9" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(9)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(9)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione9" classRD="ProdottoVersione9" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig9" classRD="ProdottoConfig9" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto9" classRD="LottoProdotto9"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine9,DescrizioneLotto;IdNumeroOrdine9,DescrizioneLotto;IdRigaAttivita9,DescrizioneLotto;
+  IdVersionePrd9,DescrizioneLotto;IdEsternoConfigPrd9,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs9" classRD="MagazzinoVrs9" editbutton="no"/>
+  <textinput name="DescrizioneProdotto9" classAD="DescrizioneProdotto9"/>
+  <textinput name="QtaVrsUMPrm9" classAD="QtaVrsUMPrm9" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(9);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm9" classAD="QtaScartoUMPrm9" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(9);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd9" classAD="IdUMPrmPrd9"/>
+  <textinput name="QtaVrsUMSec9" classAD="QtaVrsUMSec9" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(9);recuperaQtaArrotondateSec(9);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec9" classAD="QtaScartoUMSec9" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(9);recuperaQtaScartoArrotondateSec(9);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd9" classAD="IdUMSecPrd9"/>
+  <checkbox name="RicalcoloQuantitaVers9" classAD="RicalcoloQuantitaVers9"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine9" classRD="ProdottoOrdine9" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto9,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita9" classAD="IdRigaAttivita9"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut9" script="creaLotto(9)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+  <!-- line n°10 -->
+  <articolomultisearchform name="Prodotto10" classRD="Prodotto10" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(10)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(10)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione10" classRD="ProdottoVersione10" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig10" classRD="ProdottoConfig10" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto10" classRD="LottoProdotto10"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine10,DescrizioneLotto;IdNumeroOrdine10,DescrizioneLotto;IdRigaAttivita10,DescrizioneLotto;
+  IdVersionePrd10,DescrizioneLotto;IdEsternoConfigPrd10,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs10" classRD="MagazzinoVrs10" editbutton="no"/>
+  <textinput name="DescrizioneProdotto10" classAD="DescrizioneProdotto10"/>
+  <textinput name="QtaVrsUMPrm10" classAD="QtaVrsUMPrm10" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(10);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm10" classAD="QtaScartoUMPrm10" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(10);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd10" classAD="IdUMPrmPrd10"/>
+  <textinput name="QtaVrsUMSec10" classAD="QtaVrsUMSec10" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(10);recuperaQtaArrotondateSec(10);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec10" classAD="QtaScartoUMSec10" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(10);recuperaQtaScartoArrotondateSec(10);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd10" classAD="IdUMSecPrd10"/>
+  <checkbox name="RicalcoloQuantitaVers10" classAD="RicalcoloQuantitaVers10"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine10" classRD="ProdottoOrdine10" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto10,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita10" classAD="IdRigaAttivita10"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut10" script="creaLotto(10)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°11 -->
+  <articolomultisearchform name="Prodotto11" classRD="Prodotto11" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(11)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(11)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione11" classRD="ProdottoVersione11" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig11" classRD="ProdottoConfig11" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto11" classRD="LottoProdotto11"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine11,DescrizioneLotto;IdNumeroOrdine11,DescrizioneLotto;IdRigaAttivita11,DescrizioneLotto;
+  IdVersionePrd11,DescrizioneLotto;IdEsternoConfigPrd11,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs11" classRD="MagazzinoVrs11" editbutton="no"/>
+  <textinput name="DescrizioneProdotto11" classAD="DescrizioneProdotto11"/>
+  <textinput name="QtaVrsUMPrm11" classAD="QtaVrsUMPrm11" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(11);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm11" classAD="QtaScartoUMPrm11" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(11);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd11" classAD="IdUMPrmPrd11"/>
+  <textinput name="QtaVrsUMSec11" classAD="QtaVrsUMSec11" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(11);recuperaQtaArrotondateSec(11);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec11" classAD="QtaScartoUMSec11" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(11);recuperaQtaScartoArrotondateSec(11);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd11" classAD="IdUMSecPrd11"/>
+  <checkbox name="RicalcoloQuantitaVers11" classAD="RicalcoloQuantitaVers11"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine11" classRD="ProdottoOrdine11" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto11,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita11" classAD="IdRigaAttivita11"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut11" script="creaLotto(11)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°12 -->
+  <articolomultisearchform name="Prodotto12" classRD="Prodotto12" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(12)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(12)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione12" classRD="ProdottoVersione12" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig12" classRD="ProdottoConfig12" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto12" classRD="LottoProdotto12"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine12,DescrizioneLotto;IdNumeroOrdine12,DescrizioneLotto;IdRigaAttivita12,DescrizioneLotto;
+  IdVersionePrd12,DescrizioneLotto;IdEsternoConfigPrd12,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs12" classRD="MagazzinoVrs12" editbutton="no"/>
+  <textinput name="DescrizioneProdotto12" classAD="DescrizioneProdotto12"/>
+  <textinput name="QtaVrsUMPrm12" classAD="QtaVrsUMPrm12" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(12);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm12" classAD="QtaScartoUMPrm12" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(12);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd12" classAD="IdUMPrmPrd12"/>
+  <textinput name="QtaVrsUMSec12" classAD="QtaVrsUMSec12" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(12);recuperaQtaArrotondateSec(12);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec12" classAD="QtaScartoUMSec12" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(12);recuperaQtaScartoArrotondateSec(12);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd12" classAD="IdUMSecPrd12"/>
+  <checkbox name="RicalcoloQuantitaVers12" classAD="RicalcoloQuantitaVers12"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine12" classRD="ProdottoOrdine12" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto12,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita12" classAD="IdRigaAttivita12"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut12" script="creaLotto(12)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°13 -->
+  <articolomultisearchform name="Prodotto13" classRD="Prodotto13" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(13)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(13)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione13" classRD="ProdottoVersione13" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig13" classRD="ProdottoConfig13" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto13" classRD="LottoProdotto13"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine13,DescrizioneLotto;IdNumeroOrdine13,DescrizioneLotto;IdRigaAttivita13,DescrizioneLotto;
+  IdVersionePrd13,DescrizioneLotto;IdEsternoConfigPrd13,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs13" classRD="MagazzinoVrs13" editbutton="no"/>
+  <textinput name="DescrizioneProdotto13" classAD="DescrizioneProdotto13"/>
+  <textinput name="QtaVrsUMPrm13" classAD="QtaVrsUMPrm13" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(13);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm13" classAD="QtaScartoUMPrm13" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(13);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd13" classAD="IdUMPrmPrd13"/>
+  <textinput name="QtaVrsUMSec13" classAD="QtaVrsUMSec13" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(13);recuperaQtaArrotondateSec(13);"/><!--Fix 15250--><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec13" classAD="QtaScartoUMSec13" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(13);recuperaQtaScartoArrotondateSec(13);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd13" classAD="IdUMSecPrd13"/>
+  <checkbox name="RicalcoloQuantitaVers13" classAD="RicalcoloQuantitaVers13"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine13" classRD="ProdottoOrdine13" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto13,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita13" classAD="IdRigaAttivita13"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut13" script="creaLotto(13)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°14 -->
+  <articolomultisearchform name="Prodotto14" classRD="Prodotto14" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(14)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(14)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione14" classRD="ProdottoVersione14" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig14" classRD="ProdottoConfig14" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto14" classRD="LottoProdotto14"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine14,DescrizioneLotto;IdNumeroOrdine14,DescrizioneLotto;IdRigaAttivita14,DescrizioneLotto;
+  IdVersionePrd14,DescrizioneLotto;IdEsternoConfigPrd14,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs14" classRD="MagazzinoVrs14" editbutton="no"/>
+  <textinput name="DescrizioneProdotto14" classAD="DescrizioneProdotto14"/>
+  <textinput name="QtaVrsUMPrm14" classAD="QtaVrsUMPrm14" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(14);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm14" classAD="QtaScartoUMPrm14" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(14);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd14" classAD="IdUMPrmPrd14"/>
+  <textinput name="QtaVrsUMSec14" classAD="QtaVrsUMSec14" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(14);recuperaQtaArrotondateSec(14);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec14" classAD="QtaScartoUMSec14" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(14);recuperaQtaScartoArrotondateSec(14);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd14" classAD="IdUMSecPrd14"/>
+  <checkbox name="RicalcoloQuantitaVers14" classAD="RicalcoloQuantitaVers14"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine14" classRD="ProdottoOrdine14" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto14,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita14" classAD="IdRigaAttivita14"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut14" script="creaLotto(14)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°20 -->
+  <articolomultisearchform name="Prodotto15" classRD="Prodotto15" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(15)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(15)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione15" classRD="ProdottoVersione15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig15" classRD="ProdottoConfig15" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto15" classRD="LottoProdotto15"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine15,DescrizioneLotto;IdNumeroOrdine15,DescrizioneLotto;IdRigaAttivita15,DescrizioneLotto;
+  IdVersionePrd15,DescrizioneLotto;IdEsternoConfigPrd15,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs15" classRD="MagazzinoVrs15" editbutton="no"/>
+  <textinput name="DescrizioneProdotto15" classAD="DescrizioneProdotto15"/>
+  <textinput name="QtaVrsUMPrm15" classAD="QtaVrsUMPrm15" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(15);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm15" classAD="QtaScartoUMPrm15" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(15);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd15" classAD="IdUMPrmPrd15"/>
+  <textinput name="QtaVrsUMSec15" classAD="QtaVrsUMSec15" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(15);recuperaQtaArrotondateSec(15);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec15" classAD="QtaScartoUMSec15" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(15);recuperaQtaScartoArrotondateSec(15);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd15" classAD="IdUMSecPrd15"/>
+  <checkbox name="RicalcoloQuantitaVers15" classAD="RicalcoloQuantitaVers15"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine15" classRD="ProdottoOrdine15" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto15,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita15" classAD="IdRigaAttivita15"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut15" script="creaLotto(15)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°16 -->
+  <articolomultisearchform name="Prodotto16" classRD="Prodotto16" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(16)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(16)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione16" classRD="ProdottoVersione16" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig16" classRD="ProdottoConfig16" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto16" classRD="LottoProdotto16"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine16,DescrizioneLotto;IdNumeroOrdine16,DescrizioneLotto;IdRigaAttivita16,DescrizioneLotto;
+  IdVersionePrd16,DescrizioneLotto;IdEsternoConfigPrd16,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs16" classRD="MagazzinoVrs16" editbutton="no"/>
+  <textinput name="DescrizioneProdotto16" classAD="DescrizioneProdotto16"/>
+  <textinput name="QtaVrsUMPrm16" classAD="QtaVrsUMPrm16" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(16);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm16" classAD="QtaScartoUMPrm16" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(16);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd16" classAD="IdUMPrmPrd16"/>
+  <textinput name="QtaVrsUMSec16" classAD="QtaVrsUMSec16" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(16);recuperaQtaArrotondateSec(16);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec16" classAD="QtaScartoUMSec16" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(16);recuperaQtaScartoArrotondateSec(16);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd16" classAD="IdUMSecPrd16"/>
+  <checkbox name="RicalcoloQuantitaVers16" classAD="RicalcoloQuantitaVers16"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine16" classRD="ProdottoOrdine16" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto16,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita16" classAD="IdRigaAttivita16"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut16" script="creaLotto(16)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°17 -->
+  <articolomultisearchform name="Prodotto17" classRD="Prodotto17" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(17)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(17)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione17" classRD="ProdottoVersione17" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig17" classRD="ProdottoConfig17" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto17" classRD="LottoProdotto17"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine17,DescrizioneLotto;IdNumeroOrdine17,DescrizioneLotto;IdRigaAttivita17,DescrizioneLotto;
+  IdVersionePrd17,DescrizioneLotto;IdEsternoConfigPrd17,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs17" classRD="MagazzinoVrs17" editbutton="no"/>
+  <textinput name="DescrizioneProdotto17" classAD="DescrizioneProdotto17"/>
+  <textinput name="QtaVrsUMPrm17" classAD="QtaVrsUMPrm17" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(17);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm17" classAD="QtaScartoUMPrm17" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(17);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd17" classAD="IdUMPrmPrd17"/>
+  <textinput name="QtaVrsUMSec17" classAD="QtaVrsUMSec17" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(17);recuperaQtaArrotondateSec(17);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec17" classAD="QtaScartoUMSec17" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(17);recuperaQtaScartoArrotondateSec(17);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd17" classAD="IdUMSecPrd17"/>
+  <checkbox name="RicalcoloQuantitaVers17" classAD="RicalcoloQuantitaVers17"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine17" classRD="ProdottoOrdine17" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto17,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita17" classAD="IdRigaAttivita17"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut17" script="creaLotto(17)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°18 -->
+  <articolomultisearchform name="Prodotto18" classRD="Prodotto18" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(18)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(18)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione18" classRD="ProdottoVersione18" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig18" classRD="ProdottoConfig18" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto18" classRD="LottoProdotto18"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine18,DescrizioneLotto;IdNumeroOrdine18,DescrizioneLotto;IdRigaAttivita18,DescrizioneLotto;
+  IdVersionePrd18,DescrizioneLotto;IdEsternoConfigPrd18,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs18" classRD="MagazzinoVrs18" editbutton="no"/>
+  <textinput name="DescrizioneProdotto18" classAD="DescrizioneProdotto18"/>
+  <textinput name="QtaVrsUMPrm18" classAD="QtaVrsUMPrm18" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(18);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm18" classAD="QtaScartoUMPrm18" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(18);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd18" classAD="IdUMPrmPrd18"/>
+  <textinput name="QtaVrsUMSec18" classAD="QtaVrsUMSec18" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(18);recuperaQtaArrotondateSec(18);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec18" classAD="QtaScartoUMSec18" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(18);recuperaQtaScartoArrotondateSec(18);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd18" classAD="IdUMSecPrd18"/>
+  <checkbox name="RicalcoloQuantitaVers18" classAD="RicalcoloQuantitaVers18"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine18" classRD="ProdottoOrdine18" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto18,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita18" classAD="IdRigaAttivita18"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut18" script="creaLotto(18)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°19 -->
+  <articolomultisearchform name="Prodotto19" classRD="Prodotto19" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(19)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(19)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione19" classRD="ProdottoVersione19" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig19" classRD="ProdottoConfig19" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto19" classRD="LottoProdotto19"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine19,DescrizioneLotto;IdNumeroOrdine19,DescrizioneLotto;IdRigaAttivita19,DescrizioneLotto;
+  IdVersionePrd19,DescrizioneLotto;IdEsternoConfigPrd19,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs19" classRD="MagazzinoVrs19" editbutton="no"/>
+  <textinput name="DescrizioneProdotto19" classAD="DescrizioneProdotto19"/>
+  <textinput name="QtaVrsUMPrm19" classAD="QtaVrsUMPrm19" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(19);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm19" classAD="QtaScartoUMPrm19" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(19);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd19" classAD="IdUMPrmPrd19"/>
+  <textinput name="QtaVrsUMSec19" classAD="QtaVrsUMSec19" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(19);recuperaQtaArrotondateSec(19);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec19" classAD="QtaScartoUMSec19" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(19);recuperaQtaScartoArrotondateSec(19);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd19" classAD="IdUMSecPrd19"/>
+  <checkbox name="RicalcoloQuantitaVers19" classAD="RicalcoloQuantitaVers19"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine19" classRD="ProdottoOrdine19" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto19,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita19" classAD="IdRigaAttivita19"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut19" script="creaLotto(19)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+   <!-- line n°20 -->
+  <articolomultisearchform name="Prodotto20" classRD="Prodotto20" editbutton="no" idCols="25" extraRelatedClassAD="DescrizioneArticolo.Descrizione,UMPrmMag,UMSecMag"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" onSearchBack="recuperaDatiProdotto()" onKeyChange="resetDatiProdotto(20)"
+  additionalRestrictConditions="IdAnnoOrdine,IdClasseMerclg;IdNumeroOrdine,IdClasseMerclg;IdRigaAttivita,IdClasseMerclg;
+  TipoBolla,TipoArticolo;IdAnnoBolla,IdClasseMerclg;IdNumeroBolla,IdClasseMerclg" onKeyBlur="onKeyBlurArticolo(20)"/> <!--Fix 22941-->
+  <multisearchform name="ProdottoVersione20" classRD="ProdottoVersione20" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList" idCols="1"
+  additionalRestrictConditions="IdAnnoOrdine,IdDisegnoTecnico;IdNumeroOrdine,IdDisegnoTecnico;IdRigaAttivita,IdDisegnoTecnico;
+  TipoBolla,StatoTecnico;IdAnnoBolla,IdDisegnoTecnico;IdNumeroBolla,IdDisegnoTecnico"/>
+  <configurazionemultisearchform name="ProdottoConfig20" classRD="ProdottoConfig20" idCols="15" editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.ProdottiDoList"  extraRelatedClassAD = "IdAzienda,IdConfigurazione"
+  additionalRestrictConditions="IdAnnoOrdine,SintesiConfig;IdNumeroOrdine,SintesiConfig;IdRigaAttivita,SintesiConfig;
+  TipoBolla,TipoConfig;IdAnnoBolla,SintesiConfig;IdNumeroBolla,SintesiConfig"/>
+  <multisearchform idCols="12"  name="LottoProdotto20" classRD="LottoProdotto20"  editbutton="no"
+  specificDOList="it.thera.thip.produzione.raccoltaDati.web.LottiVersamentiDoList"
+  additionalRestrictConditions="IdAnnoOrdine,DescrizioneLotto;IdNumeroOrdine,DescrizioneLotto;
+  IdRigaAttivita,DescrizioneLotto;IdAnnoOrdine20,DescrizioneLotto;IdNumeroOrdine20,DescrizioneLotto;IdRigaAttivita20,DescrizioneLotto;
+  IdVersionePrd20,DescrizioneLotto;IdEsternoConfigPrd20,DescrizioneLotto;" />
+  <multisearchform name="MagazzinoVrs20" classRD="MagazzinoVrs20" editbutton="no"/>
+  <textinput name="DescrizioneProdotto20" classAD="DescrizioneProdotto20"/>
+  <textinput name="QtaVrsUMPrm20" classAD="QtaVrsUMPrm20" onFocus="showKeyPad(this);" onChange="recuperaQtaSec(20);"/><!--Fix 15250--><!-- Fix 25921 aggiunto recuperaQtaSec -->
+  <textinput name="QtaScartoUMPrm20" classAD="QtaScartoUMPrm20" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoSec(20);"/><!--Fix 15250-->
+  <textinput name="IdUMPrmPrd20" classAD="IdUMPrmPrd20"/>
+  <textinput name="QtaVrsUMSec20" classAD="QtaVrsUMSec20" onFocus="showKeyPad(this);" onChange="recuperaQtaPrm(20);recuperaQtaArrotondateSec(20);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="QtaScartoUMSec20" classAD="QtaScartoUMSec20" onFocus="showKeyPad(this);" onChange="recuperaQtaScartoPrm(20);recuperaQtaScartoArrotondateSec(20);"/><!--Fix 15250--><!-- Fix 31082 --><!-- Fix 39680 -->
+  <textinput name="IdUMSecPrd20" classAD="IdUMSecPrd20"/>
+  <checkbox name="RicalcoloQuantitaVers20" classAD="RicalcoloQuantitaVers20"/> <!-- Fix 39680 -->
+  <multisearchform name="ProdottoOrdine20" classRD="ProdottoOrdine20" editbutton="no" additionalfields="1"  specificDOList="it.thera.thip.produzione.raccoltaDati.web.OrdiniEsecutiveDoList" additionalRestrictConditions="IdNumeroBolla,NumeroOrdFmt;IdAnnoBolla,NumeroOrdFmt;IdProdotto20,IdArticolo" onSearchBack="fillVrsCfg()"/>
+  <textinput name="IdRigaAttivita20" classAD="IdRigaAttivita20"/> <!-- Fix 14722 -->
+  <button name="CreaLottoBut20" script="creaLotto(20)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
+
+  <button name="NuovaRigaBut" script="NuovaRiga()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButNuovaRiga"/>
+  <! -- Fix 72XXX Softre inizio -->
+  <button name="CreaLottiFilatiManufatti" script="creaLottiTestoriFilatiManufatti()" resourceFile="it/testori/thip/produzione/raccoltaDati/resources/YRilevDatiPrdTS" resourceID="ButCreaLottiFilatiManufatti"/>
+  <textinput name="LottiFilatiManufatti" classAD="LottiFilatiManufatti"/>
+  <! -- Fix 72XXX Softre fine -->
+  <!-- Fix 18536 inizio -->
+  <button name="PaginaPrecBut" script="PaginaPrec()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="PaginaPrec"/>
+  <button name="PaginaSuccBut" script="PaginaSucc()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="PaginaSucc"/>
+  <!-- Fix 18536 fine -->
+    <!-- Fix 39680 Inizio -->
+    <checkbox name="RicalcoloQuantita" classAD="RicalcoloQuantita"/>
+	<checkbox name="RicalcoloQuantitaPrl1" classAD="RicalcoloQuantitaPrl1"/>
+	<checkbox name="RicalcoloQuantitaPrl2" classAD="RicalcoloQuantitaPrl2"/>
+	<checkbox name="RicalcoloQuantitaPrl3" classAD="RicalcoloQuantitaPrl3"/>
+	<checkbox name="RicalcoloQuantitaPrl4" classAD="RicalcoloQuantitaPrl4"/>
+	<checkbox name="RicalcoloQuantitaPrl5" classAD="RicalcoloQuantitaPrl5"/>
+	<checkbox name="RicalcoloQuantitaPrl6" classAD="RicalcoloQuantitaPrl6"/>
+	<checkbox name="RicalcoloQuantitaPrl7" classAD="RicalcoloQuantitaPrl7"/>
+	<checkbox name="RicalcoloQuantitaPrl8" classAD="RicalcoloQuantitaPrl8"/>
+	<checkbox name="RicalcoloQuantitaPrl9" classAD="RicalcoloQuantitaPrl9"/>
+	<checkbox name="RicalcoloQuantitaPrl10" classAD="RicalcoloQuantitaPrl10"/>
+	<checkbox name="RicalcoloQuantitaPrl11" classAD="RicalcoloQuantitaPrl11"/>
+	<checkbox name="RicalcoloQuantitaPrl12" classAD="RicalcoloQuantitaPrl12"/>
+	<checkbox name="RicalcoloQuantitaPrl13" classAD="RicalcoloQuantitaPrl13"/>
+	<checkbox name="RicalcoloQuantitaPrl14" classAD="RicalcoloQuantitaPrl14"/>
+	<checkbox name="RicalcoloQuantitaPrl15" classAD="RicalcoloQuantitaPrl15"/>
+	<checkbox name="RicalcoloQuantitaPrl16" classAD="RicalcoloQuantitaPrl16"/>
+	<checkbox name="RicalcoloQuantitaPrl17" classAD="RicalcoloQuantitaPrl17"/>
+	<checkbox name="RicalcoloQuantitaPrl18" classAD="RicalcoloQuantitaPrl18"/>
+	<checkbox name="RicalcoloQuantitaPrl19" classAD="RicalcoloQuantitaPrl19"/>
+	<checkbox name="RicalcoloQuantitaPrl20" classAD="RicalcoloQuantitaPrl20"/>
+    <!-- Fix 39680 Fine -->
+  </form>
+
+</tfml>

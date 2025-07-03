@@ -1,0 +1,1004 @@
+<html>
+<head>
+<title></title>
+</head>
+<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" onclick="manageKeyPad();" onFocus="manageKeyPad();"><!--Fix 15250--><!-- Fix 31082 -->
+
+<form name="RilevDatiPrdTSForm" style="height:100%">
+
+<table class="maintable" style="height:100%;">
+  <tr valign="top">
+    <td colspan="2" style="height:15px"></td>
+  </tr>
+  <tr valign="top">
+    <td width="15px"></td>
+    <td width="1">
+      <table cellpadding="3" cellspacing="3">
+        <tr valign="top">
+          <td nowrap="nowrap"><label class="labelro" for="DescrizioneOperatore">DescrizioneOperatore</label></td>
+          <td  colspan="2"><input name="DescrizioneOperatore" readonly="readonly" class="inputro" tabindex="-1" size="40"/></td>
+        </tr>
+        <tr id="BollaTR">
+          <td nowrap="nowrap" id="LabelBollaLavorazione"><label class="labelro" for="BollaLavorazione">Bolla lavorazione</label></td> <!-- Fix 14722 Aggiunto Id-->
+          <td nowrap="nowrap" id="LabelBollaCucita" style="display:none;"><label class="labelro" id="BollaCucita" name="BollaCucita"></label></td> <!-- Fix 14722 -->
+          <td><input name="BollaLavorazione" readonly="readonly" class="inputro" tabindex="-1" size="12" /></td>
+          <td><input name="DescrizioneBolla" readonly="readonly" class="inputro" tabindex="-1" size="40"/></td>
+        </tr>
+        <tr valign="top" id="TrOrdine"> <!-- Fix 14722 Aggiunto Id-->
+          <td nowrap="nowrap"><label class="labelro" for="IdNumeroOrdine">IdNumOrd</label></td>
+          <td  colspan="2">
+            <input name="IdAnnoOrdine" readonly="readonly" class="inputro" tabindex="-1" size="4"/>
+            <input name="IdNumeroOrdine" readonly="readonly" class="inputro" tabindex="-1" style="width:228px"/>
+          </td>
+        </tr>
+        <!-- Fix 14722 inizio-->
+        <tr valign="top" id="TrBollaCucita" style="display:none;">
+          <td nowrap="nowrap"><label class="labelro" for="IdNumeroBolla">Numero bolla</label></td>
+          <td colspan="2">
+            <input name="IdAnnoBolla"  id="IdAnnoBolla" readonly="readonly" class="inputro" tabindex="-1" size="4"/>
+            <input name="IdNumeroBolla" id="IdNumeroBolla" readonly="readonly" class="inputro" tabindex="-1" style="width:228px" size="10"/>
+          </td>
+        </tr>
+        <!-- Fix 14722 fine-->
+        <tr style="display:none">
+          <td colspan="2">
+            <input name="IdArticolo" type="Hidden"/>
+            <input name="IdOperatore" type="Hidden"/>
+            <input name="TipoTimbratura" type="Hidden"/>
+            <input name="IdCausaleRilevazione" type="Hidden"/>
+            <input name="IdRigaAttivita" type="Hidden"/>
+            <input name="TipoRisorsa" type="Hidden"/>
+            <input name="LivelloRisorsa" type="Hidden"/>
+            <input name="IdRisorsa" type="Hidden"/>
+            <input name="IdAmbiente" type="Hidden"/>
+            <input name="TipoBolla" type="Hidden"/>
+            <input name="Tempo" type="Hidden"/>
+            <input name="Note" type="Hidden"/>
+            <!--Fix 17241 inizio-->
+            <input name="Quantita" type="Hidden"/>
+            <input name="QuantitaSec" type="Hidden"/>
+            <!--Fix 17241 fine-->
+            <!--Fix 17550 inizio-->
+            <input name="QtaScarto" type="Hidden"/>
+            <input name="QtaScartoSec" type="Hidden"/>
+            <!--Fix 17550 fine-->
+            <input name="CurrentNumPag" type="Hidden"/><!-- Fix 18536 -->
+            <input name="OraFine" type="Hidden"/><!-- Fix 19148 -->
+            <input name="DataFine" type="Hidden"/><!-- Fix 30440 -->
+            <input name="StampaBolla" type="Hidden"/><!-- Fix 30900 -->
+          </td>
+          <!-- Fix 39680 Inizio -->
+          <td style="display:none">
+              <input id="RicalcoloQuantita" name="RicalcoloQuantita" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl1" name="RicalcoloQuantitaPrl1" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl2" name="RicalcoloQuantitaPrl2" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl3" name="RicalcoloQuantitaPrl3" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl4" name="RicalcoloQuantitaPrl4" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl5" name="RicalcoloQuantitaPrl5" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl6" name="RicalcoloQuantitaPrl6" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl7" name="RicalcoloQuantitaPrl7" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl8" name="RicalcoloQuantitaPrl8" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl9" name="RicalcoloQuantitaPrl9" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl10" name="RicalcoloQuantitaPrl10" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl11" name="RicalcoloQuantitaPrl11" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl12" name="RicalcoloQuantitaPrl12" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl13" name="RicalcoloQuantitaPrl13" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl14" name="RicalcoloQuantitaPrl14" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl15" name="RicalcoloQuantitaPrl15" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl16" name="RicalcoloQuantitaPrl16" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl17" name="RicalcoloQuantitaPrl17" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl18" name="RicalcoloQuantitaPrl18" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl19" name="RicalcoloQuantitaPrl19" type="checkbox"/>
+			  <input id="RicalcoloQuantitaPrl20" name="RicalcoloQuantitaPrl20" type="checkbox"/>
+		  </td>
+          <!-- Fix 39680 Fine -->
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="15px"></td>
+    <td height="100%">
+      <div style="height:100%;overflow:auto;">
+      <table cellpadding="1" cellspacing="1">
+        <tr>
+          <td nowrap="nowrap"><label class="labelro" for="Prodotto1">Prodotto</label></td>
+          <td nowrap="nowrap" id="LabelNumeroOrdine" style="display:none"><label class="labelro" for="IdNumeroOrdine1" style="margin: 0 50 0 0;">NumOrdine</label></td> <!-- Fix 14722 -->
+          <td nowrap="nowrap"><label class="labelro" for="QtaVrsUMPrm1">Qta buona</label></td>
+          <td nowrap="nowrap"><label class="labelro" for="QtaScartoUMPrm1">Qta scarto</label></td>
+          <td nowrap="nowrap"><label class="labelro" for="IdUMPrmPrd1">UM</label></td>
+          <td nowrap="nowrap"><label class="labelro" for="LottoProdotto1">Lotto</label></td>
+        </tr>
+        <!-- Fix 14722 blocco commentato -->
+      <!--/table>
+    </td>
+  </tr>
+  <tr>
+    <td width="15px"></td>
+    <td>
+      <table cellpadding="3" cellspacing="3"-->
+        <tr id="TR1_1">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto1"></span>
+            <span class="multisearchform" id ="ProdottoVersione1"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig1"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!--td nowrap="true" id="TDNumeroOrdine1" style="display:none">
+              <input name="IdAnnoOrdine1" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine1" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita1" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm1" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm1" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd1" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td><span class="multisearchform" id ="LottoProdotto1"></span></td>
+        </tr>
+        <tr id="TR1_2">
+          <!-- Fix 15030 Inizio-->
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine1"></span>
+          <input name="DescrizioneProdotto1" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <input name="IdRigaAttivita1" type="Hidden"/>
+          <!-- Fix 15030 Fine-->
+          </td>
+          <td id="TDDisposizione1" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec1" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec1" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd1" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers1TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers1" name="RicalcoloQuantitaVers1"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut1" name="CreaLottoBut1" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+        <td><span class="multisearchform" id ="MagazzinoVrs1"></span></td>
+        </tr>
+        <tr id="TR1_3"  style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR2_1"  style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto2"></span>
+            <span class="multisearchform" id ="ProdottoVersione2"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig2"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine2" style="display:none">
+              <input name="IdAnnoOrdine2" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine2" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita2" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm2" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm2" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd2" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto2"></span></td>
+            <!-- Fix 15030 Fine-->
+        </tr>
+        <tr id="TR2_2" style="display:none">
+          <!-- Fix 15030 inizio-->
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine2"></span>
+          <input name="DescrizioneProdotto2" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <input name="IdRigaAttivita2" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione2" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec2" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec2" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd2" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers2TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers2" name="RicalcoloQuantitaVers2"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut2" name="CreaLottoBut2" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+        <td><span class="multisearchform" id ="MagazzinoVrs2"></span></td>
+        </tr>
+        <tr id="TR2_3"  style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR3_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto3"></span>
+            <span class="multisearchform" id ="ProdottoVersione3"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig3"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine3" style="display:none">
+              <input name="IdAnnoOrdine3" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine3" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita3" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm3" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm3" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd3" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto3"></span></td>
+        </tr>
+        <tr id="TR3_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine3"></span>
+          <input name="DescrizioneProdotto3" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita3" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione3" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec3" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec3" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd3" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers3TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers3" name="RicalcoloQuantitaVers3"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut3" name="CreaLottoBut3" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+        <td><span class="multisearchform" id ="MagazzinoVrs3"></span></td>
+        </tr>
+        <tr id="TR3_3"  style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR4_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto4"></span>
+            <span class="multisearchform" id ="ProdottoVersione4"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig4"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine4" style="display:none">
+              <input name="IdAnnoOrdine4" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine4" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita4" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm4" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm4" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd4" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto4"></span></td>
+        </tr>
+        <tr id="TR4_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine4"></span>
+          <input name="DescrizioneProdotto4" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita4" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione4" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec4" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec4" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd4" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers4TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers4" name="RicalcoloQuantitaVers4"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut4" name="CreaLottoBut4" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+        <td><span class="multisearchform" id ="MagazzinoVrs4"></span></td>
+        </tr>
+        <tr id="TR4_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR5_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto5"></span>
+            <span class="multisearchform" id ="ProdottoVersione5"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig5"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine5" style="display:none">
+              <input name="IdAnnoOrdine5" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine5" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita5" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm5" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm5" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd5" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto5"></span></td>
+        </tr>
+        <tr id="TR5_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine5"></span>
+          <input name="DescrizioneProdotto5" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita5" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione5" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec5" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec5" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd5" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers5TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers5" name="RicalcoloQuantitaVers5"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut5" name="CreaLottoBut5" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs5"></span></td>
+        </tr>
+        <!--Fix 19000 AA Inizio-->
+        <!--<tr id="TR2_3" style="display:none">-->
+        <tr id="TR5_3" style="display:none">
+        <!--Fix 19000 AA Fine-->
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR6_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto6"></span>
+            <span class="multisearchform" id ="ProdottoVersione6"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig6"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine6" style="display:none">
+              <input name="IdAnnoOrdine6" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine6" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita6" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm6" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm6" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd6" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto6"></span></td>
+        </tr>
+        <tr id="TR6_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine6"></span>
+          <input name="DescrizioneProdotto6" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita6" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione6" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec6" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec6" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd6" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers6TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers6" name="RicalcoloQuantitaVers6"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut6" name="CreaLottoBut6" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs6"></span></td>
+        </tr>
+        <tr id="TR6_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR7_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto7"></span>
+            <span class="multisearchform" id ="ProdottoVersione7"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig7"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine7" style="display:none">
+              <input name="IdAnnoOrdine7" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine7" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita7" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm7" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm7" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd7" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto7"></span></td>
+        </tr>
+        <tr id="TR7_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine7"></span>
+          <input name="DescrizioneProdotto7" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita7" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione7" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec7" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec7" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd7" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers7TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers7" name="RicalcoloQuantitaVers7"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut7" name="CreaLottoBut7" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs7"></span></td>
+        </tr>
+        <tr id="TR7_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR8_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto8"></span>
+            <span class="multisearchform" id ="ProdottoVersione8"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig8"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine8" style="display:none">
+              <input name="IdAnnoOrdine8" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine8" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita8" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm8" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm8" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd8" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto8"></span></td>
+        </tr>
+        <tr id="TR8_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine8"></span>
+          <input name="DescrizioneProdotto8" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita8" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione8" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec8" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec8" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd8" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers8TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers8" name="RicalcoloQuantitaVers8"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut8" name="CreaLottoBut8" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs8"></span></td>
+        </tr>
+        <tr id="TR8_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR9_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto9"></span>
+            <span class="multisearchform" id ="ProdottoVersione9"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig9"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine9" style="display:none">
+              <input name="IdAnnoOrdine9" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine9" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita9" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm9" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm9" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd9" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto9"></span></td>
+        </tr>
+        <tr id="TR9_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine9"></span>
+          <input name="DescrizioneProdotto9" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita9" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione9" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec9" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec9" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd9" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers9TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers9" name="RicalcoloQuantitaVers9"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut9" name="CreaLottoBut9" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs9"></span></td>
+        </tr>
+        <tr id="TR9_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR10_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto10"></span>
+            <span class="multisearchform" id ="ProdottoVersione10"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig10"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine10" style="display:none">
+              <input name="IdAnnoOrdine10" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine10" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita10" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm10" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm10" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd10" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto10"></span></td>
+        </tr>
+        <tr id="TR10_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine10"></span>
+          <input name="DescrizioneProdotto10" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita10" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione10" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec10" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec10" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd10" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers10TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers10" name="RicalcoloQuantitaVers10"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut10" name="CreaLottoBut10" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs10"></span></td>
+        </tr>
+        <tr id="TR10_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR11_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto11"></span>
+            <span class="multisearchform" id ="ProdottoVersione11"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig11"></span></td>
+            <!-- Fix 14722 Inizio-->
+            <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine11" style="display:none">
+              <input name="IdAnnoOrdine11" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine11" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita11" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm11" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm11" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd11" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto11"></span></td>
+        </tr>
+        <tr id="TR11_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine11"></span>
+          <input name="DescrizioneProdotto11" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita11" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione11" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec11" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec11" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd11" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers11TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers11" name="RicalcoloQuantitaVers11"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut11" name="CreaLottoBut11" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs11"></span></td>
+        </tr>
+        <tr id="TR11_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR12_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto12"></span>
+            <span class="multisearchform" id ="ProdottoVersione12"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig12"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine12" style="display:none">
+              <input name="IdAnnoOrdine12" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine12" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita12" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm12" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm12" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd12" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto12"></span></td>
+        </tr>
+        <tr id="TR12_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine12"></span>
+          <input name="DescrizioneProdotto12" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita12" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione12" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec12" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec12" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd12" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers12TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers12" name="RicalcoloQuantitaVers12"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut12" name="CreaLottoBut12" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs12"></span></td>
+        </tr>
+        <tr id="TR12_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR13_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto13"></span>
+            <span class="multisearchform" id ="ProdottoVersione13"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig13"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine13" style="display:none">
+              <input name="IdAnnoOrdine13" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine13" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita13" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm13" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm13" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd13" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto13"></span></td>
+        </tr>
+        <tr id="TR13_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine13"></span>
+          <input name="DescrizioneProdotto13" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita13" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione13" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec13" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec13" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd13" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers13TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers13" name="RicalcoloQuantitaVers13"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut13" name="CreaLottoBut13" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs13"></span></td>
+        </tr>
+        <tr id="TR13_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR14_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto14"></span>
+            <span class="multisearchform" id ="ProdottoVersione14"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig14"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine14" style="display:none">
+              <input name="IdAnnoOrdine14" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine14" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita14" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm14" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm14" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd14" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto14"></span></td>
+        </tr>
+        <tr id="TR14_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine14"></span>
+          <input name="DescrizioneProdotto14" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita14" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione14" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec14" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec14" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd14" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers14TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers14" name="RicalcoloQuantitaVers14"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut14" name="CreaLottoBut14" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs14"></span></td>
+        </tr>
+        <tr id="TR14_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR15_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto15"></span>
+            <span class="multisearchform" id ="ProdottoVersione15"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig15"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine15" style="display:none">
+              <input name="IdAnnoOrdine15" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine15" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita15" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm15" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm15" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd15" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto15"></span></td>
+        </tr>
+        <tr id="TR15_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine15"></span>
+          <input name="DescrizioneProdotto15" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita15" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione15" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec15" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec15" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd15" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers15TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers15" name="RicalcoloQuantitaVers15"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut15" name="CreaLottoBut15" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs15"></span></td>
+        </tr>
+        <tr id="TR15_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR16_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto16"></span>
+            <span class="multisearchform" id ="ProdottoVersione16"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig16"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine16" style="display:none">
+              <input name="IdAnnoOrdine16" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine16" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita16" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm16" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm16" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd16" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto16"></span></td>
+        </tr>
+        <tr id="TR16_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine16"></span>
+          <input name="DescrizioneProdotto16" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita16" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione16" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec16" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec16" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd16" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers16TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers16" name="RicalcoloQuantitaVers16"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut16" name="CreaLottoBut16" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs16"></span></td>
+        </tr>
+        <tr id="TR16_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR17_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto17"></span>
+            <span class="multisearchform" id ="ProdottoVersione17"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig17"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine17" style="display:none">
+              <input name="IdAnnoOrdine17" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine17" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita17" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm17" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm17" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd17" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto17"></span></td>
+        </tr>
+        <tr id="TR17_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine17"></span>
+          <input name="DescrizioneProdotto17" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita17" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione17" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec17" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec17" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd17" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers17TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers17" name="RicalcoloQuantitaVers17"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut17" name="CreaLottoBut17" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs17"></span></td>
+        </tr>
+        <tr id="TR17_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR18_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto18"></span>
+            <span class="multisearchform" id ="ProdottoVersione18"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig18"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine18" style="display:none">
+              <input name="IdAnnoOrdine18" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine18" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita18" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm18" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm18" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd18" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto18"></span></td>
+        </tr>
+        <tr id="TR18_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine18"></span>
+          <input name="DescrizioneProdotto18" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita18" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione18" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec18" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec18" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd18" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers18TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers18" name="RicalcoloQuantitaVers18"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut18" name="CreaLottoBut18" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs18"></span></td>
+        </tr>
+        <tr id="TR18_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR19_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto19"></span>
+            <span class="multisearchform" id ="ProdottoVersione19"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig19"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine19" style="display:none">
+              <input name="IdAnnoOrdine19" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine19" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita19" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm19" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm19" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd19" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto19"></span></td>
+        </tr>
+        <tr id="TR19_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine19"></span>
+          <input name="DescrizioneProdotto19" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita19" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione19" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec19" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec19" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd19" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers19TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers19" name="RicalcoloQuantitaVers19"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut19" name="CreaLottoBut19" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs19"></span></td>
+        </tr>
+        <tr id="TR19_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+        <tr id="TR20_1" style="display:none">
+          <td nowrap="true"><span class="articolomultisearchform" id ="Prodotto20"></span>
+            <span class="multisearchform" id ="ProdottoVersione20"></span>
+            <span class="configurazionemultisearchform" id ="ProdottoConfig20"></span></td>
+             <!-- Fix 14722 Inizio-->
+             <!-- Fix 15030 blocco commentato-->
+            <!--td nowrap="true" id="TDNumeroOrdine20" style="display:none">
+              <input name="IdAnnoOrdine20" class="inputro" tabindex="-1" size="4"/>
+              <input name="IdNumeroOrdine20" class="inputro" tabindex="-1" size="9"/>
+              <input name="IdRigaAttivita20" type="Hidden"/>
+            </td-->
+            <!-- Fix 14722 Fine-->
+            <!-- Fix 15030 Inizio modifica size-->
+            <td nowrap="true"><input name="QtaVrsUMPrm20" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="QtaScartoUMPrm20" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+            <td nowrap="true"><input name="IdUMPrmPrd20" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+            <!-- Fix 15030 Fine-->
+            <td nowrap="true"><span class="multisearchform" id ="LottoProdotto20"></span></td>
+        </tr>
+        <tr id="TR20_2" style="display:none">
+          <td nowrap="true"><span class="multisearchform" id ="ProdottoOrdine20"></span>
+          <input name="DescrizioneProdotto20" class="inputro" tabindex="-1" readonly="readonly" size="29"/> <!-- Fix 15030 modifica size da 46-->
+          <!-- Fix 15030 inizio-->
+          <input name="IdRigaAttivita20" type="Hidden"/>
+          <!-- Fix 15030 fine-->
+          </td>
+          <td id="TDDisposizione20" style="display:none"></td> <!-- Fix 14722 -->
+          <!-- Fix 15030 Inizio modifica size-->
+          <td nowrap="true"><input name="QtaVrsUMSec20" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="QtaScartoUMSec20" class="inputro" size="9"/></td> <!--Fix 22941 Tolto tabindex="-1"-->
+          <td nowrap="true"><input name="IdUMSecPrd20" class="inputro" tabindex="-1" readonly="readonly" size="1"/></td>
+          <td nowrap="true" id="RicalcoloQuantitaVers20TD" style="display:none;"><input type="checkbox" id="RicalcoloQuantitaVers20" name="RicalcoloQuantitaVers20"/></td> <!-- Fix 39680 -->
+          <!-- Fix 15030 Fine-->
+          <td align="right"><button id="CreaLottoBut20" name="CreaLottoBut20" class="littleButton" type="button" >Crea lotto</button></td>
+        </tr>
+        <tr style="display:none">
+          <td><span class="multisearchform" id ="MagazzinoVrs20"></span></td>
+        </tr>
+        <tr id="TR20_3" style="display:none">
+          <td style="height:10px">
+          </td>
+        </tr>
+      </table>
+      </div>
+   </td>
+  </tr>
+  <tr>
+  <td width="15px"></td>
+  <!-- Fix 18536 inizio -->
+  <td>
+  	<table style="height:100%; width:100%">
+  		<tr>
+			  <td align="left"><button id="NuovaRigaBut" name="NuovaRigaBut" type="button" >Nuova riga</button></td>
+			  <!-- Fix 72XXX Softre inizio -->
+			  <td align="left"><button id="CreaLottiFilatiManufatti" name="CreaLottiFilatiManufatti" type="button" >CreaLottiFilatiManufatti</button></td>
+			  <input name="LottiFilatiManufatti" type="Hidden"/>
+			  <!-- Fix 72XXX Softre fine -->
+        <td align="center" width="40%"><label id="numPag" name="numPag"></label></td><!-- Fix 19148 -->
+  			<td align="right">
+  				<button id="PaginaPrecBut" name="PaginaPrecBut" type="button" ></button>
+  				<button id="PaginaSuccBut" name="PaginaSuccBut" type="button" ></button>
+  			</td>
+  		</tr>
+  	</table>
+  </td>
+  <!-- Fix 18536 fine -->
+  </tr>
+    <!--Fix 15250 inizio-->
+   <tr><td> 
+   <!-- Fix 32648 Inizio -->
+   <!-- <iframe  id="KeyPad" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+      style="display:none; position: absolute; left: 120; top:300; width:107; height:155;" src="it/thera/thip/produzione/raccoltaDati/KeyPad.jsp"></iframe> -->
+   <iframe  id="KeyPad" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+      style="display:none; position: absolute; left: 120; top:300; width:152; height:160;" src="it/thera/thip/produzione/raccoltaDati/KeyPad.jsp"></iframe>
+   <!-- Fix 32648 Fine -->
+</td>
+  </tr><!--Fix 15250 fine-->
+  <tr>
+    <td colspan="3"><label class="labelError" id="ErroriList"></label></td>
+  </tr>
+</table>
+</form>
+</body>
+</html>

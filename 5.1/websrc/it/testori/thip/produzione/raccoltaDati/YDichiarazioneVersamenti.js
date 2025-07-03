@@ -36,3 +36,8 @@ function creaLottoTestori(i) {
 	params += "&NoErrorList=true";
 	setLocationOnWindow(document.getElementById("thNavFrame").contentWindow, url + params);
 }
+
+function creaLottiTestoriFilatiManufatti() {
+	var className = eval("document.forms[0].thClassName.value");
+	runActionDirect('CREA_LOTTI_TESTORI_FILATI_MANUFATTI', 'action_submit', className, null, 'new', 'no');
+}
