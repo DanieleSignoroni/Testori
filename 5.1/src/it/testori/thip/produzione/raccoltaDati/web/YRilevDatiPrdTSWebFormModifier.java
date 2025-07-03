@@ -1,6 +1,5 @@
 package it.testori.thip.produzione.raccoltaDati.web;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;

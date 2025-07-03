@@ -19,8 +19,6 @@ import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
 import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
-import it.thera.thip.cs.ColonneFiltri;
-import it.thera.thip.cs.ThipException;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
@@ -64,87 +62,84 @@ public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
 			AttivitaEsecutiva attivita = (AttivitaEsecutiva) AttivitaEsecutiva.elementWithKey(AttivitaEsecutiva.class, key+KeyHelper.KEY_SEPARATOR+numRigaPadre, PersistentObject.NO_LOCK);
 			AttivitaEsecProdotto prodotto = attivita.getAtvEsecPrdPrimario();
 			if(prodotto != null) {
-				//.Se sono filati e manufatti devo aprire la schermata della creazione lotto e in qualche modo gestirla comunque
-				if(CreaLottiTestoriUtils.isArticoloGestioneFilatiManufatti(articolo, CreaLottiTestoriUtils.PRODUZIONE)) {
-					String url = se.getWebApplicationPath() + "it/testori/thip/magazzino/generalemag/CreaLottiTestoriNuovo.jsp";
-					String chiaveSelezionato = "AttivitaEsecProdotto" + ColonneFiltri.LISTA_SEP + prodotto.getKey();
-					url += "?ChiaveSelezionato="+URLUtils.get().encode(chiaveSelezionato);
-					PrintWriter out = se.getResponse().getWriter();
-					out.println("<script>");
-					out.println("parent.window.open('" + url + "', '_blank', 'width=800,height=600,resizable=yes');");
-					out.println("</script>");
-					out.close();
-				}else {
-					//.Altrimenti creo il lotto e lo setto in automatico, per subbi-feltri o pezze
-					CreaLottiTestoriUtils pal = null;
-					//.Controllo che l'ordine esecutivo abbia un materiale semi-lavorato con un lotto gia' indicato
-					if(CreaLottiTestoriUtils.isArticoloGestionePezze(articolo, CreaLottiTestoriUtils.PRODUZIONE)) {
-						pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
-						boolean trovato = false;
-						String idLottoMateriale = null;
-						Iterator iterAtv = ordese.getAttivitaEsecutive().iterator();
-						while(iterAtv.hasNext()) {
-							AttivitaEsecutiva atvEsec = (AttivitaEsecutiva) iterAtv.next();
-							Iterator iterMats = atvEsec.getMateriali().iterator();
-							while(iterMats.hasNext()) {
-								AttivitaEsecMateriale mat = (AttivitaEsecMateriale) iterMats.next();
-								//if(mat.getArticolo().getTipoParte() == ArticoloDatiIdent.SEMIFINITO) {
-								Iterator iterLots = mat.getLottiMateriali().iterator();
-								while(iterLots.hasNext()) {
-									AttivitaEsecLottiMat lottoMat = (AttivitaEsecLottiMat) iterLots.next();
-									if(!lottoMat.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
-										trovato = true;
-										idLottoMateriale = lottoMat.getIdLotto();
-									}
+				CreaLottiTestoriUtils pal = null;
+				//.Controllo che l'ordine esecutivo abbia un materiale semi-lavorato con un lotto gia' indicato
+				if(CreaLottiTestoriUtils.isArticoloGestionePezze(articolo, CreaLottiTestoriUtils.PRODUZIONE)) {
+					pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
+					boolean trovato = false;
+					String idLottoMateriale = null;
+					Iterator iterAtv = ordese.getAttivitaEsecutive().iterator();
+					while(iterAtv.hasNext()) {
+						AttivitaEsecutiva atvEsec = (AttivitaEsecutiva) iterAtv.next();
+						Iterator iterMats = atvEsec.getMateriali().iterator();
+						while(iterMats.hasNext()) {
+							AttivitaEsecMateriale mat = (AttivitaEsecMateriale) iterMats.next();
+							//if(mat.getArticolo().getTipoParte() == ArticoloDatiIdent.SEMIFINITO) {
+							Iterator iterLots = mat.getLottiMateriali().iterator();
+							while(iterLots.hasNext()) {
+								AttivitaEsecLottiMat lottoMat = (AttivitaEsecLottiMat) iterLots.next();
+								if(!lottoMat.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
+									trovato = true;
+									idLottoMateriale = lottoMat.getIdLotto();
 								}
-								//}
 							}
+							//}
 						}
-						if(!trovato) {
-							throw new ThipException("Per poter creare il lotto del prodotto finito va prima indicato il lotto sul materiale");
-						}else {
-							String idLottoTeorico = CreaLottiTestoriUtils.getYearSuffix();
-							idLottoTeorico += CreaLottiTestoriUtils.PEZZE;
-							//idLottoTeorico += CreaLottiTestoriUtils.PRODUZIONE; potrebbe venire da C/Lav quindi potrebbe non avere la P ma la T
-							if(idLottoMateriale.startsWith(idLottoTeorico)) {
-								pal.setGeneraCodiceLottoAutomatico(false);
-								try {
-									String progressivo = null;
-									if(attivita.isAttivitaFinale() 
-											&& ((YAttivitaEsecutiva)attivita).getTipoTaglio() != TipoTaglioPezza.NON_SIGNIFICATIVO){
-										progressivo = CreaLottiTestoriUtils.getNextLottoProgressivoMonoChar(ordese.getIdAzienda(), idLottoMateriale, ((YAttivitaEsecutiva)attivita).getTipoTaglio());
-									}else {
-										progressivo = CreaLottiTestoriUtils.getMaxProgressivoPezzeFromLotto(ordese.getIdAzienda(), idLottoMateriale);
-									}
-									idLotto = idLottoMateriale + progressivo;
-									pal.setIdLotto(idLotto);
-								} catch (SQLException e) {
-									e.printStackTrace(Trace.excStream);
-								}
-							}else {
-								throw new ThipException("Impossibile creare il lotto padre a partire dal lotto figlio, non e' costruito secondo la logica AATPNNNNN ");
-							}
-						}
-					}else {
-						pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
 					}
-					if(pal != null) {
-						List lottiAuto = pal.creaLottiAutomatici();
-						if(lottiAuto.size() > 0) {
-							ConnectionManager.commit();
-							Lotto lotto = (Lotto) lottiAuto.get(0);
-							String idLottoField = getStringParameter(se.getRequest(), "LottoField");
-							String idAziendaField = getStringParameter(se.getRequest(), "AziendaField");
-							String idArticoloField = getStringParameter(se.getRequest(), "ArticoloField");
-							String nomiCampi = "LottoField=" + idLottoField + "&AziendaField=" + idAziendaField + "&ArticoloField=" + idArticoloField;
-							idLotto = lotto.getCodiceLotto();
-							String idAzienda = lotto.getCodiceAzienda();
-							String idArticolo = lotto.getCodiceArticolo();
-							String descLotto = lotto.getDescrizioneLotto();
-							String valoriCampi = "&LottoVal=" + URLUtils.get().encode(idLotto) + "&AziendaVal=" + idAzienda;
-							valoriCampi += "&ArticoloVal=" + URLUtils.get().encode(idArticolo) + "&DescLotto=" + URLUtils.get().encode(descLotto);
-							se.sendRequest(getServletContext(), "it/thera/thip/magazzino/generalemag/SelezionaNuovoLotto.jsp?" + nomiCampi + valoriCampi, true);
+					if(!trovato) {
+						PrintWriter out = se.getResponse().getWriter();
+						out.println("<script>");
+						out.println("parent.window.alert('Per poter creare il lotto del prodotto finito va prima indicato il lotto sul materiale');");
+						out.println("</script>");
+						out.close();
+						pal = null;
+					}else {
+						String idLottoTeorico = CreaLottiTestoriUtils.getYearSuffix();
+						idLottoTeorico += CreaLottiTestoriUtils.PEZZE;
+						//idLottoTeorico += CreaLottiTestoriUtils.PRODUZIONE; potrebbe venire da C/Lav quindi potrebbe non avere la P ma la T
+						if(idLottoMateriale.startsWith(idLottoTeorico)) {
+							pal.setGeneraCodiceLottoAutomatico(false);
+							try {
+								String progressivo = null;
+								if(attivita.isAttivitaFinale() 
+										&& ((YAttivitaEsecutiva)attivita).getTipoTaglio() != TipoTaglioPezza.NON_SIGNIFICATIVO){
+									progressivo = CreaLottiTestoriUtils.getNextLottoProgressivoMonoChar(ordese.getIdAzienda(), idLottoMateriale, ((YAttivitaEsecutiva)attivita).getTipoTaglio());
+								}else {
+									progressivo = CreaLottiTestoriUtils.getMaxProgressivoPezzeFromLotto(ordese.getIdAzienda(), idLottoMateriale);
+								}
+								idLotto = idLottoMateriale + progressivo;
+								pal.setIdLotto(idLotto);
+							} catch (SQLException e) {
+								e.printStackTrace(Trace.excStream);
+							}
+						}else {
+							PrintWriter out = se.getResponse().getWriter();
+							out.println("<script>");
+							out.println("parent.window.alert('Impossibile creare il lotto padre a partire dal lotto figlio, non e costruito secondo la logica AATPNNNNN ');");
+							out.println("</script>");
+							out.close();
+							pal = null;
 						}
+					}
+				}else {
+					pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
+				}
+				if(pal != null) {
+					List lottiAuto = pal.creaLottiAutomatici();
+					if(lottiAuto.size() > 0) {
+						ConnectionManager.commit();
+						Lotto lotto = (Lotto) lottiAuto.get(0);
+						String idLottoField = getStringParameter(se.getRequest(), "LottoField");
+						String idAziendaField = getStringParameter(se.getRequest(), "AziendaField");
+						String idArticoloField = getStringParameter(se.getRequest(), "ArticoloField");
+						String nomiCampi = "LottoField=" + idLottoField + "&AziendaField=" + idAziendaField + "&ArticoloField=" + idArticoloField;
+						idLotto = lotto.getCodiceLotto();
+						String idAzienda = lotto.getCodiceAzienda();
+						String idArticolo = lotto.getCodiceArticolo();
+						String descLotto = lotto.getDescrizioneLotto();
+						String valoriCampi = "&LottoVal=" + URLUtils.get().encode(idLotto) + "&AziendaVal=" + idAzienda;
+						valoriCampi += "&ArticoloVal=" + URLUtils.get().encode(idArticolo) + "&DescLotto=" + URLUtils.get().encode(descLotto);
+						se.sendRequest(getServletContext(), "it/thera/thip/magazzino/generalemag/SelezionaNuovoLotto.jsp?" + nomiCampi + valoriCampi, true);
 					}
 				}
 			}
