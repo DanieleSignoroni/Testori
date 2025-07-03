@@ -40,7 +40,7 @@ import it.thera.thip.produzione.ordese.OrdineEsecutivo;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 71XXX    26/06/2025  DSSOF3   Prima stesura
+ * 72032    26/06/2025  DSSOF3   Prima stesura
  */
 
 public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
@@ -74,13 +74,17 @@ public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
 						Iterator iterMats = atvEsec.getMateriali().iterator();
 						while(iterMats.hasNext()) {
 							AttivitaEsecMateriale mat = (AttivitaEsecMateriale) iterMats.next();
-							//if(mat.getArticolo().getTipoParte() == ArticoloDatiIdent.SEMIFINITO) {
-							Iterator iterLots = mat.getLottiMateriali().iterator();
-							while(iterLots.hasNext()) {
-								AttivitaEsecLottiMat lottoMat = (AttivitaEsecLottiMat) iterLots.next();
-								if(!lottoMat.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
-									trovato = true;
-									idLottoMateriale = lottoMat.getIdLotto();
+							if((CreaLottiTestoriUtils.isArticoloGestionePezze(mat.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE)
+									|| CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(mat.getArticolo(), CreaLottiTestoriUtils.PRODUZIONE))
+									&& !trovato) {
+								//if(mat.getArticolo().getTipoParte() == ArticoloDatiIdent.SEMIFINITO) {
+								Iterator iterLots = mat.getLottiMateriali().iterator();
+								while(iterLots.hasNext()) {
+									AttivitaEsecLottiMat lottoMat = (AttivitaEsecLottiMat) iterLots.next();
+									if(!lottoMat.getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
+										trovato = true;
+										idLottoMateriale = lottoMat.getIdLotto();
+									}
 								}
 							}
 							//}

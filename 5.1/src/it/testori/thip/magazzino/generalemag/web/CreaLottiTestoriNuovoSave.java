@@ -26,6 +26,7 @@ import it.thera.thip.cs.ColonneFiltri;
  * Revisions:
  * Number   Date        Owner    Description
  * 71992    04/06/2025  DSSOF3   Prima stesura
+ * 72032	03/07/2025	DSSOF3   Gestione rilevazione dati
  */
 
 public class CreaLottiTestoriNuovoSave extends Save {

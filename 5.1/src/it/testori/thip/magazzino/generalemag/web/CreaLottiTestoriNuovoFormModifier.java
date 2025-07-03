@@ -40,6 +40,7 @@ import it.thera.thip.produzione.raccoltaDati.RilevDatiPrdTS;
  * Number   Date        Owner    Description
  * 71992    04/06/2025  DSSOF3   Prima stesura
  * 72018	27/06/2025	DSSOF3	 Alert in caso di lotti gia' presenti
+ * 72032	03/07/2025	DSSOF3	 Gestione rilevazione dati
  */
 
 public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
@@ -125,6 +126,7 @@ public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
 				} catch (SQLException e) {
 					e.printStackTrace(Trace.excStream);
 				}
+			//Fix 72032
 			}else if(className.contains("RilevDatiPrdTS")) {
 				RilevDatiPrdTS rilevDati = (RilevDatiPrdTS) getRequest().getAttribute("myObject");
 				if(rilevDati != null) {
@@ -137,6 +139,7 @@ public class CreaLottiTestoriNuovoFormModifier extends WebFormModifier {
 					}
 				}
 			}
+			//Fix 72032
 			bo.setChiaveSelezionato(chiaveSelezionato);
 		}
 	}

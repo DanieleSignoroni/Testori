@@ -25,7 +25,7 @@ import it.thera.thip.produzione.raccoltaDati.web.RilevDatiPrdTSFormActionAdapter
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 71XXX    03/07/2025  DSSOF3   Prima stesura
+ * 72032    03/07/2025  DSSOF3   Prima stesura
  */
 
 public class YRilevDatiPrdTSFormActionAdapter extends RilevDatiPrdTSFormActionAdapter {

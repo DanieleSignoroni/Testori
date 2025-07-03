@@ -647,10 +647,10 @@
   <button name="CreaLottoBut20" script="creaLotto(20)" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButCreaLotto"/>
 
   <button name="NuovaRigaBut" script="NuovaRiga()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="ButNuovaRiga"/>
-  <! -- Fix 72XXX Softre inizio -->
+  <! -- Fix 72032 Softre inizio -->
   <button name="CreaLottiFilatiManufatti" script="creaLottiTestoriFilatiManufatti()" resourceFile="it/testori/thip/produzione/raccoltaDati/resources/YRilevDatiPrdTS" resourceID="ButCreaLottiFilatiManufatti"/>
   <textinput name="LottiFilatiManufatti" classAD="LottiFilatiManufatti"/>
-  <! -- Fix 72XXX Softre fine -->
+  <! -- Fix 72032 Softre fine -->
   <!-- Fix 18536 inizio -->
   <button name="PaginaPrecBut" script="PaginaPrec()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="PaginaPrec"/>
   <button name="PaginaSuccBut" script="PaginaSucc()" resourceFile="it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS" resourceID="PaginaSucc"/>

@@ -4023,7 +4023,7 @@ label.write(out); }%>
   	<table style="height:100%; width:100%">
   		<tr>
 			  <td align="left"><button id="NuovaRigaBut" name="NuovaRigaBut" onclick="NuovaRiga()" type="button"><%= ResourceLoader.getString("it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS", "ButNuovaRiga")%></button></td>
-			  <!-- Fix 72XXX Softre inizio -->
+			  <!-- Fix 72032 Softre inizio -->
 			  <td align="left"><button id="CreaLottiFilatiManufatti" name="CreaLottiFilatiManufatti" onclick="creaLottiTestoriFilatiManufatti()" type="button"><%= ResourceLoader.getString("it/testori/thip/produzione/raccoltaDati/resources/YRilevDatiPrdTS", "ButCreaLottiFilatiManufatti")%></button></td>
 			              <% 
   WebTextInput RilevDatiPrdTSLottiFilatiManufatti =  
@@ -4033,7 +4033,7 @@ label.write(out); }%>
 <input class="<%=RilevDatiPrdTSLottiFilatiManufatti.getClassType()%>" id="<%=RilevDatiPrdTSLottiFilatiManufatti.getId()%>" maxlength="<%=RilevDatiPrdTSLottiFilatiManufatti.getMaxLength()%>" name="<%=RilevDatiPrdTSLottiFilatiManufatti.getName()%>" size="<%=RilevDatiPrdTSLottiFilatiManufatti.getSize()%>" type="Hidden"><% 
 RilevDatiPrdTSLottiFilatiManufatti.write(out); 
 %>
-			  <!-- Fix 72XXX Softre fine -->
+			  <!-- Fix 72032 Softre fine -->
         <td align="center" width="40%"><label id="numPag" name="numPag"></label></td><!-- Fix 19148 -->
   			<td align="right">
   				<button id="PaginaPrecBut" name="PaginaPrecBut" onclick="PaginaPrec()" type="button"><%= ResourceLoader.getString("it/thera/thip/produzione/raccoltaDati/resources/RilevDatiPrdTS", "PaginaPrec")%></button>

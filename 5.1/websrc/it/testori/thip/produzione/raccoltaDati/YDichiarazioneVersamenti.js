@@ -1,3 +1,4 @@
+//Fix 72032
 var oldCreaLotto = creaLotto;
 
 creaLotto = function(index) {
@@ -41,3 +42,4 @@ function creaLottiTestoriFilatiManufatti() {
 	var className = eval("document.forms[0].thClassName.value");
 	runActionDirect('CREA_LOTTI_TESTORI_FILATI_MANUFATTI', 'action_submit', className, null, 'new', 'no');
 }
+//Fix 72032

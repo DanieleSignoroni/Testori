@@ -37,6 +37,7 @@ import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
  * Revisions:
  * Number   Date        Owner    Description
  * 71992    04/06/2025  DSSOF3   Prima stesura
+ * 72032	03/07/2025	DSSOF3	 Gestione rilevazione dati
  */
 
 public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Authorizable {
@@ -59,11 +60,12 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 
 	protected String iNote;
 
-	public String iLottiRilevDatiPrdTS;
+	public String iLottiRilevDatiPrdTS; //Fix 72032
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public int save(boolean force) throws SQLException {
+		//Fix 72032
 		String[] params = getChiaveSelezionato().split(ColonneFiltri.LISTA_SEP);
 		String className = params[0];
 		String thKey = params[1];
@@ -139,6 +141,7 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 				iLottiRilevDatiPrdTS = (String.join(KeyHelper.KEY_SEPARATOR, lotti));
 			}
 		}
+		//Fix 72032
 		return super.save(force);
 	}
 

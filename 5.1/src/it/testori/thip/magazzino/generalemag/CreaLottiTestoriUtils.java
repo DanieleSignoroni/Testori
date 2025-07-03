@@ -48,12 +48,13 @@ import it.thera.thip.produzione.ordese.OrdineEsecutivo;
  * Number   Date        Owner    Description
  * 71992    04/06/2025  DSSOF3   Prima stesura
  * 72014	26/06/2025	DSSOF3	 Gestione lotti pezze c/lav
+ * 72032	03/07/2025	DSSOF3   Aggiunta azione per rilev dati
  */
 
 public class CreaLottiTestoriUtils {
 
 	public static final String CREA_LOTTI_NUOVO = "CREA_LOTTI_TESTORI_NUOVO";
-	public static final String CREA_LOTTI_FILATI_MANUFATTI = "CREA_LOTTI_TESTORI_FILATI_MANUFATTI"; //.Fix 72XXX per rilev. dati
+	public static final String CREA_LOTTI_FILATI_MANUFATTI = "CREA_LOTTI_TESTORI_FILATI_MANUFATTI"; //.Fix 72032 per rilev. dati
 
 	//Tipo di Lotto
 	public static final char MANUFATTI = 'M';
