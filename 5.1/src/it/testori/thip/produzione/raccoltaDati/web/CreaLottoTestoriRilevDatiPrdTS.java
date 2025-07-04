@@ -1,13 +1,15 @@
 package it.testori.thip.produzione.raccoltaDati.web;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.ConnectionManager;
+import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.web.ServletEnvironment;
@@ -21,11 +23,12 @@ import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.magazzino.generalemag.Lotto;
-import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
-import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
+//import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
+//import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.OrdineEsecutivo;
+import it.thera.thip.produzione.raccoltaDati.RilevDatiPrdTS;
 
 /**
  *
@@ -48,7 +51,7 @@ public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void processAction(ServletEnvironment se) throws Exception {
 		Articolo articolo = recuperaArticolo(se);
@@ -73,7 +76,7 @@ public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
 						pal = ((YAttivitaEsecProdotto)prodotto).getCreaProposizioneAutLottoTestori();
 						boolean trovato = false;
 						String idLottoMateriale = null;
-						Iterator iterAtv = ordese.getAttivitaEsecutive().iterator();
+						/*Iterator iterAtv = ordese.getAttivitaEsecutive().iterator();
 						while(iterAtv.hasNext()) {
 							AttivitaEsecutiva atvEsec = (AttivitaEsecutiva) iterAtv.next();
 							Iterator iterMats = atvEsec.getMateriali().iterator();
@@ -93,6 +96,47 @@ public class CreaLottoTestoriRilevDatiPrdTS extends BaseServlet {
 									}
 								}
 								//}
+							}
+						}*/
+						if(!trovato) {
+							RilevDatiPrdTS bo = (RilevDatiPrdTS) se.getSession().getAttribute("RilevDatiPrdTSOldObject");
+							if(bo != null) {
+								//int firstIndex = (bo.getCurrentNumPag() - 1) * 20;
+								//int lastIndex = firstIndex + 19;
+								try {
+									for (int i = 1; i < 21; i++) {
+										String getIdMateriale = "getMateriale" + String.valueOf(i);
+										String getIdLotto = "getIdLotto" + String.valueOf(i);
+										String getIdMagazzinoPrl = "getIdMagazzinoPrl" + String.valueOf(i);
+										//String getIdConfigurazione = "getIdConfigurazione" + String.valueOf(i);
+										//String getIdVersione = "getIdVersione" + String.valueOf(i);
+										Class c = Factory.getClass(bo.getClass());
+										Method idMatMethod = c.getMethod(getIdMateriale, new Class[0]);
+										Method idLotMethod = c.getMethod(getIdLotto, new Class[0]);
+										Method idMagPrlMethod = c.getMethod(getIdMagazzinoPrl, new Class[0]);
+										//Method idConfigMethod = c.getMethod(getIdConfigurazione, new Class[0]);
+										//Method idVersMethod = c.getMethod(getIdVersione, new Class[0]);
+										Object objMat = null;
+										objMat = idMatMethod.invoke(bo, new Object[0]);
+										Object objLot = idLotMethod.invoke(bo, new Object[0]);
+										Object objMag = idMagPrlMethod.invoke(bo, new Object[0]);
+										//Object objConfig = idConfigMethod.invoke(bo, new Object[0]);
+										//Object objVers = idVersMethod.invoke(bo, new Object[0]);
+										if (objMat != null && objLot != null && objMag != null) {
+											Articolo mat = (Articolo) objMat;
+											//String idMagPrl = (String) objMag;
+											String idLot = (String) objLot;
+											if((CreaLottiTestoriUtils.isArticoloGestionePezze(mat, CreaLottiTestoriUtils.PRODUZIONE)
+													|| CreaLottiTestoriUtils.isArticoloGestioneSubbiFeltri(mat, CreaLottiTestoriUtils.PRODUZIONE))
+													&& !trovato) {
+												trovato = true;
+												idLottoMateriale = idLot;
+											}
+										}
+									}
+								}catch (Exception e) {
+									e.printStackTrace(Trace.excStream);
+								}
 							}
 						}
 						if(!trovato) {
