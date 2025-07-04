@@ -43,3 +43,20 @@ function creaLottiTestoriFilatiManufatti() {
 	runActionDirect('CREA_LOTTI_TESTORI_FILATI_MANUFATTI', 'action_submit', className, null, 'new', 'no');
 }
 //Fix 72032
+
+var olddatiPers = datiPers;
+
+datiPers = function(i, result) {
+	olddatiPers();
+	var secondLine = result[1].split('&');
+	if (secondLine[3] != null && secondLine[3].startsWith('creaLottiTestoriAutomatico')) {
+		var param = secondLine[3];
+		param = param.substr(param.indexOf('=') + 1, 1);
+		if (param != null && param != undefined && param === "Y") {
+			let varName = 'creaLottiTestoriAutomatico' + i;
+			if (typeof window[varName] !== 'undefined' && window[varName] === false) {
+				window[varName] = true;
+			}
+		}
+	}
+}

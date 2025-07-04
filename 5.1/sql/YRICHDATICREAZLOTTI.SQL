@@ -1,0 +1,1 @@
+UPDATE THERA.CLASS_HDR SET BO_DATA_COLLECTOR = 'it.testori.thip.magazzino.generalemag.web.CreaLottiTestoriNuovoDataCollector' WHERE CLASS_NAME = 'YRichDatiCreazLotti';

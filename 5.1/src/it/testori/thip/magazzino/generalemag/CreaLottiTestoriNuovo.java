@@ -17,9 +17,12 @@ import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.security.Authorizable;
 
 import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
+import it.thera.thip.acquisti.documentoAC.DocumentoAcqRigaPrm;
+import it.thera.thip.acquisti.ordineAC.OrdineAcquistoRigaPrm;
 import it.thera.thip.base.articolo.Articolo;
 import it.thera.thip.cs.ColonneFiltri;
 import it.thera.thip.magazzino.generalemag.Lotto;
+import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 
@@ -130,18 +133,12 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 					pal.setGeneraCodiceLottoAutomatico(false);
 					pal.setIdLotto(dettaglio.getIdLotto());
 
-					List lottiAuto = pal.creaLottiAutomatici();
-					if(lottiAuto != null && !lottiAuto.isEmpty()) {
-						for (Iterator iterator = lottiAuto.iterator(); iterator.hasNext();) {
-							Lotto object = (Lotto) iterator.next();
-							lotti.add(object.getCodiceLotto()+ColonneFiltri.SEP+dettaglio.getQuantita());
-						}
-					}
+					lotti.add(dettaglio.getIdLotto()+ColonneFiltri.SEP+dettaglio.getQuantita());
 				}
 				iLottiRilevDatiPrdTS = (String.join(KeyHelper.KEY_SEPARATOR, lotti));
 			}
+			//Fix 72032
 		}
-		//Fix 72032
 		return super.save(force);
 	}
 
@@ -215,6 +212,52 @@ public class CreaLottiTestoriNuovo extends BusinessObjectAdapter implements Auth
 
 	public void setChiaveSelezionato(String iChiaveSelezionato) {
 		this.iChiaveSelezionato = iChiaveSelezionato;
+	}
+
+	public Articolo getArticolo() {
+		Articolo articolo = null;
+		String[] params = getChiaveSelezionato().split(ColonneFiltri.LISTA_SEP);
+		String className = params[0];
+		String thKey = params[1];
+		try {
+			if(className.contains("DocumentoAcquistoRigaPrm")) {
+				DocumentoAcqRigaPrm docAcqRig = (DocumentoAcqRigaPrm) DocumentoAcqRigaPrm.elementWithKey(DocumentoAcqRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+				if(docAcqRig != null) {
+					articolo = docAcqRig.getArticolo();
+				}
+			}else if(className.contains("OrdineAcquistoRigaPrm")) {
+				OrdineAcquistoRigaPrm docAcqRig = (OrdineAcquistoRigaPrm) OrdineAcquistoRigaPrm.elementWithKey(OrdineAcquistoRigaPrm.class, thKey, PersistentObject.NO_LOCK);
+				if(docAcqRig != null) {
+					articolo = docAcqRig.getArticolo();
+				}
+			}else if(className.contains("AttivitaEsecProdotto")) {
+				try {
+					AttivitaEsecProdotto docAcqRig = (AttivitaEsecProdotto) AttivitaEsecProdotto.elementWithKey(AttivitaEsecProdotto.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						articolo = docAcqRig.getArticolo();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("DocumentoPrdRigaVersam")) {
+				try {
+					DocumentoPrdRigaVersamento docAcqRig = (DocumentoPrdRigaVersamento) DocumentoPrdRigaVersamento.elementWithKey(DocumentoPrdRigaVersamento.class, thKey, PersistentObject.NO_LOCK);
+					if(docAcqRig != null) {
+						articolo = docAcqRig.getArticolo();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}else if(className.contains("RilevDatiPrdTS")) {
+				AttivitaEsecProdotto docAcqRig = (AttivitaEsecProdotto) AttivitaEsecProdotto.elementWithKey(AttivitaEsecProdotto.class, thKey, PersistentObject.NO_LOCK);
+				if(docAcqRig != null) {
+					articolo = docAcqRig.getArticolo();
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}
+		return articolo;
 	}
 
 }

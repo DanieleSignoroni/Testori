@@ -5,3 +5,4 @@
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.raccoltaDati.web.RilevDatiPrdTSFormActionAdapter', 'it.testori.thip.produzione.raccoltaDati.web.YRilevDatiPrdTSFormActionAdapter', '0', 'N', 'N');
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.raccoltaDati.RilevDatiPrdTS','it.testori.thip.produzione.raccoltaDati.YRilevDatiPrdTS','0','N','N');
     INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('RilevDatiPrdTS','YRilevDatiPrdTS','1','N','N');
+    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED,REPLACEMENT_APP) VALUES ('it.thera.thip.produzione.raccoltaDati.web.CheckDatiArticoliServlet','it.testori.thip.produzione.raccoltaDati.web.YCheckDatiArticoliServlet','0','N','N');
