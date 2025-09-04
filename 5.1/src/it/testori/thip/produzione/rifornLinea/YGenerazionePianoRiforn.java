@@ -1,0 +1,119 @@
+package it.testori.thip.produzione.rifornLinea;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+
+import com.thera.thermfw.base.TimeUtils;
+import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.persist.Factory;
+import com.thera.thermfw.persist.KeyHelper;
+import com.thera.thermfw.persist.PersistentObject;
+
+import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.base.cliente.ClienteVendita;
+import it.thera.thip.base.documenti.StatoAvanzamento;
+import it.thera.thip.base.generale.Numeratore;
+import it.thera.thip.base.generale.NumeratoreException;
+import it.thera.thip.base.generale.NumeratoreHandler;
+import it.thera.thip.base.generale.Serie;
+import it.thera.thip.produzione.rifornLinea.GenerazionePianoRiforn;
+import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
+import it.thera.thip.produzione.rifornLinea.PianoRifornimentoRiga;
+import it.thera.thip.vendite.documentoVE.DocumentoVenRigaPrm;
+import it.thera.thip.vendite.documentoVE.DocumentoVendita;
+import it.thera.thip.vendite.generaleVE.CausaleDocumentoVendita;
+import it.thera.thip.vendite.ordineVE.OrdineVendita;
+import it.thera.thip.vendite.ordineVE.OrdineVenditaRiga;
+
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 04/09/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72XXX    04/09/2025  DSSOF3   Prima stesura
+ */
+
+public class YGenerazionePianoRiforn extends GenerazionePianoRiforn {
+
+	@Override
+	protected int afterGenerazionePianoRifornimento(int result, PianoRifornimento pianoRifornimento) {
+		int rc = super.afterGenerazionePianoRifornimento(result, pianoRifornimento);
+		if(rc > 0 && pianoRifornimento.isOnDB()
+				&& pianoRifornimento.getMagazzinoLinea().isMagazzinoLinea()) { //..Se il magazzino e' di linea
+
+			//..Genero un documento di vendita di tipo trasferimento in modo da gestire il riapprovvigionamento tramite DDT
+			rc = generaDocumentoVenditaTrasferimento(pianoRifornimento);
+		}
+		return rc;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected int generaDocumentoVenditaTrasferimento(PianoRifornimento pianoRifornimento) {
+		YPsnDatiRifornimentoLinea persDati = YPsnDatiRifornimentoLinea.getCurrentYPsnDatiRifornimentoLinea();
+		if(persDati != null
+				&& persDati.getClienteIntestatario() != null
+				&& persDati.getSerieDocVen() != null
+				&& persDati.getCausaleDocVen() != null) {
+			try {
+				DocumentoVendita docVen = creaDocumentoVendita(pianoRifornimento, persDati.getClienteIntestatario(), persDati.getNumeratoreDocVen(), persDati.getSerieDocVen(), persDati.getCausaleDocVen());
+				if(docVen != null) {
+					Iterator iterRighe = pianoRifornimento.getPianoRifornRighe().iterator();
+					while(iterRighe.hasNext()) {
+						PianoRifornimentoRiga rigaPiano = (PianoRifornimentoRiga) iterRighe.next();
+						DocumentoVenRigaPrm docVenRig = creaDocumentoVenditaRigaPrm(docVen, rigaPiano);
+						if(docVenRig != null) {
+							docVen.getRighe().add(docVenRig);
+						}
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace(Trace.excStream);
+			}
+		}
+		return 0;
+	}
+
+	public DocumentoVendita creaDocumentoVendita(PianoRifornimento pianoRifornimento, ClienteVendita cliente, Numeratore numeratore, Serie serie, CausaleDocumentoVendita causale) throws SQLException {
+		DocumentoVendita docVen = (DocumentoVendita) Factory.createObject(DocumentoVendita.class);
+		java.sql.Date data = TimeUtils.getCurrentDate();
+		docVen.setIdAzienda(Azienda.getAziendaCorrente());
+		docVen.getNumeratoreHandler().setIdNumeratore(numeratore.getIdNumeratore());
+		docVen.getNumeratoreHandler().setDataDocumento(data);
+		docVen.getNumeratoreHandler().setIdSerie(serie.getIdSerie());
+		docVen.setCausale(causale);
+		docVen.setCliente(cliente);
+		docVen.completaBO();
+		docVen.setMagazzino(pianoRifornimento.getMagazzinoLinea().getMagazzinoRiforn()); //..Esce da riapprovvigionamento
+		docVen.setMagazzinoTrasferimento(causale.getMagazzinoDiArrivo()); //..Entra su quello di trasferimento della causale
+		return docVen;
+	}
+
+	public DocumentoVenRigaPrm creaDocumentoVenditaRigaPrm(DocumentoVendita docVen, PianoRifornimentoRiga pianoRiga) {
+		DocumentoVenRigaPrm docVenRig = (DocumentoVenRigaPrm) Factory.createObject(DocumentoVenRigaPrm.class);
+		docVenRig.setIdAzienda(Azienda.getAziendaCorrente());
+		docVenRig.setTestata(docVen);
+		docVenRig.setIdCauRig(docVen.getCausale().getIdCausaleRigaDocumVen());
+		docVenRig.setIdArticolo(pianoRiga.getIdArticolo());		
+		docVenRig.setArticoloVersRichiesta(pianoRiga.getVersione());
+		docVenRig.setConfigurazione(pianoRiga.getConfigurazione());
+		docVenRig.setIdUMPrm(pianoRiga.getIdUmPrmMag());
+		docVenRig.setIdUMRif(pianoRiga.getArticolo().getUMDefaultVendita().getIdUnitaMisura());
+		docVenRig.completaBO();
+		docVenRig.getQtaPropostaEvasione().setQuantitaInUMPrm(pianoRiga.getQtaPrelievoUMPrm());
+		docVenRig.getQtaPropostaEvasione().setQuantitaInUMSec(pianoRiga.getQtaPrelievoUMSec());
+		BigDecimal qtaInUMRif = BigDecimal.ZERO;
+		qtaInUMRif = docVenRig.getArticolo().convertiUM(pianoRiga.getQtaPrelievoUMPrm(), docVenRig.getUMPrm(), docVenRig.getUMRif(), docVenRig.getArticoloVersRichiesta());
+		docVenRig.getQtaPropostaEvasione().setQuantitaInUMRif(qtaInUMRif);
+		return docVenRig;
+	}
+}

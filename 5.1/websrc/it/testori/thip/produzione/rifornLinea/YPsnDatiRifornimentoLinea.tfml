@@ -1,0 +1,30 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YPsnDatiRifornimentoLinea"
+    name="YPsnDatiRifornimentoLineaForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    servlet="com.thera.thermfw.web.servlet.FormActionAdapter"
+    webFormModifierClass="it.testori.thip.produzione.rifornLinea.web.YPsnDatiRifornimentoLineaFormModifier"
+    jsLibraryName="it/testori/thip/produzione/rifornLinea/YPsnDatiRifornimentoLinea.js"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <menubar  name="myMenuBar">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </menubar>
+    <toolbar name="myToolBar" imgwidth="16" imgheight="16">
+      <import file="it/thera/thip/cs/defObjMenu.tfml"/>
+    </toolbar>
+    <tabbed name="mytabbed" height="100%" width="100%">
+      <tab name="tab1" resourceFile="it.testori.thip.produzione.rifornLinea.resources.YPsnDatiRifornimentoLinea" resourceID="tab1">
+        <multisearchform name="ClienteIntestatario" classRD="ClienteIntestatario"/>
+        <multisearchform name="NumeratoreDocVen" classRD="NumeratoreDocVen"/>
+        <multisearchform name="SerieDocVen" classRD="SerieDocVen"/>
+        <multisearchform name="CausaleDocVen" classRD="CausaleDocVen"/>
+        <subform classCD="DatiComuniEstesi" name="DatiComuniEstesi"/>
+      </tab>
+    </tabbed>
+  </form>
+</tfml>
+
