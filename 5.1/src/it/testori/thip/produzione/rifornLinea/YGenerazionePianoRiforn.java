@@ -3,29 +3,24 @@ package it.testori.thip.produzione.rifornLinea;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.List;
 
 import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.collector.BODataCollector;
+import com.thera.thermfw.persist.ErrorCodes;
 import com.thera.thermfw.persist.Factory;
-import com.thera.thermfw.persist.KeyHelper;
-import com.thera.thermfw.persist.PersistentObject;
 
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.cliente.ClienteVendita;
-import it.thera.thip.base.documenti.StatoAvanzamento;
 import it.thera.thip.base.generale.Numeratore;
-import it.thera.thip.base.generale.NumeratoreException;
-import it.thera.thip.base.generale.NumeratoreHandler;
 import it.thera.thip.base.generale.Serie;
 import it.thera.thip.produzione.rifornLinea.GenerazionePianoRiforn;
 import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
 import it.thera.thip.produzione.rifornLinea.PianoRifornimentoRiga;
 import it.thera.thip.vendite.documentoVE.DocumentoVenRigaPrm;
 import it.thera.thip.vendite.documentoVE.DocumentoVendita;
+import it.thera.thip.vendite.documentoVE.web.DocumentoVenditaDataCollector;
 import it.thera.thip.vendite.generaleVE.CausaleDocumentoVendita;
-import it.thera.thip.vendite.ordineVE.OrdineVendita;
-import it.thera.thip.vendite.ordineVE.OrdineVenditaRiga;
 
 /**
  * <p></p>
@@ -49,6 +44,7 @@ public class YGenerazionePianoRiforn extends GenerazionePianoRiforn {
 	protected int afterGenerazionePianoRifornimento(int result, PianoRifornimento pianoRifornimento) {
 		int rc = super.afterGenerazionePianoRifornimento(result, pianoRifornimento);
 		if(rc > 0 && pianoRifornimento.isOnDB()
+				&& pianoRifornimento.getMagazzinoLinea() != null
 				&& pianoRifornimento.getMagazzinoLinea().isMagazzinoLinea()) { //..Se il magazzino e' di linea
 
 			//..Genero un documento di vendita di tipo trasferimento in modo da gestire il riapprovvigionamento tramite DDT
@@ -74,6 +70,19 @@ public class YGenerazionePianoRiforn extends GenerazionePianoRiforn {
 						if(docVenRig != null) {
 							docVen.getRighe().add(docVenRig);
 						}
+					}
+					DocumentoVenditaDataCollector boDC = (DocumentoVenditaDataCollector)Factory.createObject(DocumentoVenditaDataCollector.class);
+					boDC.setAutoCommit(false);
+					boDC.setAutoCheck(true);
+					boDC.initialize("DocumentoVendita");
+					boDC.setBo(docVen);
+					boDC.impostaSecondoCausale();
+					int rc = boDC.save();
+					if (rc == BODataCollector.ERROR) {
+						output.println("errore di generazione documento di trasferimento : "+boDC.messages().toString());
+						return ErrorCodes.GENERIC_ERROR;
+					}else {
+						return 1;
 					}
 				}
 			} catch (SQLException e) {
