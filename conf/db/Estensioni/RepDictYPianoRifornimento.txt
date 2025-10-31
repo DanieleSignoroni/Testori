@@ -1,0 +1,7 @@
+<B>2025-10-31 12:36:45</B>
+<BR>Il dizionario <B>YPIANI_RFR</B> è stato cancellato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00003\tddml\3_DROP_YPIANI_RFR.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>YPIANI_RFR</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00003\tddml\3_YPIANI_RFR.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00003\tddml\3_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>

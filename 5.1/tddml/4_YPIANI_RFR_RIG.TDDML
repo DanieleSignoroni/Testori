@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YPIANI_RFR_RIG (YPIANI0): Ges della riga Piano di Rif mag Li; -->
+  <CreateTable schema="THIPPERS" name="YPIANI_RFR_RIG" shortname="YPIANI0">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="ID_ANNO_PIANO" shortname="ID_ANNO_PI" type="char" length="6" nullable="no"/>
+    <Column name="ID_NUMERO_PIANO" shortname="ID_NUMERO_" type="char" length="10" nullable="no"/>
+    <Column name="ID_RIGA_PIANO" shortname="ID_RIGA_PI" type="integer" nullable="no"/>
+    <Column name="FLAG01" shortname="FLAG01" type="char" length="1" nullable="no" default="Y"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YPIANI_RFR_RIG_I01" tabschema="THIPPERS" tabname="YPIANI_RFR_RIG" shortname="YPIANI_I02" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="ID_ANNO_PIANO" order="Asc"/>
+    <IndexCol name="ID_NUMERO_PIANO" order="Asc"/>
+    <IndexCol name="ID_RIGA_PIANO" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YPIANI_RFR_RIG">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="ID_ANNO_PIANO"/>
+        <ColumnRef name="ID_NUMERO_PIANO"/>
+        <ColumnRef name="ID_RIGA_PIANO"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YPIANI_RFR_RIG" text="Ges della riga Piano di Rif mag Li">
+      <CommentColumn name="ID_AZIENDA" text="IdAzienda"/>
+      <CommentColumn name="ID_ANNO_PIANO" text="Anno"/>
+      <CommentColumn name="ID_NUMERO_PIANO" text="Numero Piano"/>
+      <CommentColumn name="ID_RIGA_PIANO" text="Riga Piano"/>
+      <CommentColumn name="FLAG01" text="Flag01"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YPIANI_RFR_RIG_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YPIANI_RFR_RIG"/>
+</TDDML>
