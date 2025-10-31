@@ -21,7 +21,7 @@
         <multisearchform name="ClienteIntestatario" classRD="ClienteIntestatario"/>
         <multisearchform name="NumeratoreDocVen" classRD="NumeratoreDocVen"/>
         <multisearchform name="SerieDocVen" classRD="SerieDocVen"/>
-        <multisearchform name="CausaleDocVen" classRD="CausaleDocVen"/>
+        <multisearchform name="CausaleDocVen" classRD="CausaleDocVen" fixedRestrictConditions="TrasferimentoTraMag,Y"/>
         <subform classCD="DatiComuniEstesi" name="DatiComuniEstesi"/>
       </tab>
     </tabbed>

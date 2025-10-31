@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YDOCVEN_RIG_PRM (YDOCVEN): Documento vendita riga primaria; -->
+  <CreateTable schema="THIPPERS" name="YDOCVEN_RIG_PRM" shortname="YDOCVEN">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="ID_ANNO_DOC" shortname="ID_ANNO_DO" type="char" length="6" nullable="no"/>
+    <Column name="ID_NUMERO_DOC" shortname="ID_NUMERO_" type="char" length="10" nullable="no"/>
+    <Column name="ID_RIGA_DOC" shortname="ID_RIGA_DO" type="integer" nullable="no"/>
+    <Column name="ID_DET_RIGA_DOC" shortname="ID_DET_RIG" type="integer" nullable="no" default="0"/>
+    <Column name="R_ANNO_PIANO_RFR" shortname="R_ANNO_PIA" type="char" length="6" nullable="yes"/>
+    <Column name="R_NUMERO_PIANO_RFR" shortname="R_NUMERO_P" type="char" length="10" nullable="yes"/>
+    <Column name="R_RIGA_PIANO_RFR" shortname="R_RIGA_PIA" type="integer" nullable="yes"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YDOCVEN_RIG_PR_I01" tabschema="THIPPERS" tabname="YDOCVEN_RIG_PRM" shortname="YDOCVE_I01" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="ID_ANNO_DOC" order="Asc"/>
+    <IndexCol name="ID_NUMERO_DOC" order="Asc"/>
+    <IndexCol name="ID_RIGA_DOC" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YDOCVEN_RIG_PRM">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="ID_ANNO_DOC"/>
+        <ColumnRef name="ID_NUMERO_DOC"/>
+        <ColumnRef name="ID_RIGA_DOC"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YDOCVEN_RIG_PRM" text="Documento vendita riga primaria">
+      <CommentColumn name="ID_AZIENDA" text="Azienda"/>
+      <CommentColumn name="ID_ANNO_DOC" text="Anno documento"/>
+      <CommentColumn name="ID_NUMERO_DOC" text="N.ro documento"/>
+      <CommentColumn name="ID_RIGA_DOC" text="Riga documento"/>
+      <CommentColumn name="ID_DET_RIGA_DOC" text="Dettaglio riga documento"/>
+      <CommentColumn name="R_ANNO_PIANO_RFR" text="Anno documento - Piano Rifornimento"/>
+      <CommentColumn name="R_NUMERO_PIANO_RFR" text="Numero piano rifornimento"/>
+      <CommentColumn name="R_RIGA_PIANO_RFR" text="Riga piano - RFR"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YDOCVEN_RIG_PR_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YDOCVEN_RIG_PRM"/>
+</TDDML>

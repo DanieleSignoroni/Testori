@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <AlterTable schema="THIPPERS" name="YDOC_VEN_TES">
+    <AddColumn>
+      <Column name="R_ANNO_PIANO_RFR" shortname="R_ANNO_PIANO_RFR" type="char" length="6" nullable="yes"/>
+      <Column name="R_NUMERO_PIANO_RFR" shortname="R_NUMERO_PIANO_RFR" type="char" length="10" nullable="yes"/>
+    </AddColumn>
+  </AlterTable>
+</TDDML>

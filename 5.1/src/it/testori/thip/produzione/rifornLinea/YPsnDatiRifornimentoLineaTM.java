@@ -50,8 +50,7 @@ public class YPsnDatiRifornimentoLineaTM extends TableManager {
 
 	private static TableManager cInstance;
 
-	private static final String CLASS_NAME = it.testori.thip.produzione.rifornLinea.YPsnDatiRifornimentoLinea.class
-			.getName();
+	private static final String CLASS_NAME = it.testori.thip.produzione.rifornLinea.YPsnDatiRifornimentoLinea.class.getName();
 
 	public synchronized static TableManager getInstance() throws SQLException {
 		if (cInstance == null) {
@@ -86,9 +85,7 @@ public class YPsnDatiRifornimentoLineaTM extends TableManager {
 	}
 
 	private void init() throws SQLException {
-		configure(ID_AZIENDA + ", " + R_CLIENTE_INTESTATARIO + ", " + R_NUMERATORE_DOC_VEN + ", " + R_SERIE_DOC_VEN
-				+ ", " + R_CAU_DOC_VEN + ", " + STATO + ", " + R_UTENTE_CRZ + ", " + TIMESTAMP_CRZ + ", " + R_UTENTE_AGG
-				+ ", " + TIMESTAMP_AGG);
+		configure();
 	}
 
 }

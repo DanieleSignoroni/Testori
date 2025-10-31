@@ -10,6 +10,8 @@ import com.thera.thermfw.collector.BODataCollector;
 import com.thera.thermfw.persist.ErrorCodes;
 import com.thera.thermfw.persist.Factory;
 
+import it.testori.thip.vendite.documentoVE.YDocumentoVenRigaPrm;
+import it.testori.thip.vendite.documentoVE.YDocumentoVendita;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.cliente.ClienteVendita;
 import it.thera.thip.base.generale.Numeratore;
@@ -102,8 +104,11 @@ public class YGenerazionePianoRiforn extends GenerazionePianoRiforn {
 		docVen.setCausale(causale);
 		docVen.setCliente(cliente);
 		docVen.completaBO();
-		docVen.setMagazzino(pianoRifornimento.getMagazzinoLinea().getMagazzinoRiforn()); //..Esce da riapprovvigionamento
-		docVen.setMagazzinoTrasferimento(causale.getMagazzinoDiArrivo()); //..Entra su quello di trasferimento della causale
+		docVen.setMagazzino(causale.getMagazzino());
+		docVen.setIdMagazzinoTra(getIdMagazzinoLinea());
+		if(docVen instanceof YDocumentoVendita) {
+			((YDocumentoVendita) docVen).setPianoRifornimento(pianoRifornimento);
+		}
 		return docVen;
 	}
 
@@ -123,6 +128,10 @@ public class YGenerazionePianoRiforn extends GenerazionePianoRiforn {
 		BigDecimal qtaInUMRif = BigDecimal.ZERO;
 		qtaInUMRif = docVenRig.getArticolo().convertiUM(pianoRiga.getQtaPrelievoUMPrm(), docVenRig.getUMPrm(), docVenRig.getUMRif(), docVenRig.getArticoloVersRichiesta());
 		docVenRig.getQtaPropostaEvasione().setQuantitaInUMRif(qtaInUMRif);
+		docVenRig.setAssoggettamentoIVA(pianoRiga.getArticolo().getAssoggettamentoIVA());
+		if(docVenRig instanceof YDocumentoVenRigaPrm) {
+			((YDocumentoVenRigaPrm) docVenRig).setPianoRifornimentoRiga(pianoRiga);
+		}
 		return docVenRig;
 	}
 }

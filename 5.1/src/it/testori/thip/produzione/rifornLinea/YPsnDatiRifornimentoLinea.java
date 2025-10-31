@@ -35,20 +35,17 @@ public class YPsnDatiRifornimentoLinea extends YPsnDatiRifornimentoLineaPO imple
 	@SuppressWarnings("rawtypes")
 	protected static Hashtable iHistory_YPsnDatiRifornimentoLinea = new Hashtable();
 
-	public static YPsnDatiRifornimentoLinea getCurrentYPsnDatiRifornimentoLinea()
-	{
+	public static YPsnDatiRifornimentoLinea getCurrentYPsnDatiRifornimentoLinea(){
 		return getYPsnDatiRifornimentoLinea(Azienda.getAziendaCorrente());
 	}
 
 	@SuppressWarnings("unchecked")
-	public static YPsnDatiRifornimentoLinea getYPsnDatiRifornimentoLinea(String iIdAzienda)
-	{
+	public static YPsnDatiRifornimentoLinea getYPsnDatiRifornimentoLinea(String iIdAzienda){
 		if (iIdAzienda == null)
 			return null;
 
 		YPsnDatiRifornimentoLinea iYPsnDatiRifornimentoLinea = null;
 
-		//fix 5298 inizio
 		try
 		{
 			if(PersistentObjectCache.isEnabled())
@@ -75,8 +72,7 @@ public class YPsnDatiRifornimentoLinea extends YPsnDatiRifornimentoLineaPO imple
 	}
 
 	@SuppressWarnings("unchecked")
-	public int saveOwnedObjects(int rc) throws SQLException
-	{
+	public int saveOwnedObjects(int rc) throws SQLException{
 		rc += super.saveOwnedObjects(rc);
 
 		if(rc >= 0)

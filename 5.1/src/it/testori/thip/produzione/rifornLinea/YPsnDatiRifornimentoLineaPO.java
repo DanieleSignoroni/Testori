@@ -61,8 +61,7 @@ public abstract class YPsnDatiRifornimentoLineaPO extends EntitaAzienda implemen
 	}
 
 	public static YPsnDatiRifornimentoLinea elementWithKey(String key, int lockType) throws SQLException {
-		return (YPsnDatiRifornimentoLinea) PersistentObject.elementWithKey(YPsnDatiRifornimentoLinea.class, key,
-				lockType);
+		return (YPsnDatiRifornimentoLinea) PersistentObject.elementWithKey(YPsnDatiRifornimentoLinea.class, key,lockType);
 	}
 
 	public YPsnDatiRifornimentoLineaPO() {

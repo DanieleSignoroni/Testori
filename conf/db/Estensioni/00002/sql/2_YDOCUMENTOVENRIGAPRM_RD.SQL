@@ -1,0 +1,13 @@
+# CLASSRD
+    INSERT INTO <SCH>CLASSRD (CLASS_NAME, RELATION_NAME, CORR_CLASS_NAME, OUTER_JOIN, ONLY_SELECT, XMLEXPORTABLE, GRID_DISPLAYABLE, DEF_SETTING_POS, USER_ID, CHECK_DISABLED) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 'PianoRifornimentoRiga', 'Y', 'N', 'N', 'Y', 10, <USER>, 'N');
+# CLASSRD_NLS
+    INSERT INTO <SCH>CLASSRD_NLS (CLASS_NAME, RELATION_NAME, LANGUAGE, NLS_RELATION_NAME, NLS_COLUMN_TITLE, NLS_LABEL) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 'it', 'Piano rifornimento - riga', 'Piano rifornimento - riga', null);
+# CLASSRD_ROW
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 5, null, null, 'PianoRifornimentoRiga', 'DataPrimoImpegno', 'Y');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 6, null, null, 'PianoRifornimentoRiga', 'DisponXLinea', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 7, null, null, 'PianoRifornimentoRiga', 'DisponXTutteLinee', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 2, 'AnnoPianoRfr', null, 'PianoRifornimentoRiga', 'IdAnnoPiano', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 1, 'IdAzienda', null, 'PianoRifornimentoRiga', 'IdAzienda', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 3, 'IdNumeroPianoRfr', null, 'PianoRifornimentoRiga', 'IdNumeroPiano', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 4, 'IdRigaPianoRfr', null, 'PianoRifornimentoRiga', 'IdRigaPiano', 'N');
+    INSERT INTO <SCH>CLASSRD_ROW (CLASS_NAME, RELATION_NAME, SEQUENCE, ATTRIBUTE_NAME, CD_NAME, CORR_CLASS_NAME, CORR_ATTR_NAME, DEF_SEARCH) VALUES ('YDocumentoVenRigaPrm', 'PianoRifornimentoRiga', 8, null, null, 'PianoRifornimentoRiga', 'StatoRifornimento', 'N');

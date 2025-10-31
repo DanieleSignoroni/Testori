@@ -206,6 +206,7 @@
   WebMultiSearchForm YPsnDatiRifornimentoLineaCausaleDocVen =  
      new com.thera.thermfw.web.WebMultiSearchForm("YPsnDatiRifornimentoLinea", "CausaleDocVen", false, false, true, 1, null, null); 
   YPsnDatiRifornimentoLineaCausaleDocVen.setParent(YPsnDatiRifornimentoLineaForm); 
+  YPsnDatiRifornimentoLineaCausaleDocVen.setFixedRestrictConditions("TrasferimentoTraMag,Y"); 
   YPsnDatiRifornimentoLineaCausaleDocVen.write(out); 
 %>
 <!--<span class="multisearchform" id="CausaleDocVen"></span>-->
