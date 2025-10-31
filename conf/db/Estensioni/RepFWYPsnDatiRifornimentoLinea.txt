@@ -1,3 +1,0 @@
-<B>2025-09-04 16:16:53</B>
-<BR>Il descrittore di classe <B>YPsnDatiRifornimentoLinea</B> è stato generato correttamente
-<BR><B>La generazione descrittori di classe è completata con successo</B><BR>

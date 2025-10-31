@@ -1,3 +1,0 @@
-<B>2025-10-31 12:13:10</B>
-<BR>Il descrittore di classe <B>YDocumentoVenRigaPrm</B> è stato generato correttamente
-<BR><B>La generazione descrittori di classe è completata con successo</B><BR>
