@@ -7,7 +7,18 @@
     <Column name="ID_ANNO_PIANO" shortname="ID_ANNO_PI" type="char" length="6" nullable="no"/>
     <Column name="ID_NUMERO_PIANO" shortname="ID_NUMERO_" type="char" length="10" nullable="no"/>
     <Column name="ID_RIGA_PIANO" shortname="ID_RIGA_PI" type="integer" nullable="no"/>
-    <Column name="FLAG01" shortname="FLAG01" type="char" length="1" nullable="no" default="Y"/>
+    <Column name="VARCHAR01" shortname="VARCHAR01" type="varchar" length="100" nullable="yes"/>
+    <Column name="VARCHAR02" shortname="VARCHAR02" type="varchar" length="100" nullable="yes"/>
+    <Column name="DATE01" shortname="DATE01" type="date" nullable="yes"/>
+    <Column name="DATE02" shortname="DATE02" type="date" nullable="yes"/>
+    <Column name="DECIMAL01" shortname="DECIMAL01" type="decimal" length="19" scale="6" nullable="yes"/>
+    <Column name="DECIMAL02" shortname="DECIMAL02" type="decimal" length="19" scale="6" nullable="yes"/>
+    <Column name="INTEGER01" shortname="INTEGER01" type="integer" nullable="yes"/>
+    <Column name="INTEGER02" shortname="INTEGER02" type="integer" nullable="yes"/>
+    <Column name="FLAG01" shortname="FLAG01" type="char" length="1" nullable="no" default="N"/>
+    <Column name="FLAG02" shortname="FLAG02" type="char" length="1" nullable="no" default="N"/>
+    <Column name="ENUM1" shortname="ENUM1" type="char" length="1" nullable="no" default="I"/>
+    <Column name="ENUM2" shortname="ENUM2" type="char" length="1" nullable="no" default="I"/>
   </CreateTable>
   <CreateIndex schema="THIPPERS" name="YPIANI_RFR_RIG_I01" tabschema="THIPPERS" tabname="YPIANI_RFR_RIG" shortname="YPIANI_I02" unique="yes">
     <IndexCol name="ID_AZIENDA" order="Asc"/>
@@ -31,7 +42,18 @@
       <CommentColumn name="ID_ANNO_PIANO" text="Anno"/>
       <CommentColumn name="ID_NUMERO_PIANO" text="Numero Piano"/>
       <CommentColumn name="ID_RIGA_PIANO" text="Riga Piano"/>
+       <CommentColumn name="VARCHAR01" text="Varchar01"/>
+      <CommentColumn name="VARCHAR02" text="Varchar02"/>
+      <CommentColumn name="DATE01" text="Date01"/>
+      <CommentColumn name="DATE02" text="Date02"/>
+      <CommentColumn name="DECIMAL01" text="Decimal01"/>
+      <CommentColumn name="DECIMAL02" text="Decimal02"/>
+      <CommentColumn name="INTEGER01" text="Integer01"/>
+      <CommentColumn name="INTEGER02" text="Integer02"/>
       <CommentColumn name="FLAG01" text="Flag01"/>
+      <CommentColumn name="FLAG02" text="Flag02"/>
+      <CommentColumn name="ENUM1" text="Enum1"/>
+      <CommentColumn name="ENUM2" text="Enum2"/>
     </CommentTable>
     <CommentIndex schema="THIPPERS" name="YPIANI_RFR_RIG_I01" text="Primary Key"/>
   </Comment>

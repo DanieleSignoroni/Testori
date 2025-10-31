@@ -1,93 +1,173 @@
-/*
- * @(#)YPianoRifornimento.java
- */
+package it.testori.thip.produzione.rifornLinea;
+
+import java.math.BigDecimal;
+
+import com.thera.thermfw.persist.CopyException;
+import com.thera.thermfw.persist.Copyable;
+
+import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
 
 /**
- * null
+ * <p></p>
  *
- * <br></br><b>Copyright (C) : Thera SpA</b>
- * @author Wizard 31/10/2025 at 12:36:49
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 31/10/2025
+ * </p>
  */
+
 /*
  * Revisions:
- * Date          Owner      Description
- * 31/10/2025    Wizard     Codice generato da Wizard
- *
+ * Number   Date        Owner    Description
+ * 72XXX    31/10/2025  DSSOF3   Prima stesura
  */
-package it.testori.thip.produzione.rifornLinea;
-import com.thera.thermfw.persist.*;
-import java.sql.*;
-import java.util.*;
-import it.thera.thip.produzione.rifornLinea.*;
-import com.thera.thermfw.common.*;
-import it.thera.thip.base.azienda.Azienda;
 
 public class YPianoRifornimento extends PianoRifornimento {
 
-  
-  /**
-   * Attributo iFlag01
-   */
-  protected boolean iFlag01 = true;
+	protected String iVarchar01;
 
-  
-  /**
-   * YPianoRifornimento
-   */
-  /*
-   * Revisions:
-   * Date          Owner      Description
-   * 31/10/2025    Wizard     Codice generato da Wizard
-   *
-   */
-  public YPianoRifornimento() {
-    setFlag01(true);
-    setIdAzienda(Azienda.getAziendaCorrente());
-  }
+	protected String iVarchar02;
 
-  /**
-   * Valorizza l'attributo. 
-   * @param flag01
-   */
-  /*
-   * Revisions:
-   * Date          Owner      Description
-   * 31/10/2025    Wizard     Codice generato da Wizard
-   *
-   */
-  public void setFlag01(boolean flag01) {
-    this.iFlag01 = flag01;
-    setDirty();
-  }
+	protected java.sql.Date iDate01;
 
-  /**
-   * Restituisce l'attributo. 
-   * @return boolean
-   */
-  /*
-   * Revisions:
-   * Date          Owner      Description
-   * 31/10/2025    Wizard     Codice generato da Wizard
-   *
-   */
-  public boolean getFlag01() {
-    return iFlag01;
-  }
+	protected java.sql.Date iDate02;
 
-  /**
-   * setEqual
-   * @param obj
-   * @throws CopyException
-   */
-  /*
-   * Revisions:
-   * Date          Owner      Description
-   * 31/10/2025    Wizard     Codice generato da Wizard
-   *
-   */
-  public void setEqual(Copyable obj) throws CopyException {
-    super.setEqual(obj);
-  }
+	protected BigDecimal iDecimal01;
+
+	protected BigDecimal iDecimal02;
+
+	protected Integer iInteger01;
+
+	protected Integer iInteger02;
+
+	protected boolean iFlag01 = false;
+
+	protected boolean iFlag02 = false;
+
+	protected char iEnum1 = 'I';
+
+	protected char iEnum2 = 'I';
+
+	public YPianoRifornimento() {
+		setFlag01(false);
+		setFlag02(false);
+		setEnum1('I');
+		setEnum2('I');
+		setIdAzienda(Azienda.getAziendaCorrente());
+	}
+
+	public void setVarchar01(String varchar01) {
+		this.iVarchar01 = varchar01;
+		setDirty();
+	}
+
+	public String getVarchar01() {
+		return iVarchar01;
+	}
+
+	public void setVarchar02(String varchar02) {
+		this.iVarchar02 = varchar02;
+		setDirty();
+	}
+
+	public String getVarchar02() {
+		return iVarchar02;
+	}
+
+	public void setDate01(java.sql.Date date01) {
+		this.iDate01 = date01;
+		setDirty();
+	}
+
+	public java.sql.Date getDate01() {
+		return iDate01;
+	}
+
+	public void setDate02(java.sql.Date date02) {
+		this.iDate02 = date02;
+		setDirty();
+	}
+
+	public java.sql.Date getDate02() {
+		return iDate02;
+	}
+
+	public void setDecimal01(BigDecimal decimal01) {
+		this.iDecimal01 = decimal01;
+		setDirty();
+	}
+
+	public BigDecimal getDecimal01() {
+		return iDecimal01;
+	}
+
+	public void setDecimal02(BigDecimal decimal02) {
+		this.iDecimal02 = decimal02;
+		setDirty();
+	}
+
+	public BigDecimal getDecimal02() {
+		return iDecimal02;
+	}
+
+	public void setInteger01(Integer integer01) {
+		this.iInteger01 = integer01;
+		setDirty();
+	}
+
+	public Integer getInteger01() {
+		return iInteger01;
+	}
+
+	public void setInteger02(Integer integer02) {
+		this.iInteger02 = integer02;
+		setDirty();
+	}
+
+	public Integer getInteger02() {
+		return iInteger02;
+	}
+
+	public void setFlag01(boolean flag01) {
+		this.iFlag01 = flag01;
+		setDirty();
+	}
+
+	public boolean getFlag01() {
+		return iFlag01;
+	}
+
+	public void setFlag02(boolean flag02) {
+		this.iFlag02 = flag02;
+		setDirty();
+	}
+
+	public boolean getFlag02() {
+		return iFlag02;
+	}
+
+	public void setEnum1(char enum1) {
+		this.iEnum1 = enum1;
+		setDirty();
+	}
+
+	public char getEnum1() {
+		return iEnum1;
+	}
+
+	public void setEnum2(char enum2) {
+		this.iEnum2 = enum2;
+		setDirty();
+	}
+
+	public char getEnum2() {
+		return iEnum2;
+	}
+
+	public void setEqual(Copyable obj) throws CopyException {
+		super.setEqual(obj);
+	}
 
 }
-
