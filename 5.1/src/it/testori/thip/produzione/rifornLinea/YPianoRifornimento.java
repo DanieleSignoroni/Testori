@@ -1,12 +1,23 @@
 package it.testori.thip.produzione.rifornLinea;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.common.ErrorMessage;
+import com.thera.thermfw.persist.CachedStatement;
+import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.CopyException;
 import com.thera.thermfw.persist.Copyable;
+import com.thera.thermfw.persist.Database;
 
+import it.testori.thip.vendite.documentoVE.YDocumentoVenditaTM;
 import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.base.documenti.StatoAttivita;
 import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
+import it.thera.thip.vendite.documentoVE.DocumentoVenditaTM;
 
 /**
  * <p></p>
@@ -25,6 +36,22 @@ import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
  */
 
 public class YPianoRifornimento extends PianoRifornimento {
+
+	protected static final String STMT_DOC_VEN_CLG = "SELECT "
+			+ "	1 "
+			+ "FROM "
+			+ "	"+YDocumentoVenditaTM.TABLE_NAME_EXT+" Y "
+			+ "INNER JOIN "+DocumentoVenditaTM.TABLE_NAME+" T "
+			+ "ON "
+			+ "	Y."+YDocumentoVenditaTM.ID_AZIENDA+" = T."+DocumentoVenditaTM.ID_AZIENDA+" "
+			+ "	AND Y."+YDocumentoVenditaTM.ID_ANNO_DOC+" = T."+DocumentoVenditaTM.ID_ANNO_DOC+" "
+			+ "	AND Y."+YDocumentoVenditaTM.ID_NUMERO_DOC+" = T."+DocumentoVenditaTM.ID_NUMERO_DOC+" "
+			+ "WHERE "
+			+ "	Y."+YDocumentoVenditaTM.ID_AZIENDA+" = ? "
+			+ "	AND Y."+YDocumentoVenditaTM.ID_ANNO_PIANO_RFR+" = ? "
+			+ "	AND Y."+YDocumentoVenditaTM.ID_NUMERO_PIANO_RFR+" = ? "
+			+ "	AND T."+DocumentoVenditaTM.COL_MAGAZZINO+" <> '"+StatoAttivita.ESEGUITO+"' ";
+	protected static CachedStatement cDocumentoVenditaCollegato = new CachedStatement(STMT_DOC_VEN_CLG);
 
 	protected String iVarchar01;
 
@@ -164,6 +191,34 @@ public class YPianoRifornimento extends PianoRifornimento {
 
 	public char getEnum2() {
 		return iEnum2;
+	}
+
+	@Override
+	public ErrorMessage checkDelete() {
+		ErrorMessage em = super.checkDelete();
+		if(isInDocumentoVendita()) {
+			return new ErrorMessage("BAS0000078","Il piano non puo' essere cancellato, e' collegato ad un documento di vendita provvisorio");
+		}
+		return em;
+	}
+
+	protected boolean isInDocumentoVendita() {
+		try {
+			ResultSet rsDocVen = null;
+			Database db = ConnectionManager.getCurrentDatabase();
+			PreparedStatement psDocVen = cDocumentoVenditaCollegato.getStatement();
+			db.setString(psDocVen, 1, getIdAzienda());
+			db.setString(psDocVen, 2, getIdAnnoPiano());    
+			db.setString(psDocVen, 3, getIdNumeroPiano());   
+			rsDocVen = psDocVen.executeQuery();
+			if (rsDocVen.next()) {
+				return true;
+			}      	
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace(Trace.excStream);
+		}
+		return false;
 	}
 
 	public void setEqual(Copyable obj) throws CopyException {

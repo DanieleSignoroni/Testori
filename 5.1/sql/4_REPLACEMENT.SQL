@@ -1,3 +1,0 @@
-    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('it.thera.thip.produzione.rifornLinea.PianoRifornimentoRiga', 'it.testori.thip.produzione.rifornLinea.YPianoRifornimentoRiga', '0', 'Y', 'N');
-    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('it.thera.thip.produzione.rifornLinea.PianoRifornimentoRigaTM', 'it.testori.thip.produzione.rifornLinea.YPianoRifornimentoRigaTM', '0', 'Y', 'N');
-    INSERT INTO <SCH>REPLACEMENT (ORIGINAL_NAME,REPLACING_NAME,TYPE,DISABLED) VALUES ('PianoRifornimentoRiga', 'YPianoRifornimentoRiga', '1', 'Y', 'N');
