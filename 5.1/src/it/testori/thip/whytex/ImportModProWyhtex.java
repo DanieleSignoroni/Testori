@@ -1,0 +1,215 @@
+package it.testori.thip.whytex;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.batch.BatchJob;
+import com.thera.thermfw.persist.ConnectionManager;
+import com.thera.thermfw.persist.Database;
+import com.thera.thermfw.persist.Factory;
+
+import it.thera.thip.cs.CSVColonna;
+import it.thera.thip.cs.CSVFile;
+import it.thera.thip.cs.CSVRiga;
+import it.thera.thip.cs.GestoreCommit;
+import it.thera.thip.datiTecnici.modpro.CMModproSempl;
+import it.thera.thip.datiTecnici.modpro.CMModproSemplTM;
+
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 18/11/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72XXX    18/11/2025  DSSOF3   Prima stesura
+ */
+
+@SuppressWarnings("unchecked")
+public class ImportModProWyhtex extends ImportFileWhytex {
+
+	static {
+		cWrappers.put(CMModproSemplTM.R_ARTICOLO_PADRE, new ColumnWrapper("IdArticoloPadre", String.class));
+		cWrappers.put(CMModproSemplTM.SEQUENZA_ORDIN, new ColumnWrapper("SequenzaOrdin", Short.class));
+		cWrappers.put(CMModproSemplTM.R_ARTICOLO, new ColumnWrapper("IdArticolo", String.class));
+		cWrappers.put(CMModproSemplTM.COEFF_IMPIEGO, new ColumnWrapper("CoeffImpiego", BigDecimal.class));
+		cWrappers.put(CMModproSemplTM.R_MODELLO_TEMPL, new ColumnWrapper("IdModelloTempl", Integer.class));
+	}
+
+	protected int numRigheConErrori;
+	protected int numRigheCancellate;
+	protected int numRigheInserite;
+	protected int numRigheDuplicate;
+
+	@Override
+	protected boolean run() {
+		boolean ok = super.run();
+		if(ok) {
+			if(files != null && files.length == 0) {
+				output.println("Nessun file da importare...");
+			}else if(files != null){
+				for(File file : files) {
+					try {
+						CSVFile csvFile = parseFile(file, 1);
+						if(csvFile != null) {
+							completaColonne(csvFile);
+							elaboraFile(csvFile);
+
+							//se tutto ok sposto il file in outbound
+						}
+					}catch (Exception e) {
+						e.printStackTrace(Trace.excStream);
+					}
+				}
+			}
+		}
+		return ok;
+	}
+
+	/**
+	 *
+	 * @param fileCSV CSVFile
+	 * @param errori List
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("rawtypes")
+	protected void importaDati(CSVFile fileCSV, List errori) throws SQLException {
+		List righe = fileCSV.getRighe();
+		if (!righe.isEmpty()) {
+			if (!errori.isEmpty()) {
+				printList(errori);
+				job.setApplStatus(BatchJob.WITH_WARNING);
+			}
+			elaboraFile(fileCSV);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected void elaboraFile(CSVFile fileCSV) throws SQLException {
+		GestoreCommit gestoreCommit = new GestoreCommit(10);
+		int numeroRiga = 1;
+		for (Iterator ri = fileCSV.getRigheIterator(); ri.hasNext(); ) {
+			CSVRiga rigaCSV = (CSVRiga) ri.next();
+			elaboraRiga(rigaCSV, new Integer(numeroRiga++));
+			gestoreCommit.commit();
+			checkPoint();
+		}
+		if (numRigheConErrori >= 1)
+			job.setApplStatus(BatchJob.WITH_WARNING);
+		if(numRigheInserite > 0)
+			gestoreCommit.fine();
+		else
+			gestoreCommit.fine(false);
+	}
+
+	protected boolean elaboraRiga(CSVRiga rigaCSV, Integer numeroRiga) {
+		boolean ok = false;
+		CMModproSempl cm = (CMModproSempl) Factory.createObject(CMModproSempl.class);
+		try {
+			aggiornaInternal(cm, rigaCSV, numeroRiga);
+			ok = (cm.save() > 0);
+		}catch (Exception e) {
+			e.printStackTrace(Trace.excStream);
+			ok = false;
+			output.println("Riga CSV :"+numeroRiga+" errore: "+e.getMessage());
+			numRigheConErrori++;
+		}
+		if (ok)
+			numRigheInserite++;
+		return ok;
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected boolean aggiornaInternal(CMModproSempl cm, CSVRiga rigaCSV, Integer numeroRiga) throws Exception {
+		Iterator colonne = rigaCSV.getFileCSV().getColonne().values().iterator();
+		while (colonne.hasNext()) {
+			CSVColonna colonna = (CSVColonna) colonne.next();
+			String nome = colonna.getNomeColonna();
+			Object valore = null;
+			valore = rigaCSV.getValoreToObject(nome);
+			String valoreStr = rigaCSV.getValore(colonna.getPosizione().intValue());
+			if (!isEmpty(valoreStr) && (valore == null)) {
+				return false;
+			}
+
+			ColumnWrapper wrapper = (ColumnWrapper) cWrappers.get(nome);
+			if(wrapper != null && wrapper.getJavaType() == String.class && valore == null)
+				valore = valore != null ? valore : "";
+			if (wrapper != null && valore != null) {
+				if(wrapper.getJavaType() == String.class){
+					if(((String)valore).length() > wrapper.getJavaSize()){
+						valore = ((String)valore).substring(0, wrapper.getJavaSize());
+					}
+				}
+				String setter = "set" + wrapper.getProperty();
+				Object target = cm;
+				Method setMethod = target.getClass().getMethod(setter, new Class[] {wrapper.getJavaType()});
+				setMethod.invoke(target, new Object[] {valore});
+			}
+		}
+		return true;
+	}
+
+	protected boolean isEmpty(String value) {
+		return value.equals(CSVFile.NULL_VALUE);
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	protected void completaColonne(CSVFile fileCSV) throws SQLException {
+		String schema = CMModproSemplTM.TABLE_NAME.substring(0, CMModproSemplTM.TABLE_NAME.indexOf("."));
+		String table = CMModproSemplTM.TABLE_NAME.substring(CMModproSemplTM.TABLE_NAME.indexOf(".") + 1);
+		Connection connection = ConnectionManager.getCurrentConnection();
+		Database db = ConnectionManager.getCurrentDatabase();
+		DatabaseMetaData metadata = db.getDatabaseMetaData(connection);
+		ResultSet rs = metadata.getColumns(connection.getCatalog(), schema, table, null);
+		Map colonneDaTM = new Hashtable();
+		while (rs.next()) {
+			List data = new ArrayList();
+			data.add(rs.getString("DATA_TYPE"));
+			data.add(rs.getString("COLUMN_SIZE"));
+			colonneDaTM.put(rs.getString("COLUMN_NAME"), data);
+		}
+		Set colonneCSV = fileCSV.getColonne().keySet();
+		Iterator colonneCSVIter = colonneCSV.iterator();
+		while(colonneCSVIter.hasNext()){
+			String nomeCol = (String) colonneCSVIter.next();
+			if (colonneDaTM.containsKey(nomeCol)) {
+				CSVColonna colonna = (CSVColonna)fileCSV.getColonne().get(nomeCol);
+				List columnData =  (List)colonneDaTM.get(nomeCol);
+				colonna.setTipo(new Integer((String)columnData.get(0)));
+				ColumnWrapper wrapper = (ColumnWrapper) cWrappers.get(nomeCol);
+				if (wrapper != null) {
+					colonna.setJavaClass(wrapper.getJavaType());
+					wrapper.setJavaSize(new Integer((String)columnData.get(1)).intValue());
+				}
+			}
+			else {
+				output.println("ColonnaSbagliata" + new Object[] {nomeCol});
+			}
+		}
+	}
+
+	@Override
+	protected String getClassAdCollectionName() {
+		return "YImpModProWyhtex";
+	}
+
+}
