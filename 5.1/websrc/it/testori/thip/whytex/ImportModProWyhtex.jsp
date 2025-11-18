@@ -31,7 +31,7 @@
   List errors = new ArrayList(); 
   WebJSTypeList jsList = new WebJSTypeList(); 
   WebForm YImpModProWyhtexForm =  
-     new com.thera.thermfw.web.WebFormForBatchForm(request, response, "YImpModProWyhtexForm", "YImpModProWyhtex", "Arial,10", "com.thera.thermfw.batch.web.BatchFormActionAdapter", false, false, true, true, true, true, null, 0, true, "it/testori/thip/whytext/ImportModProWyhtex.js"); 
+     new com.thera.thermfw.web.WebFormForBatchForm(request, response, "YImpModProWyhtexForm", "YImpModProWyhtex", "Arial,10", "com.thera.thermfw.batch.web.BatchFormActionAdapter", false, false, true, true, true, true, null, 0, true, "it/testori/thip/whytex/ImportModProWyhtex.js"); 
   YImpModProWyhtexForm.setServletEnvironment(se); 
   YImpModProWyhtexForm.setJSTypeList(jsList); 
   YImpModProWyhtexForm.setHeader("it.thera.thip.cs.Header.jsp"); 
@@ -155,8 +155,28 @@
 </td>
 			</tr>
 			<tr>
+				<td><input id="CMEntityId" name="CMEntityId" type="hidden"></td>
+			</tr>
+			<tr>
+				<td height="100%">
+					<table style="margin: 7 7 7 7;">
+						<tr>
+							<td colspan="2"><% 
+   request.setAttribute("parentForm", YImpModProWyhtexForm); 
+   String CDForRunParameter$com$thera$thermfw$batchLoad$RunParamBatchLoader$jsp = "RunParameter"; 
+%>
+<jsp:include page="/com/thera/thermfw/batchLoad/RunParamBatchLoader.jsp" flush="true"> 
+<jsp:param name="CDName" value="<%=CDForRunParameter$com$thera$thermfw$batchLoad$RunParamBatchLoader$jsp%>"/> 
+</jsp:include> 
+<!--<span class="subform" id="runParameter"></span>-->
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
 				<td>
-					<table border="0" style="margin: 7 7 7 7;" width="98%">
+					<table border="0" style="margin: 7 7 7 7;">
 						<tr>
 							<td><%{  WebLabelCompound label = new com.thera.thermfw.web.WebLabelCompound(null, null, "YImpModProWyhtex", "InboundPath", null); 
    label.setParent(YImpModProWyhtexForm); 

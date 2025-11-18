@@ -6,7 +6,7 @@
 			menubar="yes" inputFont="Arial,10"	toolbar="yes" 
 			header="it.thera.thip.cs.Header.jsp" footer="it.thera.thip.cs.Footer.jsp"
 			onLoadPresent="yes"
-			jsLibraryName="it/testori/thip/whytext/ImportModProWyhtex.js">
+			jsLibraryName="it/testori/thip/whytex/ImportModProWyhtex.js">
 			>
 
 	<menubar name="myMenuBar" maxWidth="150" color="#000000" background="#A5B6CE"> 
@@ -16,6 +16,7 @@
 		<import file="com/thera/thermfw/batch/BatchRunnableMenu.tfml"/> 
 	</toolbar>
 	
+	<subform name="runParameter" classCD="RunParameter"/>
 	<textinput classAD="IdAzienda" name="IdAzienda"/>
     <textinput classAD="InboundPath" name="InboundPath"/>
     <textinput classAD="OutboundPath" name="OutboundPath"/>

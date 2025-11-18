@@ -3,8 +3,10 @@ package it.testori.thip.whytex;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,14 +18,19 @@ import java.util.Set;
 
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.batch.BatchJob;
+import com.thera.thermfw.batch.BatchOptions;
+import com.thera.thermfw.batch.BatchService;
+import com.thera.thermfw.batchload.RunBatchLoader;
 import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.Database;
+import com.thera.thermfw.persist.ErrorCodes;
 import com.thera.thermfw.persist.Factory;
 
 import it.thera.thip.cs.CSVColonna;
 import it.thera.thip.cs.CSVFile;
 import it.thera.thip.cs.CSVRiga;
 import it.thera.thip.cs.GestoreCommit;
+import it.thera.thip.datiTecnici.modpro.CMModProSemplificati;
 import it.thera.thip.datiTecnici.modpro.CMModproSempl;
 import it.thera.thip.datiTecnici.modpro.CMModproSemplTM;
 
@@ -54,10 +61,35 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 		cWrappers.put(CMModproSemplTM.R_MODELLO_TEMPL, new ColumnWrapper("IdModelloTempl", Integer.class));
 	}
 
+	protected RunBatchLoader iRunParameter = null;
+
 	protected int numRigheConErrori;
 	protected int numRigheCancellate;
 	protected int numRigheInserite;
 	protected int numRigheDuplicate;
+
+	public ImportModProWyhtex() {
+		super();
+		iRunParameter = (RunBatchLoader) Factory.createObject(RunBatchLoader.class);
+		iRunParameter.setOwner(this);
+		iRunParameter.setOnlySimulator(true);
+		iRunParameter.setEntityId("CMModProSempl");
+	}
+
+	public void setDirty() {
+	}
+
+	public void setSimulazione(boolean simulazione) {
+		iRunParameter.setOnlySimulator(simulazione);
+	}
+
+	public boolean isSimulazione() {
+		return iRunParameter.getOnlySimulator();
+	}
+
+	public RunBatchLoader getRunParameter() {
+		return iRunParameter;
+	}
 
 	@Override
 	protected boolean run() {
@@ -66,22 +98,73 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 			if(files != null && files.length == 0) {
 				output.println("Nessun file da importare...");
 			}else if(files != null){
+				pulisciCM();
 				for(File file : files) {
 					try {
 						CSVFile csvFile = parseFile(file, 1);
 						if(csvFile != null) {
+							output.println("Elaborazione file : "+csvFile.getNomeFile());
 							completaColonne(csvFile);
 							elaboraFile(csvFile);
-
-							//se tutto ok sposto il file in outbound
+							output.println("Termine elaborazione file : "+csvFile.getNomeFile());
+							output.println("sposto il file...");
 						}
 					}catch (Exception e) {
+						output.println("exc : "+e.getMessage());
+						e.printStackTrace(Trace.excStream);
+					}
+				}
+				if(numRigheInserite > 0) {
+					CMModProSemplificati cmSempl = (CMModProSemplificati) Factory.createObject(CMModProSemplificati.class);
+					cmSempl.setIdAzienda(getIdAzienda());
+					BatchOptions opt = (BatchOptions) Factory.createObject(BatchOptions.class);
+					opt.setExecutionMode(BatchOptions.IMMEDIATE_EXECUTION);			
+					try {
+						cmSempl.getRunParameter().setEqual(getRunParameter());
+						opt.initDefaultValues(CMModProSemplificati.class, "CMModProSempl", "RUN");
+						cmSempl.setBatchJob(opt.getBatchJob());
+						int resSave = cmSempl.save();
+						if (resSave >= ErrorCodes.NO_ROWS_UPDATED) {
+							ConnectionManager.commit();
+							Socket socket = BatchService.getConnection();
+							BatchService.submitJob(cmSempl.getBatchJob().getBatchJobId(), socket);
+						}
+						else
+							ConnectionManager.rollback();
+
+					} catch (Exception e) {
 						e.printStackTrace(Trace.excStream);
 					}
 				}
 			}
 		}
 		return ok;
+	}
+
+	protected void pulisciCM() {
+		PreparedStatement ps = null;
+		try {
+			String del = "DELETE FROM "+CMModproSemplTM.TABLE_NAME+" WHERE "+CMModproSemplTM.DATA_ORIGIN+" = ?"
+					+ "AND "+CMModproSemplTM.RUN_ID+" = ?  ";
+			Connection connection = ConnectionManager.getCurrentConnection();
+			ps = connection.prepareStatement(del);
+			ps.setString(1, getRunParameter().getDataOrigin());
+			ps.setInt(2, getRunParameter().getRunId());
+			int num = ps.executeUpdate();
+			if(num > 0) {
+				connection.commit();
+			}
+		}catch (SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}finally {
+			if(ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
+			}
+		}
 	}
 
 	/**
@@ -115,7 +198,7 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 		if (numRigheConErrori >= 1)
 			job.setApplStatus(BatchJob.WITH_WARNING);
 		if(numRigheInserite > 0)
-			gestoreCommit.fine();
+			gestoreCommit.fine(true);
 		else
 			gestoreCommit.fine(false);
 	}
@@ -123,6 +206,9 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 	protected boolean elaboraRiga(CSVRiga rigaCSV, Integer numeroRiga) {
 		boolean ok = false;
 		CMModproSempl cm = (CMModproSempl) Factory.createObject(CMModproSempl.class);
+		cm.setDataOrigin(getRunParameter().getDataOrigin());
+		cm.setRunId(getRunParameter().getRunId());
+		cm.setRowId(numeroRiga);
 		try {
 			aggiornaInternal(cm, rigaCSV, numeroRiga);
 			ok = (cm.save() > 0);
