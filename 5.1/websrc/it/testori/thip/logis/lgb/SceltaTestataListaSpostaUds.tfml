@@ -13,5 +13,6 @@
     <textinput name="CodiceSocieta" classAD="CodiceSocieta"/>
 	<multisearchform classRD="TestataLista" name="TestataLista" specificDOList="it.testori.thip.logis.lgb.web.SceltaTestataListaSpostaUdsDoList"/>
 	<checkbox name="Sposta" classAD="Sposta"/>
+	<textinput name="ChiaviSelezionati" classAD="ChiaviSelezionati"/>
   </form>
 </tfml>

@@ -106,6 +106,15 @@
   YSceltaTlSpUdsCodiceSocieta.write(out); 
 %>
 </td>
+					<td><% 
+  WebTextInput YSceltaTlSpUdsChiaviSelezionati =  
+     new com.thera.thermfw.web.WebTextInput("YSceltaTlSpUds", "ChiaviSelezionati"); 
+  YSceltaTlSpUdsChiaviSelezionati.setParent(YSceltaTlSpUdsForm); 
+%>
+<input class="<%=YSceltaTlSpUdsChiaviSelezionati.getClassType()%>" id="<%=YSceltaTlSpUdsChiaviSelezionati.getId()%>" maxlength="<%=YSceltaTlSpUdsChiaviSelezionati.getMaxLength()%>" name="<%=YSceltaTlSpUdsChiaviSelezionati.getName()%>" size="<%=YSceltaTlSpUdsChiaviSelezionati.getSize()%>" type="hidden"><% 
+  YSceltaTlSpUdsChiaviSelezionati.write(out); 
+%>
+</td>
 				<td style="display:none;"><% 
   WebCheckBox YSceltaTlSpUdsSposta =  
      new com.thera.thermfw.web.WebCheckBox("YSceltaTlSpUds", "Sposta"); 

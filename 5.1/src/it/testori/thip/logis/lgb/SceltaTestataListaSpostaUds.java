@@ -1,5 +1,6 @@
 package it.testori.thip.logis.lgb;
 
+import java.sql.SQLException;
 import java.util.Vector;
 
 import com.thera.thermfw.common.BaseComponentsCollection;
@@ -34,7 +35,7 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 	protected String iCodiceSocieta;
 
 	protected Proxy testataLista = new Proxy(TestataLista.class);
-	
+
 	protected boolean iSposta;
 	protected String iChiaviSelezionati;
 
@@ -50,7 +51,7 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 		this.iCodiceSocieta = iCodiceSocieta;
 		testataLista.setKey(KeyHelper.replaceTokenObjectKey(testataLista.getKey(), 1, iCodiceSocieta));
 	}
-	
+
 	public boolean isSposta() {
 		return iSposta;
 	}
@@ -58,7 +59,7 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 	public void setSposta(boolean iSposta) {
 		this.iSposta = iSposta;
 	}
-	
+
 	public String getChiaviSelezionati() {
 		return iChiaviSelezionati;
 	}
@@ -94,5 +95,14 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 			}
 		}
 		return errors;
+	}
+
+	@Override
+	public int save(boolean force) throws SQLException {
+		int rc = 1;
+		if(isSposta() && getChiaviSelezionati() != null) {
+			
+		}
+		return rc;
 	}
 }
