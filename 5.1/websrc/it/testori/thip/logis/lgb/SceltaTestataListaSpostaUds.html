@@ -1,0 +1,51 @@
+<html>
+
+<head></head>
+
+<body style="margin: 0px; overflow: hidden;">
+	<form name="myForm">
+		<table width="100%" cellspacing="0" cellpadding="0" id="emptyborder">
+			<tr>
+				<td><input type="hidden" name="CodiceSocieta"
+					id="CodiceSocieta" /></td>
+				<td style="display:none;"><input type="checkbox" name="Sposta" id="Sposta" /></td>
+			</tr>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td width="100"><label for="TestataLista">TestataLista</label></td>
+							<td><span class="multisearchform" id="TestataLista" /></td>
+							<td>
+								<button style="width: 125px; display: inline;"
+									name="bottoneConferma" id="bottoneConferma"
+									onClick="conferma()" type="button">conferma lista</button>
+							</td>
+							<td style="display: none;">
+								<button style="width: 125px; display: inline;" name="spostaUds"
+									id="spostaUds" onClick="spostaUdsFn()" type="button">sposta
+									uds</button>
+							</td>
+							<td style="display: none;">
+								<button style="width: 125px; display: inline;" name="indietro"
+									id="indietro" onClick="indietroFn()" type="button">indietro</button>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr style="margin-top: 2rem;">
+				<td>
+					<table>
+						<iframe style="display: none; width: 100%; height: 90vh;"
+							name="righe" id="righe" src=""></iframe>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="height: 0"><span class="errorlist" /></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

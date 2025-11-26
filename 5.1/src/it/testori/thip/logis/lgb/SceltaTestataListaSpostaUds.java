@@ -1,6 +1,10 @@
 package it.testori.thip.logis.lgb;
 
+import java.util.Vector;
+
+import com.thera.thermfw.common.BaseComponentsCollection;
 import com.thera.thermfw.common.BusinessObjectAdapter;
+import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.Proxy;
 import com.thera.thermfw.security.Authorizable;
@@ -30,6 +34,9 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 	protected String iCodiceSocieta;
 
 	protected Proxy testataLista = new Proxy(TestataLista.class);
+	
+	protected boolean iSposta;
+	protected String iChiaviSelezionati;
 
 	public SceltaTestataListaSpostaUds() {
 		setCodiceSocieta(Azienda.getAziendaCorrente());
@@ -43,12 +50,28 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 		this.iCodiceSocieta = iCodiceSocieta;
 		testataLista.setKey(KeyHelper.replaceTokenObjectKey(testataLista.getKey(), 1, iCodiceSocieta));
 	}
+	
+	public boolean isSposta() {
+		return iSposta;
+	}
 
-	protected String getCodiceTestataLista() {
+	public void setSposta(boolean iSposta) {
+		this.iSposta = iSposta;
+	}
+	
+	public String getChiaviSelezionati() {
+		return iChiaviSelezionati;
+	}
+
+	public void setChiaviSelezionati(String iChiaviSelezionati) {
+		this.iChiaviSelezionati = iChiaviSelezionati;
+	}
+
+	public String getCodiceTestataLista() {
 		return KeyHelper.getTokenObjectKey(testataLista.getKey(), 2);
 	}
 
-	protected void setCodiceTestataLista(String idCodiceLista) {
+	public void setCodiceTestataLista(String idCodiceLista) {
 		testataLista.setKey(KeyHelper.replaceTokenObjectKey(testataLista.getKey(), 2, idCodiceLista));
 	}
 
@@ -58,5 +81,18 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 
 	public void setTestataLista(TestataLista t){
 		testataLista.setObject(t);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Vector checkAll(BaseComponentsCollection components) {
+		Vector errors = super.checkAll(components);
+		if(getTestataLista() != null) {
+			Vector elencoUds = TestataLista.getElencoUds(getTestataLista());
+			if(elencoUds == null || elencoUds.size() == 0) {
+				errors.add(new ErrorMessage("BAS0000078","La lsita selezionata non contiene UDS"));
+			}
+		}
+		return errors;
 	}
 }

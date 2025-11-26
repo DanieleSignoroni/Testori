@@ -1,0 +1,17 @@
+<tfml>
+  <generator type="form"/>
+  <form classHdr="YSceltaTlSpUds"
+    name="myForm"
+    locktype="nolock"
+    errorList="yes" menubar="yes" toolbar="yes" submitReset="none"
+    jsLibraryName="it/testori/thip/logis/lgb/SceltaTestataListaSpostaUds.js"
+    servlet="it.testori.thip.logis.lgb.web.SceltaTestataListaSpostaUdsFAA"
+    webFormModifierClass="it.testori.thip.logis.lgb.web.SceltaTestataListaSpostaUdsFM"
+    onLoadPresent="yes"
+    header="com.thera.thermfw.common.Header.jsp"
+    footer="com.thera.thermfw.common.Footer.jsp">
+    <textinput name="CodiceSocieta" classAD="CodiceSocieta"/>
+	<multisearchform classRD="TestataLista" name="TestataLista" specificDOList="it.testori.thip.logis.lgb.web.SceltaTestataListaSpostaUdsDoList"/>
+	<checkbox name="Sposta" classAD="Sposta"/>
+  </form>
+</tfml>
