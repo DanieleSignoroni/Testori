@@ -2,6 +2,9 @@ package it.testori.thip.logis.lgb;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,7 +30,9 @@ import it.thera.thip.base.comuniVenAcq.SpecificheCopiaDocumentoVen;
 import it.thera.thip.base.documenti.StatoAvanzamento;
 import it.thera.thip.base.documenti.web.DocumentoDataCollector;
 import it.thera.thip.cs.ThipException;
+import it.thera.thip.logis.fis.RigaUds;
 import it.thera.thip.logis.fis.TestataUds;
+import it.thera.thip.logis.lgb.RigaLista;
 import it.thera.thip.logis.lgb.TestataLista;
 import it.thera.thip.vendite.documentoVE.DocumentoVendita;
 import it.thera.thip.vendite.documentoVE.web.DocumentoVenditaDataCollector;
@@ -157,6 +162,24 @@ public class SceltaTestataListaSpostaUds extends BusinessObjectAdapter implement
 							docDC.initSecurityServices(boDC.getMode(), true, true, true);  
 							((DocumentoVendita)docDC.getBo()).setSalvaRighe(false);
 							SecondaryDataCollector righePrm = docDC.getSecondaryDataCollector("RighePrimarie");
+
+							//qui devo rimuovere le righe che ho scelto a video
+
+							//dalla riga uds prendo la riga lista e prendo la num riga host --> se non ce allora l'utente
+							//non l'ha messa quindi tolgo dalla oneToMany
+
+							Collection<Integer> righeDocScelte = Collections.emptyList();
+							Iterator iterUds = uds.iterator();
+							while(iterUds.hasNext()) {
+								TestataUds tu = (TestataUds) iterUds.next();
+								Iterator iterRigheUds = tu.getRigheUds().iterator();
+								while(iterRigheUds.hasNext()) {
+									RigaUds ru = (RigaUds) iterRigheUds.next();
+									RigaLista rl = ru.getRigaLista();
+									righeDocScelte.add(rl.getNumeroRigaHost());
+								}
+							}
+
 							((OneToMany)righePrm.getBo()).clear();
 							docDC.setAutoCommit(false);
 							int rcSave = docDC.save();
