@@ -74,34 +74,24 @@ public class EasyCheckService {
 		Status status = Status.OK;
 		Collection<ErrorMessage> errors = new ArrayList<>();
 
-		JSONObject reqSchema = payload.optJSONObject("request_schema");
-		JSONArray fields = (reqSchema != null) ? reqSchema.optJSONArray("fields") : null;
+		PezzaGreggiaField pezza = PezzaGreggiaField.fromPayload(payload, errors);
+		if(errors.isEmpty()) {
+			String bollaLavorazione = pezza.getProductionOrder();
+			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
+			if(atvEsec != null 
+					&& atvEsec.getMateriali().size() > 0
+					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
+				AttivitaEsecMateriale materiale = (AttivitaEsecMateriale) atvEsec.getMateriali().get(0);
 
-		if (fields == null) {
-			status = Status.BAD_REQUEST;
-			errors.add(new ErrorMessage("BAS0000078","Array 'fields' non trovato nel nodo 'request_schema'"));
-		}else {
-			PezzaGreggiaField pezza = PezzaGreggiaField.fromPayload(payload, errors);
-			if(errors.isEmpty()) {
-				String bollaLavorazione = pezza.getProductionOrder();
-				AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
-				if(atvEsec != null 
-						&& atvEsec.getMateriali().size() > 0
-						&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
-					AttivitaEsecMateriale materiale = (AttivitaEsecMateriale) atvEsec.getMateriali().get(0);
-					
-				}else {
-					if(atvEsec == null)
-						errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice :"+bollaLavorazione));
-					else if(atvEsec.getMateriali().size() == 0)
-						errors.add(new ErrorMessage("BAS0000078","Non e' stata trovato nessun materiale per l'attivita :"+bollaLavorazione));
-					else if(((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd() != YArticoloDatiMagaz.PEZZE)
-						errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non e' una pezza"));
-					
-					status = Status.INTERNAL_SERVER_ERROR;
-				}
 			}else {
-				status = Status.BAD_REQUEST;
+				if(atvEsec == null)
+					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
+				else if(atvEsec.getMateriali().size() == 0)
+					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovato nessun materiale per l'attivita: "+bollaLavorazione));
+				else if(((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd() != YArticoloDatiMagaz.PEZZE)
+					errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non e' una pezza"));
+
+				status = Status.INTERNAL_SERVER_ERROR;
 			}
 		}
 

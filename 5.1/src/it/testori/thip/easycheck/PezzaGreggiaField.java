@@ -116,14 +116,7 @@ public class PezzaGreggiaField {
 			return result;
 		}
 
-		JSONObject req = payload.optJSONObject("request_schema");
-		if (req == null) {
-			errors.add(new ErrorMessage("BAS0000078",
-					"Oggetto 'request_schema' non trovato nel payload"));
-			return result;
-		}
-
-		String badgeCode = req.optString("badgeCode", null);
+		String badgeCode = payload.optString("badgeCode", null);
 		if (badgeCode == null || badgeCode.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
 					"Campo 'badgeCode' mancante o vuoto in request_schema"));
@@ -131,13 +124,13 @@ public class PezzaGreggiaField {
 			result.setBadgeCode(badgeCode);
 		}
 
-		Integer pieceNumber = getOptionalInteger(req, "pieceNumber", true, "BAS0000078", errors);
+		Integer pieceNumber = getOptionalInteger(payload, "pieceNumber", true, "BAS0000078", errors);
 		result.setPieceNumber(pieceNumber);
 
-		Integer subPieceNumber = getOptionalInteger(req, "subPieceNumber", true, "BAS0000078", errors);
+		Integer subPieceNumber = getOptionalInteger(payload, "subPieceNumber", true, "BAS0000078", errors);
 		result.setSubPieceNumber(subPieceNumber);
 
-		String cutCode = req.optString("cutCode", null);
+		String cutCode = payload.optString("cutCode", null);
 		if (cutCode == null || cutCode.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
 					"Campo 'cutCode' mancante o vuoto in request_schema"));
@@ -145,10 +138,10 @@ public class PezzaGreggiaField {
 			result.setCutCode(cutCode);
 		}
 
-		String frameCode = req.optString("frameCode", null);
+		String frameCode = payload.optString("frameCode", null);
 		result.setFrameCode(frameCode);
 
-		String itemCode = req.optString("itemCode", null);
+		String itemCode = payload.optString("itemCode", null);
 		if (itemCode == null || itemCode.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
 					"Campo 'itemCode' mancante o vuoto in request_schema"));
@@ -156,7 +149,7 @@ public class PezzaGreggiaField {
 			result.setItemCode(itemCode);
 		}
 
-		String productionOrder = req.optString("productionOrder", null);
+		String productionOrder = payload.optString("productionOrder", null);
 		if (productionOrder == null || productionOrder.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
 					"Campo 'productionOrder' mancante o vuoto in request_schema"));
@@ -164,7 +157,7 @@ public class PezzaGreggiaField {
 			result.setProductionOrder(productionOrder);
 		}
 
-		String rawPieceFlag = req.optString("rawPieceFlag", null);
+		String rawPieceFlag = payload.optString("rawPieceFlag", null);
 		if (rawPieceFlag == null || rawPieceFlag.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
 					"Campo 'rawPieceFlag' mancante o vuoto in request_schema"));
@@ -172,7 +165,7 @@ public class PezzaGreggiaField {
 			result.setRawPieceFlag(rawPieceFlag);
 		}
 
-		String clientCode = req.optString("clientCode", null);
+		String clientCode = payload.optString("clientCode", null);
 		result.setClientCode(clientCode);
 
 		return result;
