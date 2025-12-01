@@ -16,12 +16,13 @@
     <toolbar name="myToolBar" imgwidth="16" imgheight="16">
       <import file="it/thera/thip/cs/defObjMenu.tfml"/>
     </toolbar>
+    <textinput name="IdAzienda" classAD="IdAzienda"/>
     <tabbed name="mytabbed" height="100%" width="100%">
       <tab name="tab1" resourceFile="it.testori.thip.easycheck.resources.InterfacciaEasyCheck" resourceID="tab1">
         <multisearchform name="NumeratoreDocProd" classRD="NumeratoreDocProd"/>
         <multisearchform name="SerieDocProd" classRD="SerieDocProd"/>
-        <multisearchform name="Azienda" classRD="Azienda"/>
         <multisearchform name="CausaleDocProd" classRD="CausaleDocProd"/>
+        <multisearchform name="DipendenteRilevazione" classRD="DipendenteRilevazione"/>
         <subform classCD="DatiComuniEstesi" name="DatiComuniEstesi"/>
       </tab>
     </tabbed>

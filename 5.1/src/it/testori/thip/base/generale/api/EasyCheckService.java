@@ -3,7 +3,6 @@ package it.testori.thip.base.generale.api;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.ws.rs.core.Response.Status;
@@ -17,6 +16,7 @@ import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.rs.errors.ErrorUtils;
 
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
+import it.testori.thip.easycheck.InterfacciaEasyCheck;
 import it.testori.thip.easycheck.PezzaGreggiaField;
 import it.testori.thip.easycheck.PezzaLavorata;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
@@ -24,6 +24,8 @@ import it.testori.thip.magazzino.generalemag.YLotto;
 import it.testori.thip.produzione.ordese.TipoTaglioPezza;
 import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.base.dipendente.Dipendente;
+import it.thera.thip.base.generale.NumeratoreException;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.produzione.documento.CausaleDocProduzione;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
@@ -32,8 +34,6 @@ import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.AttivitaEsecutivaTM;
 import it.thera.thip.produzione.ordese.OrdineEsecutivo;
-import it.thera.thip.produzione.ordese.PersDatiPrdCausaleRilev;
-import it.thera.thip.produzione.raccoltaDati.RilevazioneDatiProdRig;
 
 /**
  * <p></p>
@@ -201,7 +201,21 @@ public class EasyCheckService {
 		return null;
 	}
 
+	protected DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
+			AttivitaEsecutiva atvEsec,
+			BigDecimal quantita, BigDecimal quantitaScarto,
+			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec) throws NumeratoreException {
+		InterfacciaEasyCheck interfaccia = InterfacciaEasyCheck.getCurrentInterfacciaEasyCheck();
+		if(interfaccia != null)
+			return creaDocumentoProduzione(ordEsec, atvEsec, quantita, quantitaScarto, idUMSec, qtaSec,
+					qtaScartoSec, interfaccia.getIdNumeratoreDocPrd(),
+					interfaccia.getIdSerieDocPrd(), interfaccia.getCausaleDocProd(), interfaccia.getDipendenteRilevazione());
+		return null;
+	}
+
 	/**
+	 * Metodo per la creazione di un documento di produzione data un'attivita e alcuni dati necessari.<br>
+	 * La risorsa sul quale rileva e' quella principale.
 	 * @param ordineEsecutivo
 	 * @param attivitaEsecutiva
 	 * @param quantita
@@ -210,22 +224,24 @@ public class EasyCheckService {
 	 * @param qtaSec
 	 * @param qtaScartoSec
 	 * @return
+	 * @throws NumeratoreException 
 	 */
-	protected DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
+	public static DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
 			AttivitaEsecutiva atvEsec,
 			BigDecimal quantita, BigDecimal quantitaScarto,
-			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec) {
+			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec,
+			String idNumeratore, String idSerie, CausaleDocProduzione cauDoc, Dipendente dichiarante) throws NumeratoreException {
 		DocumentoProduzione docPrd = (DocumentoProduzione) Factory.createObject(DocumentoProduzione.class);
 		docPrd.setIdAzienda(Azienda.getAziendaCorrente());
 		docPrd.getNumeratoreHandler().setAnno(String.valueOf(TimeUtils.getCurrentYear()));
-		docPrd.getNumeratoreHandler().setIdNumeratore("DOC_PROD");
-		docPrd.getNumeratoreHandler().setIdSerie("DP");
+		docPrd.getNumeratoreHandler().setIdNumeratore(idNumeratore);
+		docPrd.getNumeratoreHandler().setIdSerie(idSerie);
 		docPrd.impostaSottoserie();
 		docPrd.setNumeroDocFormattato(docPrd.getNumeratoreHandler().getIdProgressivoFormattato());
 		docPrd.setIdNumeroDoc(docPrd.getNumeratoreHandler().getIdProgressivo());
-		docPrd.setRCauDocPrd("PVA");
+		docPrd.setCausale(cauDoc);
 		docPrd.setNumeroRitorno(atvEsec.getNumeroRitorno());
-		docPrd.setRDipendente(getIdOperatore());
+		docPrd.setDichiarante(dichiarante);
 		docPrd.setRisorsa(atvEsec.getAtvEsecRsrPrincipale().getRisorsa());
 		docPrd.setIdAnnoOrdine(ordEsec.getIdAnnoOrdine());
 		docPrd.setIdNumeroOrd(ordEsec.getIdNumeroOrdine());
