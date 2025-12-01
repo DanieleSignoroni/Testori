@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- INTERFACCIA_EASY_CHECK (INTERFA): Interfaccia - Easy Check; -->
+  <CreateTable schema="THIPPERS" name="INTERFACCIA_EASY_CHECK" shortname="INTERFA">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="STATO" shortname="STATO" type="char" length="1" nullable="no"/>
+    <Column name="R_UTENTE_CRZ" shortname="R_UTENTE_C" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_CRZ" shortname="TIMESTAMP_" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="R_UTENTE_AGG" shortname="R_UTENTE_A" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_AGG" shortname="TIMESTAMP0" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="R_NUMERATORE_DOC_PRD" shortname="R_NUMERATO" type="char" length="15" nullable="no"/>
+    <Column name="R_SERIE_DOC_PRD" shortname="R_SERIE_DO" type="char" length="2" nullable="no"/>
+    <Column name="R_CAU_DOC_PROD" shortname="R_CAU_DOC_" type="char" length="3" nullable="no"/>
+    <Column name="R_DIPENDENTE_RIL" shortname="R_DIPENDEN" type="char" length="8" nullable="no"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="INTERFACCIA_EA_I01" tabschema="THIPPERS" tabname="INTERFACCIA_EASY_CHECK" shortname="INTERF_I01" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="INTERFACCIA_EASY_CHECK">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="INTERFACCIA_EASY_CHECK" text="Interfaccia - Easy Check">
+      <CommentColumn name="ID_AZIENDA" text="Azienda"/>
+      <CommentColumn name="STATO" text="Stato"/>
+      <CommentColumn name="R_UTENTE_CRZ" text="Utente creazione"/>
+      <CommentColumn name="TIMESTAMP_CRZ" text="Timestamp creazione"/>
+      <CommentColumn name="R_UTENTE_AGG" text="Utente ultima modifica"/>
+      <CommentColumn name="TIMESTAMP_AGG" text="Timestamp ultima modifica"/>
+      <CommentColumn name="R_NUMERATORE_DOC_PRD" text="Numeratore - Doc Prod."/>
+      <CommentColumn name="R_SERIE_DOC_PRD" text="Serie - Doc Prod."/>
+      <CommentColumn name="R_CAU_DOC_PROD" text="Causale - Doc Prod."/>
+      <CommentColumn name="R_DIPENDENTE_RIL" text="Dipendente rilevazione"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="INTERFACCIA_EA_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="INTERFACCIA_EASY_CHECK"/>
+</TDDML>

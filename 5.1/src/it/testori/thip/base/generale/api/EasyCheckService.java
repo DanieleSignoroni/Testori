@@ -1,14 +1,16 @@
 package it.testori.thip.base.generale.api;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.Factory;
@@ -17,13 +19,21 @@ import com.thera.thermfw.rs.errors.ErrorUtils;
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.easycheck.PezzaGreggiaField;
 import it.testori.thip.easycheck.PezzaLavorata;
+import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.testori.thip.magazzino.generalemag.YLotto;
+import it.testori.thip.produzione.ordese.TipoTaglioPezza;
+import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.magazzino.generalemag.Lotto;
+import it.thera.thip.produzione.documento.CausaleDocProduzione;
+import it.thera.thip.produzione.documento.DocumentoProduzione;
 import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.AttivitaEsecutivaTM;
+import it.thera.thip.produzione.ordese.OrdineEsecutivo;
+import it.thera.thip.produzione.ordese.PersDatiPrdCausaleRilev;
+import it.thera.thip.produzione.raccoltaDati.RilevazioneDatiProdRig;
 
 /**
  * <p></p>
@@ -62,7 +72,16 @@ public class EasyCheckService {
 		if (!errors.isEmpty()) {
 			status = Status.BAD_REQUEST;
 		} else {
+			String bollaLavorazione = pezza.getProductionOrder();
+			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
+			if(atvEsec != null) {
 
+			}else {
+				if(atvEsec == null)
+					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
+
+				status = Status.INTERNAL_SERVER_ERROR;
+			}
 		}
 
 		result.put("errors", ErrorUtils.getInstance().toJSON(errors));
@@ -85,42 +104,65 @@ public class EasyCheckService {
 					&& atvEsec.getMateriali().size() > 0
 					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
 				AttivitaEsecMateriale materiale = (AttivitaEsecMateriale) atvEsec.getMateriali().get(0);
+				AttivitaEsecutiva attivita = materiale.getAttivitaEsecutiva();
 				if(materiale.getLottiMateriali().size() > 0
 						&& !((AttivitaEsecLottiMat)materiale.getLottiMateriali().get(0)).getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
 
 					AttivitaEsecLottiMat atvEsecLottoMat = (AttivitaEsecLottiMat) materiale.getLottiMateriali().get(0);
 					YLotto lotto = (YLotto) atvEsecLottoMat.getLotto();
 
-					result.put("success", true);
-					result.put("message", "Pezza greggia processata e validata con successo.");
-					result.put("pieceHeaderSkid", "");
-					
-					JSONObject itemDataPanthera = new JSONObject();
-					itemDataPanthera.put("pieceCode", materiale.getIdArticolo());
-					itemDataPanthera.put("itemDescription", materiale.getArticolo().getDescrizioneArticoloNLS().getDescrizione());
-					itemDataPanthera.put("standardWeight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
+					String progressivo = null;
+					try {
+						if(attivita.isAttivitaFinale() 
+								&& ((YAttivitaEsecutiva)attivita).getTipoTaglio() != TipoTaglioPezza.NON_SIGNIFICATIVO){
+							progressivo = CreaLottiTestoriUtils.getNextLottoProgressivoMonoChar(attivita.getIdAzienda(), lotto.getCodiceLotto(), ((YAttivitaEsecutiva)attivita).getTipoTaglio());
+						}else {
+							progressivo = CreaLottiTestoriUtils.getMaxProgressivoPezzeFromLotto(attivita.getIdAzienda(), lotto.getCodiceLotto());
+						}
+						if(progressivo != null) {
+							String idLottoPfMax = lotto.getCodiceLotto() + progressivo;
 
-					itemDataPanthera.put("parameter1", 0);
-					itemDataPanthera.put("parameter2", 0); 
+							result.put("success", true);
+							result.put("message", "Pezza greggia processata e validata con successo.");
+							result.put("pieceHeaderSkid", "");
 
-					itemDataPanthera.put("minHeight", String.valueOf(lotto.getAltezzaMinima()));
-					itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
+							JSONObject itemDataPanthera = new JSONObject();
+							itemDataPanthera.put("pieceCode", materiale.getIdArticolo());
+							itemDataPanthera.put("itemDescription", materiale.getArticolo().getDescrizioneArticoloNLS().getDescrizione());
+							itemDataPanthera.put("standardWeight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
 
-					result.put("itemDataPanthera", itemDataPanthera);
+							itemDataPanthera.put("parameter1", 0);
+							itemDataPanthera.put("parameter2", 0); 
 
-					JSONObject pieceDetailData = new JSONObject();
-					pieceDetailData.put("pieceCode", materiale.getIdArticolo());
-					pieceDetailData.put("totalQuantity", materiale.getQtaResiduaUMPrm());
-					pieceDetailData.put("minHeightNumeric", lotto.getAltezzaMinima() != null ? lotto.getAltezzaMinima() : 0);
-					pieceDetailData.put("maxHeightNumeric", lotto.getAltezzaMassima() != null ? lotto.getAltezzaMassima() : 0);
-					pieceDetailData.put("weight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
-					pieceDetailData.put("defectCode", lotto.getIdDifettosita() != null ? lotto.getIdDifettosita() : "NODEF");
-					pieceDetailData.put("operatorCode", "");
-					pieceDetailData.put("goodQuantity", lotto.getQuantitaOriginale() != null ? lotto.getQuantitaOriginale() : 0);
-					pieceDetailData.put("additionalDescription", lotto.getDifettosita() != null ? lotto.getDifettosita().getDescrizione() : "");
-					pieceDetailData.put("productionOrder", atvEsec.getNumeroRitorno());
+							itemDataPanthera.put("minHeight", String.valueOf(lotto.getAltezzaMinima()));
+							itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
 
-					result.put("pieceDetailData", pieceDetailData);
+							result.put("itemDataPanthera", itemDataPanthera);
+
+							JSONObject pieceDetailData = new JSONObject();
+							pieceDetailData.put("pieceCode", materiale.getIdArticolo());
+							pieceDetailData.put("totalQuantity", materiale.getQtaResiduaUMPrm());
+							pieceDetailData.put("minHeightNumeric", lotto.getAltezzaMinima() != null ? lotto.getAltezzaMinima() : 0);
+							pieceDetailData.put("maxHeightNumeric", lotto.getAltezzaMassima() != null ? lotto.getAltezzaMassima() : 0);
+							pieceDetailData.put("weight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
+							pieceDetailData.put("defectCode", lotto.getIdDifettosita() != null ? lotto.getIdDifettosita() : "NODEF");
+							pieceDetailData.put("operatorCode", "");
+							pieceDetailData.put("goodQuantity", lotto.getQuantitaOriginale() != null ? lotto.getQuantitaOriginale() : 0);
+							pieceDetailData.put("additionalDescription", lotto.getDifettosita() != null ? lotto.getDifettosita().getDescrizione() : "");
+							pieceDetailData.put("productionOrder", atvEsec.getNumeroRitorno());
+
+							result.put("pieceDetailData", pieceDetailData);
+
+						}else {
+							errors.add(new ErrorMessage("BAS0000078","Errore nel reperimento dell'ultima sotto-pezza generata"));
+							status = Status.INTERNAL_SERVER_ERROR;
+						}
+
+					}catch (Exception e) {
+						errors.add(new ErrorMessage("BAS0000078","Eccezione non gestita: "+e.getMessage()));
+						status = Status.INTERNAL_SERVER_ERROR;
+						e.printStackTrace(Trace.excStream);
+					}
 				}else {
 					errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non ha un lotto significativo"));
 					status = Status.INTERNAL_SERVER_ERROR;
@@ -157,5 +199,57 @@ public class EasyCheckService {
 			e.printStackTrace(Trace.excStream);
 		}
 		return null;
+	}
+
+	/**
+	 * @param ordineEsecutivo
+	 * @param attivitaEsecutiva
+	 * @param quantita
+	 * @param quantitaScarto
+	 * @param idUMSec
+	 * @param qtaSec
+	 * @param qtaScartoSec
+	 * @return
+	 */
+	protected DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
+			AttivitaEsecutiva atvEsec,
+			BigDecimal quantita, BigDecimal quantitaScarto,
+			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec) {
+		DocumentoProduzione docPrd = (DocumentoProduzione) Factory.createObject(DocumentoProduzione.class);
+		docPrd.setIdAzienda(Azienda.getAziendaCorrente());
+		docPrd.getNumeratoreHandler().setAnno(String.valueOf(TimeUtils.getCurrentYear()));
+		docPrd.getNumeratoreHandler().setIdNumeratore("DOC_PROD");
+		docPrd.getNumeratoreHandler().setIdSerie("DP");
+		docPrd.impostaSottoserie();
+		docPrd.setNumeroDocFormattato(docPrd.getNumeratoreHandler().getIdProgressivoFormattato());
+		docPrd.setIdNumeroDoc(docPrd.getNumeratoreHandler().getIdProgressivo());
+		docPrd.setRCauDocPrd("PVA");
+		docPrd.setNumeroRitorno(atvEsec.getNumeroRitorno());
+		docPrd.setRDipendente(getIdOperatore());
+		docPrd.setRisorsa(atvEsec.getAtvEsecRsrPrincipale().getRisorsa());
+		docPrd.setIdAnnoOrdine(ordEsec.getIdAnnoOrdine());
+		docPrd.setIdNumeroOrd(ordEsec.getIdNumeroOrdine());
+		docPrd.setNumeroOrdFormattato(ordEsec.getNumeroOrdFmt());
+		docPrd.setIdRigaAttivita(atvEsec.getIdRigaAttivita());
+		docPrd.setRAttivita(atvEsec.getIdAttivita());
+		docPrd.setRStabilimento(ordEsec.getIdStabilimento());
+		docPrd.setRArticolo(ordEsec.getIdArticolo());
+		docPrd.setRVersione(ordEsec.getIdVersione());
+		docPrd.setRConfigurazione(ordEsec.getIdConfigurazione());
+		docPrd.setRCommessa(ordEsec.getIdCommessa());
+		docPrd.setRReparto(atvEsec.getIdReparto());
+		docPrd.setCentroCosto(atvEsec.getCentroCosto());
+		docPrd.setRCentroLavoro(atvEsec.getIdCentroLavoro());
+		docPrd.setNote(null);
+		docPrd.setSaldo(DocumentoProduzione.SALDO);
+		docPrd.setQuantita(quantita);
+		docPrd.setQtaScarto(quantitaScarto);
+		if (idUMSec != null) {
+			docPrd.setQtaSec(qtaSec);
+			docPrd.setQtaScartoSec(qtaScartoSec);
+			if (docPrd.getQtaSec() == null || docPrd.getQtaScartoSec() == null)
+				docPrd.setRicalcoloQtaFattoreConv(true);
+		}
+		return docPrd;
 	}
 }

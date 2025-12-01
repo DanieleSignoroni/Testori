@@ -1,0 +1,6 @@
+<B>2025-12-01 15:50:16</B>
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00004\tddml\4_DROP_INTERFACCIA_EASY_CHECK.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>INTERFACCIA_EASY_CHECK</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00004\tddml\4_INTERFACCIA_EASY_CHECK.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00004\tddml\4_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>
