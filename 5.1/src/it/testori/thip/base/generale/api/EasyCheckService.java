@@ -17,7 +17,10 @@ import com.thera.thermfw.rs.errors.ErrorUtils;
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.easycheck.PezzaGreggiaField;
 import it.testori.thip.easycheck.PezzaLavorata;
+import it.testori.thip.magazzino.generalemag.YLotto;
 import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.magazzino.generalemag.Lotto;
+import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.AttivitaEsecutivaTM;
@@ -82,7 +85,46 @@ public class EasyCheckService {
 					&& atvEsec.getMateriali().size() > 0
 					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
 				AttivitaEsecMateriale materiale = (AttivitaEsecMateriale) atvEsec.getMateriali().get(0);
+				if(materiale.getLottiMateriali().size() > 0
+						&& !((AttivitaEsecLottiMat)materiale.getLottiMateriali().get(0)).getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
 
+					AttivitaEsecLottiMat atvEsecLottoMat = (AttivitaEsecLottiMat) materiale.getLottiMateriali().get(0);
+					YLotto lotto = (YLotto) atvEsecLottoMat.getLotto();
+
+					result.put("success", true);
+					result.put("message", "Pezza greggia processata e validata con successo.");
+					result.put("pieceHeaderSkid", "");
+					
+					JSONObject itemDataPanthera = new JSONObject();
+					itemDataPanthera.put("pieceCode", materiale.getIdArticolo());
+					itemDataPanthera.put("itemDescription", materiale.getArticolo().getDescrizioneArticoloNLS().getDescrizione());
+					itemDataPanthera.put("standardWeight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
+
+					itemDataPanthera.put("parameter1", 0);
+					itemDataPanthera.put("parameter2", 0); 
+
+					itemDataPanthera.put("minHeight", String.valueOf(lotto.getAltezzaMinima()));
+					itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
+
+					result.put("itemDataPanthera", itemDataPanthera);
+
+					JSONObject pieceDetailData = new JSONObject();
+					pieceDetailData.put("pieceCode", materiale.getIdArticolo());
+					pieceDetailData.put("totalQuantity", materiale.getQtaResiduaUMPrm());
+					pieceDetailData.put("minHeightNumeric", lotto.getAltezzaMinima() != null ? lotto.getAltezzaMinima() : 0);
+					pieceDetailData.put("maxHeightNumeric", lotto.getAltezzaMassima() != null ? lotto.getAltezzaMassima() : 0);
+					pieceDetailData.put("weight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
+					pieceDetailData.put("defectCode", lotto.getIdDifettosita() != null ? lotto.getIdDifettosita() : "NODEF");
+					pieceDetailData.put("operatorCode", "");
+					pieceDetailData.put("goodQuantity", lotto.getQuantitaOriginale() != null ? lotto.getQuantitaOriginale() : 0);
+					pieceDetailData.put("additionalDescription", lotto.getDifettosita() != null ? lotto.getDifettosita().getDescrizione() : "");
+					pieceDetailData.put("productionOrder", atvEsec.getNumeroRitorno());
+
+					result.put("pieceDetailData", pieceDetailData);
+				}else {
+					errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non ha un lotto significativo"));
+					status = Status.INTERNAL_SERVER_ERROR;
+				}
 			}else {
 				if(atvEsec == null)
 					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
