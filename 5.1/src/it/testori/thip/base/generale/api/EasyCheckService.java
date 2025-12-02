@@ -88,7 +88,7 @@ public class EasyCheckService {
 				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
 				AttivitaEsecProdotto prodotto = atvEsec.getAtvEsecPrdPrimario();
 				try {
-					
+
 					//..carico il lotto sul materiale
 					Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
 							Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
@@ -104,7 +104,17 @@ public class EasyCheckService {
 
 						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), null, null, null, null);
 						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
-						
+						BODataCollector boDCDocPrd = YCostantiTestori.createDataCollector("DocumentoProduzione");
+						docPrd.setMinutiRilevati(BigDecimal.ONE);
+						boDCDocPrd.setBo(docPrd);
+						boDCDocPrd.loadAttValue();
+						boDCDocPrd.setAutoCommit(true);//Fix 19148
+						int ret = boDCDocPrd.save();
+						if (ret == BODataCollector.OK) {
+
+						}else {
+							errors.addAll(boDCDocPrd.getErrorList().getErrors());
+						}
 						//vediamo se tutto ok
 						//.cambio i riferimenti al doc prd sul lotto?
 					}else {
@@ -285,6 +295,7 @@ public class EasyCheckService {
 			String idNumeratore, String idSerie, CausaleDocProduzione cauDoc, Dipendente dichiarante) throws NumeratoreException {
 		DocumentoProduzione docPrd = (DocumentoProduzione) Factory.createObject(DocumentoProduzione.class);
 		docPrd.setIdAzienda(Azienda.getAziendaCorrente());
+		docPrd.setIdAnnoDoc(String.valueOf(TimeUtils.getCurrentYear()));
 		docPrd.getNumeratoreHandler().setAnno(String.valueOf(TimeUtils.getCurrentYear()));
 		docPrd.getNumeratoreHandler().setIdNumeratore(idNumeratore);
 		docPrd.getNumeratoreHandler().setIdSerie(idSerie);
