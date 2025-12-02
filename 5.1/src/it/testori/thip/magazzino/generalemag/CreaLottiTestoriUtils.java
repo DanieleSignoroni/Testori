@@ -578,7 +578,7 @@ public class CreaLottiTestoriUtils {
 					int maxProgressivo = rs.getInt(1);
 					if (rs.wasNull()) {
 						return null;
-					} else {
+					} else if(maxProgressivo > 0){
 						return String.format("%02d", maxProgressivo);
 					}
 				}

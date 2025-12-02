@@ -103,7 +103,8 @@ public class EasyCheckService {
 			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
 			if(atvEsec != null 
 					&& atvEsec.getMateriali().size() > 0
-					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
+					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE
+					&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV) {
 				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
 				AttivitaEsecutiva attivita = materiale.getAttivitaEsecutiva();
 				String progressivo = null;
@@ -158,7 +159,8 @@ public class EasyCheckService {
 					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovato nessun materiale per l'attivita: "+bollaLavorazione));
 				else if(((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd() != YArticoloDatiMagaz.PEZZE)
 					errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non e' una pezza"));
-
+				else if(atvEsec.getStatoAttivita() == AttivitaEsecutiva.COMPLETATO_ATV)
+					errors.add(new ErrorMessage("BAS0000078","L'attivita e' in stato completato"));
 				status = Status.INTERNAL_SERVER_ERROR;
 			}
 		}
