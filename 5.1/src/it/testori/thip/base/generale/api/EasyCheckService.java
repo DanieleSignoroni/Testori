@@ -1,6 +1,7 @@
 package it.testori.thip.base.generale.api;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.collector.BODataCollector;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.persist.KeyHelper;
@@ -21,17 +23,22 @@ import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.easycheck.InterfacciaEasyCheck;
 import it.testori.thip.easycheck.PezzaGreggiaField;
 import it.testori.thip.easycheck.PezzaLavorata;
+import it.testori.thip.logis.bas.YCostantiTestori;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.testori.thip.magazzino.generalemag.YLotto;
 import it.testori.thip.produzione.ordese.TipoTaglioPezza;
+import it.testori.thip.produzione.ordese.YAttivitaEsecMateriale;
+import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
 import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.dipendente.Dipendente;
 import it.thera.thip.base.generale.NumeratoreException;
+import it.thera.thip.cs.DatiComuniEstesi;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.produzione.documento.CausaleDocProduzione;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
+import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.AttivitaEsecutivaTM;
 import it.thera.thip.produzione.ordese.OrdineEsecutivo;
@@ -63,6 +70,7 @@ public class EasyCheckService {
 		return instance;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject riceviPezzaLavorata(JSONObject payload) {
 		JSONObject response = new JSONObject();
 		JSONObject result = new JSONObject();
@@ -75,12 +83,42 @@ public class EasyCheckService {
 		} else {
 			String bollaLavorazione = pezza.getProductionOrder();
 			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
-			if(atvEsec != null) {
+			if(atvEsec != null
+					&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV) {
+				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
+				AttivitaEsecProdotto prodotto = atvEsec.getAtvEsecPrdPrimario();
+				try {
+					
+					//..carico il lotto sul materiale
+					Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
+							Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
+					}), PersistentObject.NO_LOCK);
+					materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
+
+					//..carico il lotto sul prodotto
+					BODataCollector boDCNewLt = generaLottoPezzaLavorata(pezza, prodotto);
+					if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
+						Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
+						prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
+						//.genero il documento di produzione
+
+						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), null, null, null, null);
+						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
+						
+						//vediamo se tutto ok
+						//.cambio i riferimenti al doc prd sul lotto?
+					}else {
+
+					}
+				}catch (SQLException e) {
+					e.printStackTrace(Trace.excStream);
+				}
 
 			}else {
 				if(atvEsec == null)
 					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
-
+				else if(atvEsec.getStatoAttivita() == AttivitaEsecutiva.COMPLETATO_ATV)
+					errors.add(new ErrorMessage("BAS0000078","L'attivita e' in stato completato"));
 				status = Status.INTERNAL_SERVER_ERROR;
 			}
 		}
@@ -89,6 +127,34 @@ public class EasyCheckService {
 		response.put("response", result);
 		response.put("status", status);
 		return response;
+	}
+
+	public BODataCollector generaLottoPezzaLavorata(PezzaLavorata pezzaLavorata, AttivitaEsecProdotto prodotto) {
+		BODataCollector boDC = null;
+		try {
+			boDC = YCostantiTestori.createDataCollector("Lotto");
+			Lotto lt = (Lotto) boDC.getBo();
+			lt.setCodiceAzienda(Azienda.getAziendaCorrente());
+			lt.setArticolo(prodotto.getArticolo());
+			lt.setCodiceLotto(pezzaLavorata.getHeaderID());
+			lt.retrieve();
+			if(lt instanceof YLotto) {
+				((YLotto) lt).setPezzaGreggia(pezzaLavorata.getRawPieceCode());
+				((YLotto) lt).setQuantitaBonifico(pezzaLavorata.getAllowance());
+				((YLotto) lt).setAltezzaMinima(pezzaLavorata.getMinWidth());
+				((YLotto) lt).setAltezzaMassima(pezzaLavorata.getMaxWidth());
+				((YLotto) lt).setPesoKg(pezzaLavorata.getPieceWeight());
+				((YLotto) lt).setIdDifettosita(pezzaLavorata.getFinalQuality());
+				if(pezzaLavorata.getWidthQuality() != null && !pezzaLavorata.getWidthQuality().equals("1"))
+					((YLotto) lt).setIdDifettositaAltezza(pezzaLavorata.getWidthQuality());
+			}
+			lt.setNote(pezzaLavorata.getPieceNote());
+			boDC.setAutoCommit(false);
+			boDC.save();
+		} catch (SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}
+		return boDC;
 	}
 
 	public JSONObject ritornaDatiPezzaGreggia(JSONObject payload) {
@@ -141,7 +207,7 @@ public class EasyCheckService {
 						itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
 
 						result.put("itemDataPanthera", itemDataPanthera);
-						
+
 					}else {
 						errors.add(new ErrorMessage("BAS0000078","Lotto con codice :"+pezza.getRawPieceCode()+" su materiale "+materiale.getIdArticolo() + " non esistente in Panthera"));
 						status = Status.BAD_REQUEST;
