@@ -7,6 +7,22 @@ import org.json.JSONObject;
 
 import com.thera.thermfw.common.ErrorMessage;
 
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 02/12/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72236    02/12/2025  DSSOF3   Prima stesura
+ */
+
 public class PezzaLavorata {
 
 	private String headerID;

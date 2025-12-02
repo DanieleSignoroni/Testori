@@ -21,7 +21,7 @@ import it.thera.thip.cs.DatiComuniEstesiTTM;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    01/12/2025  DSSOF3   Prima stesura
+ * 72236    01/12/2025  DSSOF3   Prima stesura
  */
 
 public class InterfacciaEasyCheckTM extends TableManager {

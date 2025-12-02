@@ -16,7 +16,7 @@ import it.thera.thip.cs.web.DatiPersWebFormModifier;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    01/12/2025  DSSOF3   Prima stesura
+ * 72236    01/12/2025  DSSOF3   Prima stesura
  */
 
 public class InterfacciaEasyCheckFormModifier extends DatiPersWebFormModifier {

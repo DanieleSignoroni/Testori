@@ -48,7 +48,7 @@ import it.thera.thip.produzione.ordese.OrdineEsecutivo;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    28/11/2025  DSSOF3   Prima stesura
+ * 72236    28/11/2025  DSSOF3   Prima stesura
  */
 
 public class EasyCheckService {

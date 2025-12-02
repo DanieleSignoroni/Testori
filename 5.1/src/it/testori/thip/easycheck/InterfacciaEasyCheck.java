@@ -23,7 +23,7 @@ import it.thera.thip.base.azienda.Azienda;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    01/12/2025  DSSOF3   Prima stesura
+ * 72236    01/12/2025  DSSOF3   Prima stesura
  */
 
 public class InterfacciaEasyCheck extends InterfacciaEasyCheckPO implements Cacheable {

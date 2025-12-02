@@ -37,7 +37,7 @@ import it.thera.thip.produzione.documento.CausaleDocProduzione;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    01/12/2025  DSSOF3   Prima stesura
+ * 72236    01/12/2025  DSSOF3   Prima stesura
  */
 
 public abstract class InterfacciaEasyCheckPO extends EntitaAzienda	implements BusinessObject, Authorizable, Deletable, Conflictable {
