@@ -1,5 +1,6 @@
 package it.testori.thip.base.generale.api;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -26,6 +27,7 @@ import com.thera.thermfw.rs.BaseResource;
  */
 
 @Path("/easyCheck")
+@PermitAll
 public class EasyCheckResource extends BaseResource {
 
 	private static EasyCheckService service = EasyCheckService.getInstance();

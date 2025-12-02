@@ -13,6 +13,8 @@ import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.Factory;
+import com.thera.thermfw.persist.KeyHelper;
+import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.rs.errors.ErrorUtils;
 
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
@@ -29,7 +31,6 @@ import it.thera.thip.base.generale.NumeratoreException;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.produzione.documento.CausaleDocProduzione;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
-import it.thera.thip.produzione.ordese.AttivitaEsecLottiMat;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
 import it.thera.thip.produzione.ordese.AttivitaEsecutivaTM;
@@ -103,69 +104,52 @@ public class EasyCheckService {
 			if(atvEsec != null 
 					&& atvEsec.getMateriali().size() > 0
 					&& ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0)).getArticolo().getArticoloDatiMagaz().getCodAutLotProd()  == YArticoloDatiMagaz.PEZZE) {
-				AttivitaEsecMateriale materiale = (AttivitaEsecMateriale) atvEsec.getMateriali().get(0);
+				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
 				AttivitaEsecutiva attivita = materiale.getAttivitaEsecutiva();
-				if(materiale.getLottiMateriali().size() > 0
-						&& !((AttivitaEsecLottiMat)materiale.getLottiMateriali().get(0)).getIdLotto().equals(Lotto.LOTTO_DUMMY)) {
-
-					AttivitaEsecLottiMat atvEsecLottoMat = (AttivitaEsecLottiMat) materiale.getLottiMateriali().get(0);
-					YLotto lotto = (YLotto) atvEsecLottoMat.getLotto();
-
-					String progressivo = null;
-					try {
+				String progressivo = null;
+				try {
+					YLotto lotto = (YLotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
+							Azienda.getAziendaCorrente(),materiale.getIdArticolo(),pezza.getRawPieceCode()}),PersistentObject.NO_LOCK);
+					if(lotto != null) {
 						if(attivita.isAttivitaFinale() 
 								&& ((YAttivitaEsecutiva)attivita).getTipoTaglio() != TipoTaglioPezza.NON_SIGNIFICATIVO){
-							progressivo = CreaLottiTestoriUtils.getNextLottoProgressivoMonoChar(attivita.getIdAzienda(), lotto.getCodiceLotto(), ((YAttivitaEsecutiva)attivita).getTipoTaglio());
+							progressivo = CreaLottiTestoriUtils.getMaxLottoProgressivoMonoChar(attivita.getIdAzienda(), lotto.getCodiceLotto(), ((YAttivitaEsecutiva)attivita).getTipoTaglio());
 						}else {
-							progressivo = CreaLottiTestoriUtils.getMaxProgressivoPezzeFromLotto(attivita.getIdAzienda(), lotto.getCodiceLotto());
+							progressivo = CreaLottiTestoriUtils.getMaxProgressivoPezzeFromLottoNonFormattato(attivita.getIdAzienda(), lotto.getCodiceLotto());
 						}
-						if(progressivo != null) {
-							String idLottoPfMax = lotto.getCodiceLotto() + progressivo;
-
-							result.put("success", true);
-							result.put("message", "Pezza greggia processata e validata con successo.");
-							result.put("pieceHeaderSkid", "");
-
-							JSONObject itemDataPanthera = new JSONObject();
-							itemDataPanthera.put("pieceCode", materiale.getIdArticolo());
-							itemDataPanthera.put("itemDescription", materiale.getArticolo().getDescrizioneArticoloNLS().getDescrizione());
-							itemDataPanthera.put("standardWeight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
-
-							itemDataPanthera.put("parameter1", 0);
-							itemDataPanthera.put("parameter2", 0); 
-
-							itemDataPanthera.put("minHeight", String.valueOf(lotto.getAltezzaMinima()));
-							itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
-
-							result.put("itemDataPanthera", itemDataPanthera);
-
-							JSONObject pieceDetailData = new JSONObject();
-							pieceDetailData.put("pieceCode", materiale.getIdArticolo());
-							pieceDetailData.put("totalQuantity", materiale.getQtaResiduaUMPrm());
-							pieceDetailData.put("minHeightNumeric", lotto.getAltezzaMinima() != null ? lotto.getAltezzaMinima() : 0);
-							pieceDetailData.put("maxHeightNumeric", lotto.getAltezzaMassima() != null ? lotto.getAltezzaMassima() : 0);
-							pieceDetailData.put("weight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
-							pieceDetailData.put("defectCode", lotto.getIdDifettosita() != null ? lotto.getIdDifettosita() : "NODEF");
-							pieceDetailData.put("operatorCode", "");
-							pieceDetailData.put("goodQuantity", lotto.getQuantitaOriginale() != null ? lotto.getQuantitaOriginale() : 0);
-							pieceDetailData.put("additionalDescription", lotto.getDifettosita() != null ? lotto.getDifettosita().getDescrizione() : "");
-							pieceDetailData.put("productionOrder", atvEsec.getNumeroRitorno());
-
-							result.put("pieceDetailData", pieceDetailData);
-
+						String pieceHeaderSkid = "";
+						if(progressivo == null) {
+							pieceHeaderSkid = pezza.getRawPieceCode();
 						}else {
-							errors.add(new ErrorMessage("BAS0000078","Errore nel reperimento dell'ultima sotto-pezza generata"));
-							status = Status.INTERNAL_SERVER_ERROR;
+							pieceHeaderSkid = lotto.getCodiceLotto() + progressivo;
 						}
 
-					}catch (Exception e) {
-						errors.add(new ErrorMessage("BAS0000078","Eccezione non gestita: "+e.getMessage()));
-						status = Status.INTERNAL_SERVER_ERROR;
-						e.printStackTrace(Trace.excStream);
+						result.put("success", true);
+						result.put("message", "Pezza greggia processata e validata con successo.");
+						result.put("pieceHeaderSkid", pieceHeaderSkid);
+
+						JSONObject itemDataPanthera = new JSONObject();
+						itemDataPanthera.put("pieceCode", pieceHeaderSkid);
+						itemDataPanthera.put("itemDescription", materiale.getArticolo().getDescrizioneArticoloNLS().getDescrizione());
+						itemDataPanthera.put("standardWeight", lotto.getPesoKg() != null ? lotto.getPesoKg() : 0);
+
+						itemDataPanthera.put("parameter1", 0);
+						itemDataPanthera.put("parameter2", 0); 
+
+						itemDataPanthera.put("minHeight", String.valueOf(lotto.getAltezzaMinima()));
+						itemDataPanthera.put("maxHeight", String.valueOf(lotto.getAltezzaMassima()));
+
+						result.put("itemDataPanthera", itemDataPanthera);
+						
+					}else {
+						errors.add(new ErrorMessage("BAS0000078","Lotto con codice :"+pezza.getRawPieceCode()+" su materiale "+materiale.getIdArticolo() + " non esistente in Panthera"));
+						status = Status.BAD_REQUEST;
 					}
-				}else {
-					errors.add(new ErrorMessage("BAS0000078","Il materiale dell'attivita non ha un lotto significativo"));
+
+				}catch (Exception e) {
+					errors.add(new ErrorMessage("BAS0000078","Eccezione non gestita: "+e.getMessage()));
 					status = Status.INTERNAL_SERVER_ERROR;
+					e.printStackTrace(Trace.excStream);
 				}
 			}else {
 				if(atvEsec == null)

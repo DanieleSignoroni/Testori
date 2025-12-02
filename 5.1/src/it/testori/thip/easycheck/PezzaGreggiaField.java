@@ -31,7 +31,7 @@ public class PezzaGreggiaField {
 	private String frameCode;
 	private String itemCode;
 	private String productionOrder;
-	private String rawPieceFlag;
+	private String rawPieceCode;
 	private String clientCode;
 
 	public String getBadgeCode() {
@@ -90,12 +90,12 @@ public class PezzaGreggiaField {
 		this.productionOrder = productionOrder;
 	}
 
-	public String getRawPieceFlag() {
-		return rawPieceFlag;
+	public String getRawPieceCode() {
+		return rawPieceCode;
 	}
 
-	public void setRawPieceFlag(String rawPieceFlag) {
-		this.rawPieceFlag = rawPieceFlag;
+	public void setRawPieceCode(String rawPieceCode) {
+		this.rawPieceCode = rawPieceCode;
 	}
 
 	public String getClientCode() {
@@ -117,37 +117,37 @@ public class PezzaGreggiaField {
 		}
 
 		String badgeCode = payload.optString("badgeCode", null);
-		if (badgeCode == null || badgeCode.isEmpty()) {
-			errors.add(new ErrorMessage("BAS0000078",
-					"Campo 'badgeCode' mancante o vuoto in request_schema"));
-		} else {
-			result.setBadgeCode(badgeCode);
-		}
+		//		if (badgeCode == null || badgeCode.isEmpty()) {
+		//			errors.add(new ErrorMessage("BAS0000078",
+		//					"Campo 'badgeCode' mancante o vuoto in request_schema"));
+		//		} else {
+		result.setBadgeCode(badgeCode);
+		//}
 
-		Integer pieceNumber = getOptionalInteger(payload, "pieceNumber", true, "BAS0000078", errors);
+		Integer pieceNumber = getOptionalInteger(payload, "pieceNumber", false, "BAS0000078", errors);
 		result.setPieceNumber(pieceNumber);
 
-		Integer subPieceNumber = getOptionalInteger(payload, "subPieceNumber", true, "BAS0000078", errors);
+		Integer subPieceNumber = getOptionalInteger(payload, "subPieceNumber", false, "BAS0000078", errors);
 		result.setSubPieceNumber(subPieceNumber);
 
 		String cutCode = payload.optString("cutCode", null);
-		if (cutCode == null || cutCode.isEmpty()) {
-			errors.add(new ErrorMessage("BAS0000078",
-					"Campo 'cutCode' mancante o vuoto in request_schema"));
-		} else {
-			result.setCutCode(cutCode);
-		}
+		//		if (cutCode == null || cutCode.isEmpty()) {
+		//			errors.add(new ErrorMessage("BAS0000078",
+		//					"Campo 'cutCode' mancante o vuoto in request_schema"));
+		//		} else {
+		result.setCutCode(cutCode);
+		//		}
 
 		String frameCode = payload.optString("frameCode", null);
 		result.setFrameCode(frameCode);
 
 		String itemCode = payload.optString("itemCode", null);
-		if (itemCode == null || itemCode.isEmpty()) {
-			errors.add(new ErrorMessage("BAS0000078",
-					"Campo 'itemCode' mancante o vuoto in request_schema"));
-		} else {
-			result.setItemCode(itemCode);
-		}
+		//		if (itemCode == null || itemCode.isEmpty()) {
+		//			errors.add(new ErrorMessage("BAS0000078",
+		//					"Campo 'itemCode' mancante o vuoto in request_schema"));
+		//		} else {
+		result.setItemCode(itemCode);
+		//		}
 
 		String productionOrder = payload.optString("productionOrder", null);
 		if (productionOrder == null || productionOrder.isEmpty()) {
@@ -157,12 +157,12 @@ public class PezzaGreggiaField {
 			result.setProductionOrder(productionOrder);
 		}
 
-		String rawPieceFlag = payload.optString("rawPieceFlag", null);
-		if (rawPieceFlag == null || rawPieceFlag.isEmpty()) {
+		String rawPieceCode = payload.optString("rawPieceCode", null);
+		if (rawPieceCode == null || rawPieceCode.isEmpty()) {
 			errors.add(new ErrorMessage("BAS0000078",
-					"Campo 'rawPieceFlag' mancante o vuoto in request_schema"));
+					"Campo 'rawPieceCode' mancante o vuoto in request_schema"));
 		} else {
-			result.setRawPieceFlag(rawPieceFlag);
+			result.setRawPieceCode(rawPieceCode);
 		}
 
 		String clientCode = payload.optString("clientCode", null);
