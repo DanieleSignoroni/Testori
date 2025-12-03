@@ -42,6 +42,7 @@ import it.thera.thip.produzione.documento.CausaleDocProduzione;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaMateriale;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
+import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
@@ -89,37 +90,49 @@ public class EasyCheckService {
 			String bollaLavorazione = pezza.getProductionOrder();
 			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
 			if(atvEsec != null
-					&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV) {
+					/*&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV*/) {
 				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
 				AttivitaEsecProdotto prodotto = atvEsec.getAtvEsecPrdPrimario();
 				try {
 
 					//..Carico il lotto (pezza greggia) sul materiale
-					Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
-							Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
-					}), PersistentObject.NO_LOCK);
-					materiale.getLottiMateriali().clear();
-					materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
+					boolean materialeGiaConsuntivato = false;
+					if(materiale.getQtaPrelevataUMPrm() != null && materiale.getQtaPrelevataUMPrm().compareTo(BigDecimal.ZERO) > 0) {
+						materialeGiaConsuntivato = true;
+					}
+					if(!materialeGiaConsuntivato) {
+						Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
+								Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
+						}), PersistentObject.NO_LOCK);
+						materiale.getLottiMateriali().clear();
+						materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
+						
+					}
 
 					//..Carico il lotto (pezza specolata) sul prodotto, se non esiste lo creo
 					BODataCollector boDCNewLt = generaLottoPezzaLavorata(pezza, prodotto);
 					if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
 						Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
-						
-						prodotto.getLottiProdotti().clear();
-						prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
-						
+
+						AttivitaEsecLottiPrd atvEsecLtp = ((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd);
+						atvEsecLtp.setQtaRichiestaUMPrm(pezza.getNetQuantityMeters());
+						prodotto.getLottiProdotti().add(atvEsecLtp);
+
 						//.Creo il documento di produzione
 						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null);
-						
+
 						//.carico le righe (versamenti e materiali)
 						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
-						
+
 						//.Aggiungo i lotti che non erano presenti nell' ordine
 						docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
 						DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
 						docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
-						
+
+						if(materialeGiaConsuntivato) {
+							docPrd.getMaterialiColl().clear();
+						}
+
 						//.Creo il data collector e salvo..
 						BODataCollector boDCDocPrd = YCostantiTestori.createDataCollector("DocumentoProduzione");
 						docPrd.setMinutiRilevati(BigDecimal.ONE);
@@ -133,7 +146,7 @@ public class EasyCheckService {
 						boDCDocPrd.setAutoCommit(false);//Fix 19148
 						int ret = boDCDocPrd.save();
 						if (ret == BODataCollector.OK) {
-							
+
 							//.Se tutto ok riporto i riferimenti del documento di produzione sul lotto
 							lottoPrd.setRifDocProd(docPrd.getNumeroDocFormattato());
 							lottoPrd.setRifRigaDocProd(docPrd.getRigaVersamentoProdottoPrimario().getIdRigaAttivita().toString());
@@ -141,7 +154,7 @@ public class EasyCheckService {
 							lottoPrd.save();
 
 							result.put("message", "Creato correttamente il documento di produzione : "+docPrd.getNumeroDocFormattato());
-							
+
 							ConnectionManager.commit();
 						}else {
 							errors.addAll(boDCDocPrd.getErrorList().getErrors());
@@ -160,8 +173,8 @@ public class EasyCheckService {
 			}else {
 				if(atvEsec == null)
 					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
-				else if(atvEsec.getStatoAttivita() == AttivitaEsecutiva.COMPLETATO_ATV)
-					errors.add(new ErrorMessage("BAS0000078","L'attivita e' in stato completato"));
+				/*else if(atvEsec.getStatoAttivita() == AttivitaEsecutiva.COMPLETATO_ATV)
+					errors.add(new ErrorMessage("BAS0000078","L'attivita e' in stato completato"));*/
 				status = Status.INTERNAL_SERVER_ERROR;
 			}
 		}
