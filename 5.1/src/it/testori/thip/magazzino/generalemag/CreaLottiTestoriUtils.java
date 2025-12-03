@@ -51,6 +51,7 @@ import it.thera.thip.produzione.ordese.OrdineEsecutivo;
  * 72032	03/07/2025	DSSOF3   Aggiunta azione per rilev dati
  * 72060	23/07/2025	DSSOF3	 Gestione separazione subbio da feltro.
  * 72095	25/09/2025	DSSOF3   Gestione progressivo pezze
+ * 72236	02/12/2025	DSSOF3   Aggiunta metodi
  */
 
 public class CreaLottiTestoriUtils {
@@ -566,6 +567,7 @@ public class CreaLottiTestoriUtils {
 		return "01"; // se non ci sono risultati, il primo progressivo è 01
 	}
 
+	//72236
 	public synchronized static String getMaxProgressivoPezzeFromLottoNonFormattato(String idAzienda,String idLotto) throws SQLException {
 		try (PreparedStatement stmt = ConnectionManager.getCurrentConnection().prepareStatement(STMT_MAX_ID_LOTTO_PEZZE)) {
 			int startIndex = idLotto.length() + 1;
@@ -637,6 +639,7 @@ public class CreaLottiTestoriUtils {
 		}
 		return null;
 	}
+	//72236
 	
 	public synchronized static String getMaxLottoProgressivoMonoChar(String idAzienda, String idLottoBase, char tipoTaglio) throws SQLException {
 		if (tipoTaglio == TipoTaglioPezza.TAGLIO_IN_LARGHEZZA) {

@@ -28,6 +28,7 @@ import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
  * Revisions:
  * Number   Date        Owner    Description
  * 72018    27/06/2025  DSSOF3   Prima stesura
+ * 72236	02/12/2025	DSSOF3   Aggiungere metodo
  */
 
 public class YAttivitaEsecMateriale extends AttivitaEsecMateriale {
@@ -108,6 +109,7 @@ public class YAttivitaEsecMateriale extends AttivitaEsecMateriale {
 				);
 	}
 
+	//72236
 	public AttivitaEsecLottiMat generaNuovoLottoMateriale(Lotto lt) {
 		AttivitaEsecLottiMat lotto = (AttivitaEsecLottiMat)Factory.createObject(AttivitaEsecLottiMat.class);
 		lotto.setIdAzienda(getIdAzienda());
@@ -121,4 +123,5 @@ public class YAttivitaEsecMateriale extends AttivitaEsecMateriale {
 		lotto.setQtaRichiestaUMSec(getQtaRichiestaUMSec());
 		return lotto;
 	}
+	//72236
 }

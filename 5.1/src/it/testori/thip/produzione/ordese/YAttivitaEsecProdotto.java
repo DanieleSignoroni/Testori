@@ -35,6 +35,7 @@ import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
  * Number   Date        Owner    Description
  * 72014    16/06/2025  DSSOF3   Prima stesura
  * 72018	27/06/2025	DSSOF3	 Set aggiornamento lotti dummy
+ * 72236	02/12/2025	DSSOF3   Aggiungere metodo
  */
 public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 
@@ -181,6 +182,7 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 				getQtaResiduaUMPrm());
 	}
 	
+	//72236
 	public AttivitaEsecLottiPrd generaNuovoLottoProdotto(Lotto lt) {
 		AttivitaEsecLottiPrd lotto = (AttivitaEsecLottiPrd)Factory.createObject(AttivitaEsecLottiPrd.class);
 		lotto.setIdAzienda(getIdAzienda());
@@ -194,4 +196,5 @@ public class YAttivitaEsecProdotto extends AttivitaEsecProdotto {
 		lotto.setQtaRichiestaUMSec(getQtaRichiestaLottoAutomaticoUMSec());
 		return lotto;
 	}
+	//72236
 }
