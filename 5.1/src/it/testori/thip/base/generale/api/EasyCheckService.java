@@ -94,27 +94,32 @@ public class EasyCheckService {
 				AttivitaEsecProdotto prodotto = atvEsec.getAtvEsecPrdPrimario();
 				try {
 
-					//..carico il lotto sul materiale
+					//..Carico il lotto (pezza greggia) sul materiale
 					Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
 							Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
 					}), PersistentObject.NO_LOCK);
 					materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
 
-					//..carico il lotto sul prodotto
+					//..Carico il lotto (pezza specolata) sul prodotto, se non esiste lo creo
 					BODataCollector boDCNewLt = generaLottoPezzaLavorata(pezza, prodotto);
 					if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
 						Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
+						
 						prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
-						//.genero il documento di produzione
-
+						
+						//.Creo il documento di produzione
 						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null);
+						
+						//.carico le righe (versamenti e materiali)
 						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
-						docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
+						
+						//.Aggiungo i lotti che non erano presenti nell' ordine
+						//docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
 						DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
-						rigaVrs.setQuantitaUmPrm(pezza.getNetQuantityMeters());
 						docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
+						
+						//.Creo il data collector e salvo..
 						BODataCollector boDCDocPrd = YCostantiTestori.createDataCollector("DocumentoProduzione");
-
 						docPrd.setMinutiRilevati(BigDecimal.ONE);
 						Dipendente dipByOpCode = recuperaDipendenteByOperatorCode(pezza.getOperatorCode());
 						if(dipByOpCode != null)
@@ -125,6 +130,8 @@ public class EasyCheckService {
 						boDCDocPrd.setAutoCommit(false);//Fix 19148
 						int ret = boDCDocPrd.save();
 						if (ret == BODataCollector.OK) {
+							
+							//.Se tutto ok riporto i riferimenti del documento di produzione sul lotto
 							lottoPrd.setRifDocProd(docPrd.getNumeroDocFormattato());
 							lottoPrd.setRifRigaDocProd(docPrd.getRigaVersamentoProdottoPrimario().getIdRigaAttivita().toString());
 							lottoPrd.setDataDocProd(docPrd.getDataDichiarazione());
