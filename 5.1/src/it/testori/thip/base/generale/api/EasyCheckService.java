@@ -14,10 +14,12 @@ import com.thera.thermfw.base.TimeUtils;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.collector.BODataCollector;
 import com.thera.thermfw.common.ErrorMessage;
+import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.rs.errors.ErrorUtils;
+import com.thera.thermfw.web.WebForm;
 
 import it.testori.thip.base.articolo.YArticoloDatiMagaz;
 import it.testori.thip.easycheck.InterfacciaEasyCheck;
@@ -32,10 +34,13 @@ import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
 import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.dipendente.Dipendente;
+import it.thera.thip.base.dipendente.DipendenteTM;
 import it.thera.thip.base.generale.NumeratoreException;
 import it.thera.thip.cs.DatiComuniEstesi;
 import it.thera.thip.magazzino.generalemag.Lotto;
 import it.thera.thip.produzione.documento.CausaleDocProduzione;
+import it.thera.thip.produzione.documento.DocumentoPrdRigaMateriale;
+import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
@@ -102,23 +107,39 @@ public class EasyCheckService {
 						prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
 						//.genero il documento di produzione
 
-						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), null, null, null, null);
+						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null);
 						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
+						docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
+						DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
+						rigaVrs.setQuantitaUmPrm(pezza.getNetQuantityMeters());
+						docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
 						BODataCollector boDCDocPrd = YCostantiTestori.createDataCollector("DocumentoProduzione");
+
 						docPrd.setMinutiRilevati(BigDecimal.ONE);
+						Dipendente dipByOpCode = recuperaDipendenteByOperatorCode(pezza.getOperatorCode());
+						if(dipByOpCode != null)
+							docPrd.setDichiarante(dipByOpCode);
+
 						boDCDocPrd.setBo(docPrd);
 						boDCDocPrd.loadAttValue();
-						boDCDocPrd.setAutoCommit(true);//Fix 19148
+						boDCDocPrd.setAutoCommit(false);//Fix 19148
 						int ret = boDCDocPrd.save();
 						if (ret == BODataCollector.OK) {
+							lottoPrd.setRifDocProd(docPrd.getNumeroDocFormattato());
+							lottoPrd.setRifRigaDocProd(docPrd.getRigaVersamentoProdottoPrimario().getIdRigaAttivita().toString());
+							lottoPrd.setDataDocProd(docPrd.getDataDichiarazione());
+							lottoPrd.save();
 
+							ConnectionManager.commit();
 						}else {
 							errors.addAll(boDCDocPrd.getErrorList().getErrors());
+							status = Status.INTERNAL_SERVER_ERROR;
+							ConnectionManager.rollback();
 						}
-						//vediamo se tutto ok
-						//.cambio i riferimenti al doc prd sul lotto?
 					}else {
-
+						errors.addAll(boDCNewLt.getErrorList().getErrors());
+						status = Status.INTERNAL_SERVER_ERROR;
+						ConnectionManager.rollback();
 					}
 				}catch (SQLException e) {
 					e.printStackTrace(Trace.excStream);
@@ -139,6 +160,22 @@ public class EasyCheckService {
 		return response;
 	}
 
+	@SuppressWarnings("rawtypes")
+	public Dipendente recuperaDipendenteByOperatorCode(String operatorCode) {
+		if(operatorCode == null)
+			return null;
+		String where = " "+DipendenteTM.ID_AZIENDA+" = '"+Azienda.getAziendaCorrente()+"' AND "+DipendenteTM.MATRICOLA+" = '"+operatorCode+"' ";
+		try {
+			Vector v = Dipendente.retrieveList(Dipendente.class, where, "", false);
+			if(!v.isEmpty()) {
+				return (Dipendente) v.get(0);
+			}
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}
+		return null;
+	}
+
 	public BODataCollector generaLottoPezzaLavorata(PezzaLavorata pezzaLavorata, AttivitaEsecProdotto prodotto) {
 		BODataCollector boDC = null;
 		try {
@@ -147,7 +184,10 @@ public class EasyCheckService {
 			lt.setCodiceAzienda(Azienda.getAziendaCorrente());
 			lt.setArticolo(prodotto.getArticolo());
 			lt.setCodiceLotto(pezzaLavorata.getHeaderID());
-			lt.retrieve();
+			boolean onDB = lt.retrieve();
+			if(onDB) {
+				boDC.setMode(WebForm.UPDATE);
+			}
 			if(lt instanceof YLotto) {
 				((YLotto) lt).setPezzaGreggia(pezzaLavorata.getRawPieceCode());
 				((YLotto) lt).setQuantitaBonifico(pezzaLavorata.getAllowance());
