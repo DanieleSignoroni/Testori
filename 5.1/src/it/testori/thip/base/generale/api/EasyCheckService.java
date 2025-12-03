@@ -98,6 +98,7 @@ public class EasyCheckService {
 					Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
 							Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
 					}), PersistentObject.NO_LOCK);
+					materiale.getLottiMateriali().clear();
 					materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
 
 					//..Carico il lotto (pezza specolata) sul prodotto, se non esiste lo creo
@@ -105,6 +106,7 @@ public class EasyCheckService {
 					if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
 						Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
 						
+						prodotto.getLottiProdotti().clear();
 						prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
 						
 						//.Creo il documento di produzione
@@ -114,7 +116,7 @@ public class EasyCheckService {
 						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
 						
 						//.Aggiungo i lotti che non erano presenti nell' ordine
-						//docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
+						docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
 						DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
 						docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
 						
@@ -125,6 +127,7 @@ public class EasyCheckService {
 						if(dipByOpCode != null)
 							docPrd.setDichiarante(dipByOpCode);
 
+						docPrd.passaggioStatoSospesoValido();
 						boDCDocPrd.setBo(docPrd);
 						boDCDocPrd.loadAttValue();
 						boDCDocPrd.setAutoCommit(false);//Fix 19148
@@ -137,6 +140,8 @@ public class EasyCheckService {
 							lottoPrd.setDataDocProd(docPrd.getDataDichiarazione());
 							lottoPrd.save();
 
+							result.put("message", "Creato correttamente il documento di produzione : "+docPrd.getNumeroDocFormattato());
+							
 							ConnectionManager.commit();
 						}else {
 							errors.addAll(boDCDocPrd.getErrorList().getErrors());
