@@ -15,11 +15,14 @@ import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.CopyException;
 import com.thera.thermfw.persist.Copyable;
 import com.thera.thermfw.persist.Database;
+import com.thera.thermfw.persist.ErrorCodes;
+import com.thera.thermfw.persist.Factory;
 import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.OneToMany;
 import com.thera.thermfw.persist.Proxy;
 
 import it.testori.thip.base.articolo.YArticoloCosto;
+import it.testori.thip.base.generale.AssocHdrTpDocDgt;
 import it.testori.thip.vendite.generaleVE.GestioneCalcoloCosti;
 import it.thera.thip.base.articolo.ArticoloCosto;
 import it.thera.thip.base.articolo.ClasseD;
@@ -27,6 +30,7 @@ import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.comuniVenAcq.ContenitoreRiga;
 import it.thera.thip.base.comuniVenAcq.DocumentoOrdineRiga;
 import it.thera.thip.base.comuniVenAcq.StatoEvasione;
+import it.thera.thip.base.comuniVenAcq.TipoRiga;
 import it.thera.thip.base.documenti.StatoAvanzamento;
 import it.thera.thip.cs.ThipException;
 import it.thera.thip.vendite.generaleVE.PersDatiVen;
@@ -94,8 +98,8 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	protected String iLunghezzaRichiesta;
 
 	protected Proxy iAreaApplicativa = new Proxy(it.thera.thip.base.articolo.ClasseD.class);
-	
-	protected OneToMany iYAllegati = new OneToMany(YAllegatiOrdVenRigPrm.class, this, 7, false);
+
+	protected OneToMany iYAllegati = new OneToMany(YAllegatiOrdVenRigPrm.class, this, 15, false);
 
 	public YOrdineVenditaRigaPrm() {
 		setIdAzienda(Azienda.getAziendaCorrente());
@@ -146,7 +150,33 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			String key = iAreaApplicativa.getKey();
 			iAreaApplicativa.setKey(KeyHelper.replaceTokenObjectKey(key, 1, idAzienda));
 		}
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
 
+	@Override
+	public void setAnnoDocumento(String annoDocumento) {
+		super.setAnnoDocumento(annoDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	@Override
+	public void setNumeroDocumento(String numeroDocumento) {
+		super.setNumeroDocumento(numeroDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	@Override
+	public void setNumeroRigaDocumento(Integer numeroRigaDocumento) {
+		super.setNumeroRigaDocumento(numeroRigaDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
 	}
 
 	public void setIdCodiceCambioDtCons(String idCodiceCambioDtCons) {
@@ -247,6 +277,44 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	}
 
 	@Override
+	public void completaBO() {
+		super.completaBO();
+		if(getTipoRiga() == TipoRiga.MERCE)
+			caricaAllegati(false);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected void caricaAllegati(boolean controlloPresenti) {
+		Vector associazioniDef = AssocHdrTpDocDgt.recuperaAssociazioniDefault("OrdineVenditaRigaPrm", true);
+		if(associazioniDef != null && associazioniDef.size() > 0) {
+			for (Iterator iterator = associazioniDef.iterator(); iterator.hasNext();) {
+				AssocHdrTpDocDgt associazione = (AssocHdrTpDocDgt) iterator.next();
+				
+				if(controlloPresenti && isAssociazioneAllegatoPresente(associazione.getIdTipoDocumentoDigitale()))
+					continue;
+				
+				YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) Factory.createObject(YAllegatiOrdVenRigPrm.class);
+				allegato.setOrdinevenditarigaprm(this);
+				allegato.setAssociazionedocumento(associazione);
+
+				getYAllegati().add(allegato);
+
+			}
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public boolean isAssociazioneAllegatoPresente(String idTipoDocDgt) {
+		Iterator iterAllegati = getYAllegati().iterator();
+		while(iterAllegati.hasNext()) {
+			YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) iterAllegati.next();
+			if(allegato.getIdTipoDocDgt().equals(idTipoDocDgt))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
 	protected void copiaValoriInOldRiga() {
 		super.copiaValoriInOldRiga();
 		YOrdineVenditaRigaPrm ovr = (YOrdineVenditaRigaPrm) iOldRiga;
@@ -299,6 +367,8 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		if(!isOnDB() && getIdAreaApplicativa() == null) {
 			setIdAreaApplicativa(getArticolo().getIdClasseD());
 		}
+		
+		caricaAllegati(true);
 
 		int rc = super.save();
 
@@ -328,6 +398,32 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			//72157
 		}
 		return rc;
+	}
+
+	@Override
+	public int saveOwnedObjects(int rc) throws SQLException {
+		rc = super.saveOwnedObjects(rc);
+		rc = iYAllegati.save(rc);
+		return rc;
+	}
+
+	public int deleteOwnedObjects() throws SQLException {
+		int ret = super.deleteOwnedObjects();
+		if (ret < ErrorCodes.NO_ROWS_UPDATED) {
+			return ret;
+		}
+		return getYAllegatiInternal().delete();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getYAllegati() {
+		return getYAllegatiInternal();
+	}
+
+	protected OneToMany getYAllegatiInternal() {
+		if (iYAllegati.isNew())
+			iYAllegati.retrieve();
+		return iYAllegati;
 	}
 
 	//72157
@@ -363,6 +459,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	public boolean initializeOwnedObjects(boolean result) {
 		boolean ret = super.initializeOwnedObjects(result);
 		setYCostoUnitario(getCostoUnitario());
+		result = iYAllegati.initialize(result);
 		return ret;
 	}
 	//72141
@@ -458,6 +555,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			iDataConsegnaCfmStorica = (java.sql.Date) yOrdineVenditaRigaPrm.iDataConsegnaCfmStorica.clone();
 		iCausaleCambioDataConsegna.setEqual(yOrdineVenditaRigaPrm.iCausaleCambioDataConsegna);
 		iAreaApplicativa.setEqual(yOrdineVenditaRigaPrm.iAreaApplicativa);
+		iYAllegati.setEqual(yOrdineVenditaRigaPrm.iYAllegati);
 	}
 
 }

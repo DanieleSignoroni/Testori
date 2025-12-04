@@ -71,8 +71,7 @@ public class YAllegatiOrdVenRigPrmTM extends TableManager {
 		addAttribute("IdTipoDocDgt", R_TIPO_DOC_DGT);
 
 		addComponent("DatiComuniEstesi", DatiComuniEstesiTTM.class);
-		setKeys(ID_AZIENDA + "," + ID_ANNO_ORD + "," + ID_NUMERO_ORD + "," + ID_RIGA_ORD + "," + R_CLASSE + ","
-				+ R_TIPO_DOC_DGT);
+		setKeys(ID_AZIENDA + "," + ID_ANNO_ORD + "," + ID_NUMERO_ORD + "," + ID_RIGA_ORD + "," + R_CLASSE + "," + R_TIPO_DOC_DGT);
 
 		setTimestampColumn("TIMESTAMP_AGG");
 		((it.thera.thip.cs.DatiComuniEstesiTTM) getTransientTableManager("DatiComuniEstesi")).setExcludedColums();
