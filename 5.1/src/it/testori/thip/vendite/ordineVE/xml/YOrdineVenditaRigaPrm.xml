@@ -120,6 +120,13 @@
 			<table class="resTableSmartGridRighe" style="width:85%;">
 				<tr>
 					<td>
+						<button name="GeneraDocumenti" id="GeneraDocumenti"
+							resourceFile="it.testori.thip.vendite.ordineVE.resources.YOrdineVenditaRigaPrm"
+							resourceID="GeneraDocumenti" onclick="generaDocumenti()" />
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<table class="resTableSmartGridRighe" style="width:100%;">
 							<tr>
 								<td valign="top" colspan="2">
