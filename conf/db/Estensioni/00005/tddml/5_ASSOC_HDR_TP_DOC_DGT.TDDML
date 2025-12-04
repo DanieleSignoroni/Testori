@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- ASSOC_HDR_TP_DOC_DGT (ASSOC_H): Documenti Allegati - Assoc.; -->
+  <CreateTable schema="THIPPERS" name="ASSOC_HDR_TP_DOC_DGT" shortname="ASSOC_H">
+    <Column name="ID_AZIENDA" shortname="ID_AZIENDA" type="char" length="3" nullable="no"/>
+    <Column name="STATO" shortname="STATO" type="char" length="1" nullable="no"/>
+    <Column name="R_UTENTE_CRZ" shortname="R_UTENTE_C" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_CRZ" shortname="TIMESTAMP_" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="R_UTENTE_AGG" shortname="R_UTENTE_A" type="char" length="20" nullable="yes"/>
+    <Column name="TIMESTAMP_AGG" shortname="TIMESTAMP0" type="timestamp" nullable="no" default="CURRENT TIMESTAMP"/>
+    <Column name="R_CLASS_HDR" shortname="R_CLASS_HD" type="char" length="25" nullable="no"/>
+    <Column name="R_TIPO_DOC_DGT" shortname="R_TIPO_DOC" type="char" length="10" nullable="no"/>
+    <Column name="DEF_COMPILATION" shortname="DEF_COMPIL" type="char" length="1" nullable="no" default="Y"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="ASSOC_HDR_TP_D_I01" tabschema="THIPPERS" tabname="ASSOC_HDR_TP_DOC_DGT" shortname="ASSOC__I01" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="R_CLASS_HDR" order="Asc"/>
+    <IndexCol name="R_TIPO_DOC_DGT" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="ASSOC_HDR_TP_DOC_DGT">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="R_CLASS_HDR"/>
+        <ColumnRef name="R_TIPO_DOC_DGT"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="ASSOC_HDR_TP_DOC_DGT" text="Documenti Allegati - Assoc.">
+      <CommentColumn name="ID_AZIENDA" text="Azienda"/>
+      <CommentColumn name="STATO" text="Stato"/>
+      <CommentColumn name="R_UTENTE_CRZ" text="Utente creazione"/>
+      <CommentColumn name="TIMESTAMP_CRZ" text="Timestamp creazione"/>
+      <CommentColumn name="R_UTENTE_AGG" text="Utente ultima modifica"/>
+      <CommentColumn name="TIMESTAMP_AGG" text="Timestamp ultima modifica"/>
+      <CommentColumn name="R_CLASS_HDR" text="Nome classe"/>
+      <CommentColumn name="R_TIPO_DOC_DGT" text="Tipo documento digitale"/>
+      <CommentColumn name="DEF_COMPILATION" text="Default"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="ASSOC_HDR_TP_D_I01" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="ASSOC_HDR_TP_DOC_DGT"/>
+</TDDML>

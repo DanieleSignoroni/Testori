@@ -1,0 +1,7 @@
+<B>2025-12-04 11:15:02</B>
+<BR>Il dizionario <B>ASSOC_HDR_TP_DOC_DGT</B> è stato cancellato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00005\tddml\5_DROP_ASSOC_HDR_TP_DOC_DGT.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>ASSOC_HDR_TP_DOC_DGT</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00005\tddml\5_ASSOC_HDR_TP_DOC_DGT.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00005\tddml\5_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>
