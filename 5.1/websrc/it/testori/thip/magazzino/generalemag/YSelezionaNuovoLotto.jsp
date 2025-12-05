@@ -13,7 +13,11 @@ if(mostraLotto != null && mostraLotto == Column.TRUE_CHAR){
 			var oldselezionaLotto = selezionaLotto;
 			selezionaLotto = function(){
 				oldselezionaLotto();
-				window.parent.myDoEditDim('Lotti.RLotto.DescrizioneLotto','<%=url%>',800,600);
+				try {
+					window.parent.myDoEditDim('Lotti.RLotto.DescrizioneLotto','<%=url%>',800,600);
+				}catch (e){
+					console.log(e);
+				}
 			}
 		</script>
 	<%
