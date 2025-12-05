@@ -9,16 +9,4 @@
       </Constraint>
     </AddConstraint>
   </AlterTable>
-  <!-- YVARIABILI_APPLICAZIONE_L (YVARIA1) -->
-  <AlterTable schema="THIPPERS" name="YVARIABILI_APPLICAZIONE_L">
-    <AddConstraint>
-      <Constraint name="YVARIA12LANG_20514" refschema="THERA" reftable="LANGUAGE" schema="THIPPERS" ondelete="Restrict">
-        <ColumnRef name="ID_LINGUA"/>
-      </Constraint>
-      <Constraint name="LANG2YVARIA1_19956" refschema="THIPPERS" reftable="YVARIABILI_APPLICAZIONE" schema="THIPPERS" ondelete="Cascade">
-        <ColumnRef name="ID_AZIENDA"/>
-        <ColumnRef name="CODICE"/>
-      </Constraint>
-    </AddConstraint>
-  </AlterTable>
 </TDDML>
