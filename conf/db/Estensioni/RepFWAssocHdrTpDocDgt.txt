@@ -1,3 +1,0 @@
-<B>2025-12-04 11:15:22</B>
-<BR>Il descrittore di classe <B>AssocHdrTpDocDgt</B> è stato generato correttamente
-<BR><B>La generazione descrittori di classe è completata con successo</B><BR>

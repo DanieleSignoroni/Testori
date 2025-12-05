@@ -1,7 +1,0 @@
-<B>2025-12-04 11:32:17</B>
-<BR>Il dizionario <B>YALLEGATI_ORD_VEN_RIG_PRM</B> è stato cancellato
-<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00006\tddml\6_DROP_YALLEGATI_ORD_VEN_RIG_PRM.TDDML</B> e' stato generato correttamente.
-<BR>Il dizionario <B>YALLEGATI_ORD_VEN_RIG_PRM</B> è stato creato
-<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00006\tddml\6_YALLEGATI_ORD_VEN_RIG_PRM.TDDML</B> e' stato generato correttamente.
-<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00006\tddml\6_CONSTRAINT.TDDML</B> e' stato generato correttamente.
-<BR><B>La generazione tabella è completata con successo</B><BR>
