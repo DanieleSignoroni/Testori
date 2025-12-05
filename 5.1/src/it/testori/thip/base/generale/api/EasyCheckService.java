@@ -29,7 +29,6 @@ import it.testori.thip.logis.bas.YCostantiTestori;
 import it.testori.thip.magazzino.generalemag.CreaLottiTestoriUtils;
 import it.testori.thip.magazzino.generalemag.YLotto;
 import it.testori.thip.produzione.ordese.TipoTaglioPezza;
-import it.testori.thip.produzione.ordese.YAttivitaEsecMateriale;
 import it.testori.thip.produzione.ordese.YAttivitaEsecProdotto;
 import it.testori.thip.produzione.ordese.YAttivitaEsecutiva;
 import it.thera.thip.base.azienda.Azienda;
@@ -42,7 +41,7 @@ import it.thera.thip.produzione.documento.CausaleDocProduzione;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaMateriale;
 import it.thera.thip.produzione.documento.DocumentoPrdRigaVersamento;
 import it.thera.thip.produzione.documento.DocumentoProduzione;
-import it.thera.thip.produzione.ordese.AttivitaEsecLottiPrd;
+import it.thera.thip.produzione.documento.DocumentoProduzioneTM;
 import it.thera.thip.produzione.ordese.AttivitaEsecMateriale;
 import it.thera.thip.produzione.ordese.AttivitaEsecProdotto;
 import it.thera.thip.produzione.ordese.AttivitaEsecutiva;
@@ -89,82 +88,88 @@ public class EasyCheckService {
 		} else {
 			String bollaLavorazione = pezza.getProductionOrder();
 			AttivitaEsecutiva atvEsec = leggiAtvEsec(bollaLavorazione);
+			InterfacciaEasyCheck interfaceEasyCheck = InterfacciaEasyCheck.getCurrentInterfacciaEasyCheck();
 			if(atvEsec != null
-					/*&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV*/) {
-				AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
+					//&& atvEsec.getStatoAttivita() != AttivitaEsecutiva.COMPLETATO_ATV
+					&& interfaceEasyCheck != null) {
 				AttivitaEsecProdotto prodotto = atvEsec.getAtvEsecPrdPrimario();
 				try {
+					DocumentoProduzione docPrdPrel = esisteDocumentoProd(interfaceEasyCheck.getIdCausaleDocProdPrl(), bollaLavorazione);
+					if(docPrdPrel == null) {
+						AttivitaEsecMateriale materiale = ((AttivitaEsecMateriale) atvEsec.getMateriali().get(0));
+						Lotto lottoMateriale = getLotto(materiale.getIdArticolo(), pezza.getRawPieceCode());
+						if(lottoMateriale != null) {
+							BODataCollector boDC = YCostantiTestori.createDataCollector("DocumentoProduzione");
+							docPrdPrel = creaDocumentoProduzioneEasyCheck(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null, true);
+							docPrdPrel.caricaRighe(DatiComuniEstesi.INCOMPLETO);
+							docPrdPrel.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrdPrel.getMaterialiColl().get(0));
+							docPrdPrel.getVersamentiColl().clear();
+							docPrdPrel.setMinutiRilevati(BigDecimal.ONE);
+							Dipendente dipByOpCode = recuperaDipendenteByOperatorCode(pezza.getOperatorCode());
+							if(dipByOpCode != null)
+								docPrdPrel.setDichiarante(dipByOpCode);
 
-					//..Carico il lotto (pezza greggia) sul materiale
-					boolean materialeGiaConsuntivato = false;
-					if(materiale.getQtaPrelevataUMPrm() != null && materiale.getQtaPrelevataUMPrm().compareTo(BigDecimal.ZERO) > 0) {
-						materialeGiaConsuntivato = true;
-					}
-					if(!materialeGiaConsuntivato) {
-						Lotto lottoMateriale = (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
-								Azienda.getAziendaCorrente(), materiale.getIdArticolo(), pezza.getRawPieceCode()
-						}), PersistentObject.NO_LOCK);
-						materiale.getLottiMateriali().clear();
-						materiale.getLottiMateriali().add(((YAttivitaEsecMateriale)materiale).generaNuovoLottoMateriale(lottoMateriale));
-						
-					}
-
-					//..Carico il lotto (pezza specolata) sul prodotto, se non esiste lo creo
-					BODataCollector boDCNewLt = generaLottoPezzaLavorata(pezza, prodotto);
-					if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
-						Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
-
-						AttivitaEsecLottiPrd atvEsecLtp = ((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd);
-						atvEsecLtp.setQtaRichiestaUMPrm(pezza.getNetQuantityMeters());
-						prodotto.getLottiProdotti().add(atvEsecLtp);
-
-						//.Creo il documento di produzione
-						DocumentoProduzione docPrd = creaDocumentoProduzione(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null);
-
-						//.carico le righe (versamenti e materiali)
-						docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
-
-						//.Aggiungo i lotti che non erano presenti nell' ordine
-						docPrd.creaRigheLottoMateriale(materiale, (DocumentoPrdRigaMateriale) docPrd.getMaterialiColl().get(0));
-						DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
-						docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
-
-						if(materialeGiaConsuntivato) {
-							docPrd.getMaterialiColl().clear();
+							docPrdPrel.passaggioStatoSospesoValido();
+							boDC.setBo(docPrdPrel);
+							boDC.loadAttValue();
+							boDC.setAutoCommit(false);
+							int ret = boDC.save();
+							if (ret != BODataCollector.OK) {
+								errors.addAll(boDC.getErrorList().getErrors());
+								status = Status.INTERNAL_SERVER_ERROR;
+							}
 						}
+					}
+					if(ErrorUtils.getInstance().areAllWarnings(new Vector<ErrorMessage>(errors))) {
+						//..Carico il lotto (pezza specolata) sul prodotto, se non esiste lo creo
+						BODataCollector boDCNewLt = generaLottoPezzaLavorata(pezza, prodotto);
+						if(boDCNewLt.getErrorList().getErrors().isEmpty()) {
+							Lotto lottoPrd = (Lotto) boDCNewLt.getBo();
+							prodotto.getLottiProdotti().add(((YAttivitaEsecProdotto)prodotto).generaNuovoLottoProdotto(lottoPrd));
 
-						//.Creo il data collector e salvo..
-						BODataCollector boDCDocPrd = YCostantiTestori.createDataCollector("DocumentoProduzione");
-						docPrd.setMinutiRilevati(BigDecimal.ONE);
-						Dipendente dipByOpCode = recuperaDipendenteByOperatorCode(pezza.getOperatorCode());
-						if(dipByOpCode != null)
-							docPrd.setDichiarante(dipByOpCode);
+							DocumentoProduzione docPrd = creaDocumentoProduzioneEasyCheck(atvEsec.getOrdineEsecutivo(), atvEsec, pezza.getNetQuantityMeters(), BigDecimal.ZERO, null, null, null, false);
+							docPrd.caricaRighe(DatiComuniEstesi.INCOMPLETO);
 
-						docPrd.passaggioStatoSospesoValido();
-						boDCDocPrd.setBo(docPrd);
-						boDCDocPrd.loadAttValue();
-						boDCDocPrd.setAutoCommit(false);//Fix 19148
-						int ret = boDCDocPrd.save();
-						if (ret == BODataCollector.OK) {
+							DocumentoPrdRigaVersamento rigaVrs = docPrd.getRigaVersamentoProdottoPrimario();
+							docPrd.creaRigheLottoVersamento(prodotto, rigaVrs);
 
-							//.Se tutto ok riporto i riferimenti del documento di produzione sul lotto
-							lottoPrd.setRifDocProd(docPrd.getNumeroDocFormattato());
-							lottoPrd.setRifRigaDocProd(docPrd.getRigaVersamentoProdottoPrimario().getIdRigaAttivita().toString());
-							lottoPrd.setDataDocProd(docPrd.getDataDichiarazione());
-							lottoPrd.save();
+							//.Creo il data collector e salvo..
+							BODataCollector boDC = YCostantiTestori.createDataCollector("DocumentoProduzione");
+							docPrd.setMinutiRilevati(BigDecimal.ONE);
+							Dipendente dipByOpCode = recuperaDipendenteByOperatorCode(pezza.getOperatorCode());
+							if(dipByOpCode != null)
+								docPrd.setDichiarante(dipByOpCode);
+							
+							DocumentoProduzione docPrdVrs = esisteDocumentoProd(interfaceEasyCheck.getIdCausaleDocProdVrs(), bollaLavorazione);
+							if(docPrdVrs != null)
+								//spengo il collaudo, non so ancora come
 
-							result.put("message", "Creato correttamente il documento di produzione : "+docPrd.getNumeroDocFormattato());
+							docPrd.passaggioStatoSospesoValido();
+							boDC.setBo(docPrd);
+							boDC.loadAttValue();
+							boDC.setAutoCommit(false);
+							int ret = boDC.save();
+							if (ret == BODataCollector.OK) {
 
-							ConnectionManager.commit();
+								//.Se tutto ok riporto i riferimenti del documento di produzione sul lotto
+								lottoPrd.setRifDocProd(docPrd.getNumeroDocFormattato());
+								lottoPrd.setRifRigaDocProd(docPrd.getRigaVersamentoProdottoPrimario().getIdRigaAttivita().toString());
+								lottoPrd.setDataDocProd(docPrd.getDataDichiarazione());
+								lottoPrd.save();
+
+								result.put("message", "Creato correttamente il documento di produzione : "+docPrd.getNumeroDocFormattato());
+
+								ConnectionManager.commit();
+							}else {
+								errors.addAll(boDC.getErrorList().getErrors());
+								status = Status.INTERNAL_SERVER_ERROR;
+								ConnectionManager.rollback();
+							}
 						}else {
-							errors.addAll(boDCDocPrd.getErrorList().getErrors());
+							errors.addAll(boDCNewLt.getErrorList().getErrors());
 							status = Status.INTERNAL_SERVER_ERROR;
 							ConnectionManager.rollback();
 						}
-					}else {
-						errors.addAll(boDCNewLt.getErrorList().getErrors());
-						status = Status.INTERNAL_SERVER_ERROR;
-						ConnectionManager.rollback();
 					}
 				}catch (SQLException e) {
 					e.printStackTrace(Trace.excStream);
@@ -175,6 +180,8 @@ public class EasyCheckService {
 					errors.add(new ErrorMessage("BAS0000078","Non e' stata trovata nessuna attivita con codice: "+bollaLavorazione));
 				/*else if(atvEsec.getStatoAttivita() == AttivitaEsecutiva.COMPLETATO_ATV)
 					errors.add(new ErrorMessage("BAS0000078","L'attivita e' in stato completato"));*/
+				else if(interfaceEasyCheck == null)
+					errors.add(new ErrorMessage("BAS0000078","Interfaccia Easy Check non definita"));
 				status = Status.INTERNAL_SERVER_ERROR;
 			}
 		}
@@ -196,6 +203,18 @@ public class EasyCheckService {
 				return (Dipendente) v.get(0);
 			}
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}
+		return null;
+	}
+
+	public Lotto getLotto(String idArticolo, String idLotto) {
+		try {
+			return (Lotto) Lotto.elementWithKey(Lotto.class, KeyHelper.buildObjectKey(new String[] {
+					Azienda.getAziendaCorrente(),
+					idArticolo,idLotto
+			}), PersistentObject.NO_LOCK);
+		} catch (SQLException e) {
 			e.printStackTrace(Trace.excStream);
 		}
 		return null;
@@ -313,7 +332,7 @@ public class EasyCheckService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static AttivitaEsecutiva leggiAtvEsec(String bollaLavorazione) {
+	public AttivitaEsecutiva leggiAtvEsec(String bollaLavorazione) {
 		String where = AttivitaEsecutivaTM.ID_AZIENDA + " = '" + Azienda.getAziendaCorrente() + "' AND " +
 				AttivitaEsecutivaTM.NUM_RITORNO + " = '" + bollaLavorazione + "'";
 		try {
@@ -328,15 +347,15 @@ public class EasyCheckService {
 		return null;
 	}
 
-	protected DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
+	public DocumentoProduzione creaDocumentoProduzioneEasyCheck(OrdineEsecutivo ordEsec,
 			AttivitaEsecutiva atvEsec,
 			BigDecimal quantita, BigDecimal quantitaScarto,
-			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec) throws NumeratoreException {
+			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec, boolean prelievo) throws NumeratoreException {
 		InterfacciaEasyCheck interfaccia = InterfacciaEasyCheck.getCurrentInterfacciaEasyCheck();
 		if(interfaccia != null)
 			return creaDocumentoProduzione(ordEsec, atvEsec, quantita, quantitaScarto, idUMSec, qtaSec,
 					qtaScartoSec, interfaccia.getIdNumeratoreDocPrd(),
-					interfaccia.getIdSerieDocPrd(), interfaccia.getCausaleDocProd(), interfaccia.getDipendenteRilevazione());
+					interfaccia.getIdSerieDocPrd(), (prelievo ? interfaccia.getCausaleDocProdPrl() : interfaccia.getCausaleDocProdVrs()), interfaccia.getDipendenteRilevazione());
 		return null;
 	}
 
@@ -353,7 +372,7 @@ public class EasyCheckService {
 	 * @return
 	 * @throws NumeratoreException 
 	 */
-	public static DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
+	public DocumentoProduzione creaDocumentoProduzione(OrdineEsecutivo ordEsec,
 			AttivitaEsecutiva atvEsec,
 			BigDecimal quantita, BigDecimal quantitaScarto,
 			String idUMSec, BigDecimal qtaSec, BigDecimal qtaScartoSec,
@@ -393,6 +412,22 @@ public class EasyCheckService {
 			docPrd.setQtaScartoSec(qtaScartoSec);
 			if (docPrd.getQtaSec() == null || docPrd.getQtaScartoSec() == null)
 				docPrd.setRicalcoloQtaFattoreConv(true);
+		}
+		return docPrd;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public DocumentoProduzione esisteDocumentoProd(String idCausale, String bollaLavorazione) {
+		DocumentoProduzione docPrd = null;
+		String where = " "+DocumentoProduzioneTM.ID_AZIENDA+" = '"+Azienda.getAziendaCorrente()+"' AND "+DocumentoProduzioneTM.R_CAU_DOC_PRD+" = '"+idCausale+"' ";
+		where += " AND "+DocumentoProduzioneTM.NUM_RITORNO+" = '"+bollaLavorazione+"' ";
+		try {
+			Vector v = DocumentoProduzione.retrieveList(DocumentoProduzione.class, where, "", false);
+			if(!v.isEmpty()) {
+				docPrd = (DocumentoProduzione) v.get(0);
+			}
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+			e.printStackTrace(Trace.excStream);
 		}
 		return docPrd;
 	}

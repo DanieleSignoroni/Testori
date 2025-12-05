@@ -1,0 +1,8 @@
+<B>2025-12-05 16:39:24</B>
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00007\tddml\7_DROP_YVARIABILI_APPLICAZIONE.TDDML</B> e' stato generato correttamente.
+<BR>Il dizionario <B>YVARIABILI_APPLICAZIONE</B> è stato creato
+<BR>Il dizionario <B>YVARIABILI_APPLICAZIONE_L</B> è stato creato
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00007\tddml\7_YVARIABILI_APPLICAZIONE_L.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00007\tddml\7_YVARIABILI_APPLICAZIONE.TDDML</B> e' stato generato correttamente.
+<BR>Il file <B>W:\PthDev\Projects\Panthera\Testori\conf\db\Estensioni\00007\tddml\7_CONSTRAINT.TDDML</B> e' stato generato correttamente.
+<BR><B>La generazione tabella è completata con successo</B><BR>

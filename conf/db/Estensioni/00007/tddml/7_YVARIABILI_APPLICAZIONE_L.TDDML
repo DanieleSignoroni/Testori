@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <!-- YVARIABILI_APPLICAZIONE_L (YVARIA1): Variabili di applicazione; -->
+  <CreateTable schema="THIPPERS" name="YVARIABILI_APPLICAZIONE_L" shortname="YVARIA1">
+    <Column name="ID_AZIENDA" shortname="ID_AZIEND0" type="char" length="3" nullable="no"/>
+    <Column name="CODICE" shortname="CODIC0" type="varchar" length="35" nullable="no"/>
+    <Column name="ID_LINGUA" shortname="ID_LINGUA" type="char" length="2" nullable="no"/>
+  </CreateTable>
+  <CreateIndex schema="THIPPERS" name="YVARIABILI_APP_I02" tabschema="THIPPERS" tabname="YVARIABILI_APPLICAZIONE_L" shortname="YVARIA_I03" unique="yes">
+    <IndexCol name="ID_AZIENDA" order="Asc"/>
+    <IndexCol name="CODICE" order="Asc"/>
+    <IndexCol name="ID_LINGUA" order="Asc"/>
+  </CreateIndex>
+  <AlterTable schema="THIPPERS" name="YVARIABILI_APPLICAZIONE_L">
+    <AddPrimaryKey>
+      <PrimaryKey>
+        <ColumnRef name="ID_AZIENDA"/>
+        <ColumnRef name="CODICE"/>
+        <ColumnRef name="ID_LINGUA"/>
+      </PrimaryKey>
+    </AddPrimaryKey>
+  </AlterTable>
+  <Comment>
+    <CommentTable schema="THIPPERS" name="YVARIABILI_APPLICAZIONE_L" text="Variabili di applicazione">
+      <CommentColumn name="ID_AZIENDA" text="Azienda"/>
+      <CommentColumn name="CODICE" text="Codice"/>
+      <CommentColumn name="ID_LINGUA" text="Lingua"/>
+    </CommentTable>
+    <CommentIndex schema="THIPPERS" name="YVARIABILI_APP_I02" text="Primary Key"/>
+  </Comment>
+  <Grant schema="THIPPERS" name="YVARIABILI_APPLICAZIONE_L"/>
+</TDDML>
