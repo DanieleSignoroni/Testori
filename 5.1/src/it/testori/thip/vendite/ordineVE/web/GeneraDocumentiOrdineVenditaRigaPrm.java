@@ -8,12 +8,14 @@ import java.util.Vector;
 
 import com.thera.thermfw.ad.ClassADCollection;
 import com.thera.thermfw.ad.ClassADCollectionManager;
+import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.collector.BODataCollector;
 import com.thera.thermfw.collector.BaseBOComponentManager;
 import com.thera.thermfw.gui.cnr.DOList;
 import com.thera.thermfw.gui.cnr.DisplayObject;
 import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.Factory;
+import com.thera.thermfw.persist.KeyHelper;
 import com.thera.thermfw.persist.PersistentObject;
 import com.thera.thermfw.security.Entity;
 import com.thera.thermfw.setting.Setting;
@@ -22,10 +24,13 @@ import com.thera.thermfw.type.DecimalType;
 import com.thera.thermfw.type.Type;
 import com.thera.thermfw.web.ServletEnvironment;
 import com.thera.thermfw.web.WebDOList;
+import com.thera.thermfw.web.WebElement;
 import com.thera.thermfw.web.servlet.BaseServlet;
 
+import it.testori.thip.logis.bas.YCostantiTestori;
 import it.testori.thip.vendite.ordineVE.YAllegatiOrdVenRigPrm;
 import it.testori.thip.vendite.ordineVE.YOrdineVenditaRigaPrm;
+import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.documentoDgt.AssociazioneEntitaTDgtRiga;
 import it.thera.thip.base.documentoDgt.AssociazioneEntitaTpDgt;
 import it.thera.thip.base.documentoDgt.DocumentoDigitale;
@@ -91,12 +96,32 @@ public class GeneraDocumentiOrdineVenditaRigaPrm extends BaseServlet {
 					creaDocDgt.setIdEntita(idEntita);
 					creaDocDgt.setChiaveEntita(riga.getKey());
 					creaDocDgt.setNonCreareOggettoDgt(true);
-					DocumentoDigitale d = creaDocDgt.creaDocumentoDigitale();
-					if(d != null) {
-						int rc = d.save();
-						if(rc > 0) {
-							ConnectionManager.commit();
-						}
+					BODataCollector dati = YCostantiTestori.createDataCollector("OrdineVenditaRigaPrm");
+					dati.setBo(riga);
+					dati.loadAttValue();
+
+					BODataCollector boDC = YCostantiTestori.createDataCollector("DocumentoDigitale");
+					valorizzaClassificazione(boDC, allegato.getAssociazionedocumento().getTipodocdgt(), idEntita, dati);
+					DocumentoDigitale doc = (DocumentoDigitale) boDC.getBo();
+					
+					boDC.set("Descrizione.Descrizione", allegato.getAssociazionedocumento().getTipodocdgt().getDescrizione().getDescrizione());
+					boDC.set("Descrizione.DescrizioneRidotta", allegato.getAssociazionedocumento().getTipodocdgt().getDescrizione().getDescrizioneRidotta());
+					boDC.set("DescrRidotta", allegato.getAssociazionedocumento().getTipodocdgt().getDescrizione().getDescrizioneRidotta());
+					boDC.set("Descr", allegato.getAssociazionedocumento().getTipodocdgt().getDescrizione().getDescrizione());
+					
+					doc.setTipoDocDgt(allegato.getAssociazionedocumento().getTipodocdgt());
+					doc.setIdEntita(idEntita);
+					doc.setChiaveEntita(riga.getKey());
+					
+					boDC.setOnBORecursive();
+					
+					int rc = boDC.save();
+					if(rc == BODataCollector.OK) {
+						ConnectionManager.commit();
+					}else {
+						out.println("<script>");
+						out.println("parent.window.alert('"+WebElement.formatStringForHTML(boDC.messages().toString())+"');");
+						out.println("</script>");
 					}
 				}
 
@@ -105,19 +130,33 @@ public class GeneraDocumentiOrdineVenditaRigaPrm extends BaseServlet {
 		out.close();
 	}
 
-	public void valorizzaClassificazione(BODataCollector oggDaSettare,TipoDocumentoDigitale tipoDocumento, AssociazioneEntitaTDgtRiga associaRiga, BODataCollector dati,ServletEnvironment se) {
+
+	@SuppressWarnings("rawtypes")
+	public void valorizzaClassificazione(BODataCollector oggDaSettare, TipoDocumentoDigitale tipoDoc, String idEntita, BODataCollector dataCollector) {
+		try{
+			String AssEntitaKey = KeyHelper.buildObjectKey(new String[] { Azienda.getAziendaCorrente(), idEntita, tipoDoc.getIdTipoDocDgt() });
+			AssociazioneEntitaTpDgt assEntitaTipoDocDgt = AssociazioneEntitaTpDgt.elementWithKey(AssEntitaKey, PersistentObject.NO_LOCK);
+			if (assEntitaTipoDocDgt != null)
+			{
+				Iterator it = assEntitaTipoDocDgt.getAssociazioneEntitaRighe().iterator();
+				while (it.hasNext())
+				{
+					AssociazioneEntitaTDgtRiga associaRiga = (AssociazioneEntitaTDgtRiga) it.next();
+					valorizzaClassificazione(oggDaSettare, tipoDoc, associaRiga, dataCollector);
+				}
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace(Trace.excStream);
+		}
+	}
+
+	public void valorizzaClassificazione(BODataCollector oggDaSettare,TipoDocumentoDigitale tipoDocumento, AssociazioneEntitaTDgtRiga associaRiga, BODataCollector dati) {
 		Object value = dati.get(associaRiga.getClassAdEntita());
-		String ownerCls = associaRiga.getClassName();
-		String ownerKey = dati.getKey();
-		String ownerAd = associaRiga.getClassAdEntita();
-		DisplayObject displayObj = getCurrentDisplayObject(se, ownerCls, ownerAd, ownerKey);
 		if(value != null && value.equals("")) {//34178
 			value = null;
 		}
-		if(value != null ||  (value == null && displayObj != null)){//34178
-			if(value == null) {//34178 inizio
-				value = displayObj.getDBValue(0 + 1);
-			}//34178 fine
+		if(value != null){
 			switch (associaRiga.getClassificazione())
 			{
 			case AssociazioneEntitaTDgtRiga.ANNO_DOC:
