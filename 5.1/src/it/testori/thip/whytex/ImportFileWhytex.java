@@ -2,6 +2,7 @@ package it.testori.thip.whytex;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +17,7 @@ import com.thera.thermfw.batch.BatchJob;
 import com.thera.thermfw.batch.BatchRunnable;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.security.Authorizable;
+import com.thera.thermfw.type.DecimalType;
 
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.cs.CSVFile;
@@ -43,14 +45,14 @@ import it.thera.thip.cs.GestoreCommit;
 public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 
 	/**
-     * Filtro che accetta solo gli oggetti File che terminano con '.csv'.
-     */
-    public static final FileFilter CSV_FILE_FILTER = new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-            return pathname.isFile() && pathname.getName().toLowerCase().endsWith(".csv");
-        }
-    };
+	 * Filtro che accetta solo gli oggetti File che terminano con '.csv'.
+	 */
+	public static final FileFilter CSV_FILE_FILTER = new FileFilter() {
+		@Override
+		public boolean accept(File pathname) {
+			return pathname.isFile() && pathname.getName().toLowerCase().endsWith(".csv");
+		}
+	};
 
 	protected String iIdAzienda;
 	protected String iInboundPath;
@@ -238,6 +240,13 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 	@Override
 	protected String getClassAdCollectionName() {
 		return null;
+	}
+
+	protected BigDecimal stringToBigDecimal(String str) {
+		DecimalType dt = new DecimalType();
+		dt.setCorrespondingJavaClass(BigDecimal.class);
+		dt.format(str);
+		return (BigDecimal) dt.stringToObject(str);
 	}
 
 	public static class ColumnWrapper {
