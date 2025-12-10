@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.common.BaseComponentsCollection;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.persist.CachedStatement;
@@ -23,6 +24,7 @@ import com.thera.thermfw.persist.Proxy;
 
 import it.testori.thip.base.articolo.YArticoloCosto;
 import it.testori.thip.base.generale.AssocHdrTpDocDgt;
+import it.testori.thip.base.generaleVE.web.YCalcoloMarkup;
 import it.testori.thip.vendite.generaleVE.GestioneCalcoloCosti;
 import it.thera.thip.base.articolo.ArticoloCosto;
 import it.thera.thip.base.articolo.ClasseD;
@@ -32,6 +34,7 @@ import it.thera.thip.base.comuniVenAcq.DocumentoOrdineRiga;
 import it.thera.thip.base.comuniVenAcq.StatoEvasione;
 import it.thera.thip.base.comuniVenAcq.TipoRiga;
 import it.thera.thip.base.documenti.StatoAvanzamento;
+import it.thera.thip.base.generale.ImportoInValutaEstera;
 import it.thera.thip.cs.ThipException;
 import it.thera.thip.vendite.generaleVE.PersDatiVen;
 import it.thera.thip.vendite.ordineVE.OrdineVendita;
@@ -54,6 +57,8 @@ import it.thera.thip.vendite.ordineVE.OrdineVenditaRigaPrm;
  * 72105	02/09/2025	DSSOF3   Gestione prima data promessa
  * 72141	24/09/2025  DSSOF3   Introduzione markup, errore articolo costo
  * 72157	08/10/2025	DSSOF3	 Aggiunta note cambio data consegna, modifiche generiche alla gestione date
+ * 72238	03/12/2025	DSSOF3   Check per non lasciar rendere definitivo senza data consegna confermata, calcolo markup forzato.
+ * 72242    10/12/2025  DSSOF3   Righe spesa, disabilitare personalizzazioni.
  * 72247	10/12/2025	DSSOF3	 Gestione allegati ordine vendita riga.
  */
 
@@ -332,7 +337,8 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		if(getYCostoUnitario() != null) { //72141
 			setCostoUnitario(getYCostoUnitario());
 		}
-		if(!isOnDB()) { //72157
+		if(!isOnDB() //72157
+				&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 			setDataConsegnaConfermata(null);
 			setSettConsegnaConfermata(null);
 			setDataConsegnaProduzione(null);
@@ -348,22 +354,26 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			if(isOnDB() 
 					&& getDataConsegnaConfermata() != null 
 					&& getDataConsegnaCfmStorica() == null
-					&& getStatoAvanzamento() == StatoAvanzamento.DEFINITIVO) {
+					&& getStatoAvanzamento() == StatoAvanzamento.DEFINITIVO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 				setDataConsegnaCfmStorica(getDataConsegnaConfermata());
 			}
 			//72157
 			if (getCausaleCambioDataConsegna() != null
-					&& getCausaleCambioDataConsegna().isModificaDataOrigine()) {
+					&& getCausaleCambioDataConsegna().isModificaDataOrigine()
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 				setDataConsegnaCfmStorica(getDataConsegnaConfermata());
 			}
 			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
-			if(ovr != null && isQuantitaCambiata() && getStatoEvasione() != StatoEvasione.SALDATO) {
+			if(ovr != null && isQuantitaCambiata() && getStatoEvasione() != StatoEvasione.SALDATO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 				setDataConsegnaConfermata(null);
 				setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
 			}
 			if (ovr != null
 					&& !datiUguali(ovr.getDataConsegnaRichiesta(), getDataConsegnaRichiesta())
-					&& getStatoEvasione() != StatoEvasione.SALDATO){
+					&& getStatoEvasione() != StatoEvasione.SALDATO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)){ //72242
 				setDataConsegnaConfermata(null);
 				setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
 			}
@@ -372,6 +382,11 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		if(!isOnDB() && getIdAreaApplicativa() == null) {
 			setIdAreaApplicativa(getArticolo().getIdClasseD());
 		}
+
+		//72238
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO) //72242
+			calcoloMarkup();
+		//72238
 
 		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)
 			caricaAllegati(true);
@@ -383,11 +398,13 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
 			if (ovr != null
 					&& !datiUguali(ovr.getDataConsegnaConfermata(), getDataConsegnaConfermata())
-					&& getCausaleCambioDataConsegna() != null) {
+					&& getCausaleCambioDataConsegna() != null
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 				svuotaCausaleCambioDataConsegna();
 			}
 			//72157
-			if(ovr != null && getNoteCambioDataCons() != null && !getNoteCambioDataCons().isEmpty()) {
+			if(ovr != null && getNoteCambioDataCons() != null && !getNoteCambioDataCons().isEmpty()
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 				String oldIdCambioCau = ((YOrdineVenditaRigaPrm)ovr).getIdCodiceCambioDtCons();
 				boolean cleanNotes = false;
 				if((oldIdCambioCau == null && getIdCodiceCambioDtCons() != null)){
@@ -405,6 +422,29 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		}
 		return rc;
 	}
+
+	//72238
+	protected void calcoloMarkup() {
+		try {
+			OrdineVendita tes = (OrdineVendita) getTestata();
+			BigDecimal costoUnitario = getCostoUnitario() != null ? getCostoUnitario() : BigDecimal.ZERO;
+			BigDecimal prezzo = getPrezzo() != null ? getPrezzo() : BigDecimal.ZERO;
+			BigDecimal markup = null;
+			if(!tes.getIdValuta().equals("EUR") && prezzo != null) {
+				ImportoInValutaEstera imp = (ImportoInValutaEstera) Factory.createObject(ImportoInValutaEstera.class);
+				imp.setFattCambioOper(tes.getCambio());
+				imp.convertiEstPrim(tes.getIdValuta(), prezzo, tes.getDataDocumento());
+				prezzo = imp.getImportaValPrim();
+			}
+			if (prezzo != null && costoUnitario != null && costoUnitario.compareTo(BigDecimal.ZERO) > 0) {
+				markup = YCalcoloMarkup.calcolaMarkup(costoUnitario, prezzo);
+				setMarkup(markup);
+			}
+		}catch (Exception e) {
+			e.printStackTrace(Trace.excStream);
+		}
+	}
+	//72238
 
 	@Override
 	public int saveOwnedObjects(int rc) throws SQLException {
@@ -506,7 +546,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		Vector errors = super.checkAll(components);
 
 		//..Se la data di consegna e' cambiata  ma non ho indicato un codice di cambio causale non permetto la validazione dell'oggetto
-		if(isOnDB()) {
+		if(isOnDB() && (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
 			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
 			if (ovr != null
 					&& ((YOrdineVenditaRigaPrm)ovr).getDataConsegnaCfmStorica() != null
@@ -521,6 +561,13 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			}
 		}
 
+		//72238
+		if(getStatoAvanzamento() == StatoAvanzamento.DEFINITIVO
+				&& getDataConsegnaConfermata() == null
+				&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+			errors.add(new ErrorMessage("BAS0000078","Non e' possibile rendere la riga definitiva senza data consegna confermata"));
+		}
+		//72238
 		/*ErrorMessage emArtCos = controllaArticoloCosto();
 		if(emArtCos != null)
 			errors.add(emArtCos);
