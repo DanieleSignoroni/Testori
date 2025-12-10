@@ -6,10 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.batch.BatchJob;
 import com.thera.thermfw.batch.BatchRunnable;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.security.Authorizable;
@@ -17,6 +20,8 @@ import com.thera.thermfw.security.Authorizable;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.cs.CSVFile;
 import it.thera.thip.cs.CSVFileParser;
+import it.thera.thip.cs.CSVRiga;
+import it.thera.thip.cs.GestoreCommit;
 
 /**
  *
@@ -35,11 +40,16 @@ import it.thera.thip.cs.CSVFileParser;
  * 72XXX    18/11/2025  DSSOF3   Prima stesura
  */
 
-public class ImportFileWhytex extends BatchRunnable implements Authorizable {
+public abstract class ImportFileWhytex extends BatchRunnable implements Authorizable {
 
 	protected String iIdAzienda;
 	protected String iInboundPath;
 	protected String iOutboundPath;
+
+	protected int numRigheConErrori;
+	protected int numRigheCancellate;
+	protected int numRigheInserite;
+	protected int numRigheDuplicate;
 
 	protected FileFilter fileFilter;
 	protected File[] files = null;
@@ -171,6 +181,35 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 		}
 		return fileCSV;
 	}
+
+	@SuppressWarnings("rawtypes")
+	protected void elaboraFile(CSVFile fileCSV) throws SQLException {
+		GestoreCommit gestoreCommit = gestoreCommitFile();
+		int numeroRiga = 1;
+		for (Iterator ri = fileCSV.getRigheIterator(); ri.hasNext(); ) {
+			CSVRiga rigaCSV = (CSVRiga) ri.next();
+			elaboraRiga(rigaCSV, new Integer(numeroRiga++));
+			gestoreCommit.commit();
+			checkPoint();
+		}
+		if (numRigheConErrori >= 1)
+			job.setApplStatus(BatchJob.WITH_WARNING);
+		if(numRigheInserite > 0)
+			gestoreCommit.fine(true);
+		else
+			gestoreCommit.fine(false);
+	}
+
+	protected GestoreCommit gestoreCommitFile() {
+		try {
+			return new GestoreCommit(10);
+		} catch (SQLException e) {
+			e.printStackTrace(Trace.excStream);
+		}
+		return null;
+	}
+
+	public abstract boolean elaboraRiga(CSVRiga rigaCSV, Integer integer);
 
 	/**
 	 * printList

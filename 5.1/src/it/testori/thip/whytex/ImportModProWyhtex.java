@@ -63,11 +63,6 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 
 	protected RunBatchLoader iRunParameter = null;
 
-	protected int numRigheConErrori;
-	protected int numRigheCancellate;
-	protected int numRigheInserite;
-	protected int numRigheDuplicate;
-
 	public ImportModProWyhtex() {
 		super();
 		iRunParameter = (RunBatchLoader) Factory.createObject(RunBatchLoader.class);
@@ -205,7 +200,7 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 			gestoreCommit.fine(false);
 	}
 
-	protected boolean elaboraRiga(CSVRiga rigaCSV, Integer numeroRiga) {
+	public boolean elaboraRiga(CSVRiga rigaCSV, Integer numeroRiga) {
 		boolean ok = false;
 		CMModproSempl cm = (CMModproSempl) Factory.createObject(CMModproSempl.class);
 		cm.setDataOrigin(getRunParameter().getDataOrigin());
