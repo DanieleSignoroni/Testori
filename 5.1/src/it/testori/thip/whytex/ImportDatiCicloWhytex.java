@@ -1,6 +1,7 @@
 package it.testori.thip.whytex;
 
 import java.io.File;
+import java.io.FileFilter;
 
 import com.thera.thermfw.base.Trace;
 
@@ -32,6 +33,7 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 
 	@Override
 	protected boolean run() {
+		setFileFilter((FileFilter) CSV_FILE_FILTER);
 		boolean ok = super.run();
 		if(ok) {
 			if(files != null && files.length == 0) {
@@ -65,7 +67,9 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 			String idArticolo = rigaCSV.getValore(0);
 			String idOperazione = rigaCSV.getValore(1);
 			String tempo = rigaCSV.getValore(2);
-			String risorsa = rigaCSV.getValore(3);
+			if(rigaCSV.getValori().size() > 3) {
+				String risorsa = rigaCSV.getValore(3);
+			}
 		}catch (Exception e) {
 			e.printStackTrace(Trace.excStream);
 			ok = false;

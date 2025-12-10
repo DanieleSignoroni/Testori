@@ -40,7 +40,17 @@ import it.thera.thip.cs.GestoreCommit;
  * 72XXX    18/11/2025  DSSOF3   Prima stesura
  */
 
-public abstract class ImportFileWhytex extends BatchRunnable implements Authorizable {
+public class ImportFileWhytex extends BatchRunnable implements Authorizable {
+
+	/**
+     * Filtro che accetta solo gli oggetti File che terminano con '.csv'.
+     */
+    public static final FileFilter CSV_FILE_FILTER = new FileFilter() {
+        @Override
+        public boolean accept(File pathname) {
+            return pathname.isFile() && pathname.getName().toLowerCase().endsWith(".csv");
+        }
+    };
 
 	protected String iIdAzienda;
 	protected String iInboundPath;
@@ -209,7 +219,9 @@ public abstract class ImportFileWhytex extends BatchRunnable implements Authoriz
 		return null;
 	}
 
-	public abstract boolean elaboraRiga(CSVRiga rigaCSV, Integer integer);
+	public boolean elaboraRiga(CSVRiga rigaCSV, Integer integer) {
+		return false;
+	}
 
 	/**
 	 * printList
