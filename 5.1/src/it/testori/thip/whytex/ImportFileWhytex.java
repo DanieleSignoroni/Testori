@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -125,6 +126,35 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 	protected void retrieveFiles() {
 		File folder = new File(getInboundPath());
 		this.files = getFileFilter() != null ? folder.listFiles(getFileFilter()) : folder.listFiles();
+	}
+
+	/**
+	 * Sposta un file elaborato dal percorso di Inbound a quello di Outbound.
+	 * In caso di file con lo stesso nome già esistente in Outbound, sovrascrive il file.
+	 *
+	 * @param file Il file da spostare.
+	 * @return boolean True se lo spostamento è avvenuto con successo, False altrimenti.
+	 */
+	protected boolean moveFileToOutbound(File file) {
+		if (file == null || getOutboundPath() == null) {
+			output.println("Errore: File nullo o percorso Outbound non impostato.");
+			return false;
+		}
+		try {
+			Path sourcePath = file.toPath();
+
+			Path destinationPath = Paths.get(getOutboundPath(), file.getName());
+
+			Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+			output.println("File spostato con successo in: " + destinationPath.toString());
+			return true;
+
+		} catch (Exception e) {
+			output.println("Errore durante lo spostamento del file " + file.getName() + ": " + e.getMessage());
+			e.printStackTrace(Trace.excStream);
+			return false;
+		}
 	}
 
 	@SuppressWarnings("rawtypes")

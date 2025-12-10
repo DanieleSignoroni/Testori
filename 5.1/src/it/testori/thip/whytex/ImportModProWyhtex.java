@@ -107,7 +107,9 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 							completaColonne(csvFile);
 							elaboraFile(csvFile);
 							output.println("Termine elaborazione file : "+csvFile.getNomeFile());
-							output.println("sposto il file...");
+							if (!moveFileToOutbound(file)) {
+								output.println("ATTENZIONE: Fallito lo spostamento del file: " + file.getName());
+							}
 						}
 					}catch (Exception e) {
 						output.println("exc : "+e.getMessage());

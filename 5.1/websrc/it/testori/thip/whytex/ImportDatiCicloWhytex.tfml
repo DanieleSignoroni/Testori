@@ -1,0 +1,24 @@
+<tfml>
+
+<generator type="batchForm"/>
+
+<form name="myForm" errorList="yes" locktype="nolock" classHdr="YImpDatiCicloWyhtex" 
+			menubar="yes" inputFont="Arial,10"	toolbar="yes" 
+			header="it.thera.thip.cs.Header.jsp" footer="it.thera.thip.cs.Footer.jsp"
+			onLoadPresent="yes"
+			jsLibraryName="it/testori/thip/whytex/ImportDatiCicloWhytex.js">
+			>
+
+	<menubar name="myMenuBar" maxWidth="150" color="#000000" background="#A5B6CE"> 
+		<import file="com/thera/thermfw/batch/BatchRunnableMenu.tfml"/> 
+	</menubar>
+	<toolbar name="myToolBar" width="24" height="24" imgwidth="16" imgheight="16" color="#f7fbfd" background="#C8D6E1"> 
+		<import file="com/thera/thermfw/batch/BatchRunnableMenu.tfml"/> 
+	</toolbar>
+	
+	<textinput classAD="IdAzienda" name="IdAzienda"/>
+    <textinput classAD="InboundPath" name="InboundPath"/>
+    <textinput classAD="OutboundPath" name="OutboundPath"/>
+	
+	</form>
+</tfml>
