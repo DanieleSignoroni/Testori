@@ -84,7 +84,7 @@ public class ImportDatiAnagrafica extends ImportFileWhytex {
 				art.setPeso(pesoBD);
 				art.setLunghezza(altezzaBD);
 				art.setAltezza(altezzaMinBD);
-				int rc = art.save();
+				int rc = art.getArticoloDatiTecnici().save();
 				if(rc > 0) {
 					numRigheInserite++;
 				}else {
