@@ -21,6 +21,22 @@ import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.documentoDgt.TipoDocumentoDigitale;
 import it.thera.thip.cs.EntitaAzienda;
 
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 10/12/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72247    10/12/2025  DSSOF3   Prima stesura
+ */
+
 public abstract class AssocHdrTpDocDgtPO extends EntitaAzienda implements BusinessObject, Authorizable, Deletable, Conflictable {
 
 	private static AssocHdrTpDocDgt cInstance;

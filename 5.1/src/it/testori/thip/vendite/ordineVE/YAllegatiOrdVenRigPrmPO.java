@@ -22,6 +22,22 @@ import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.cs.EntitaAzienda;
 import it.thera.thip.vendite.ordineVE.OrdineVenditaRigaPrm;
 
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 10/12/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72247    10/12/2025  DSSOF3   Prima stesura
+ */
+
 public abstract class YAllegatiOrdVenRigPrmPO extends EntitaAzienda implements BusinessObject, Authorizable, Deletable, Conflictable, Child {
 
 	private static YAllegatiOrdVenRigPrm cInstance;

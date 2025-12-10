@@ -65,9 +65,11 @@ controllaIdLotto = function() {
 	}
 }
 
+//72247
 function generaDocumenti() {
 	var key = document.forms[0].thKey.value;
 	var url = "/" + webAppPath + "/" + servletPath + "/it.testori.thip.vendite.ordineVE.web.GeneraDocumentiOrdineVenditaRigaPrm?";
 	url = url + "thKey=" + key;
 	setLocationOnWindow(document.getElementById(errorsFrameName).contentWindow, url);
 }
+//72247

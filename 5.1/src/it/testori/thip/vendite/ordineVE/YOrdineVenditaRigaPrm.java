@@ -54,6 +54,7 @@ import it.thera.thip.vendite.ordineVE.OrdineVenditaRigaPrm;
  * 72105	02/09/2025	DSSOF3   Gestione prima data promessa
  * 72141	24/09/2025  DSSOF3   Introduzione markup, errore articolo costo
  * 72157	08/10/2025	DSSOF3	 Aggiunta note cambio data consegna, modifiche generiche alla gestione date
+ * 72247	10/12/2025	DSSOF3	 Gestione allegati ordine vendita riga.
  */
 
 public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
@@ -99,7 +100,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 
 	protected Proxy iAreaApplicativa = new Proxy(it.thera.thip.base.articolo.ClasseD.class);
 
-	protected OneToMany iYAllegati = new OneToMany(YAllegatiOrdVenRigPrm.class, this, 15, false);
+	protected OneToMany iYAllegati = new OneToMany(YAllegatiOrdVenRigPrm.class, this, 15, false); //72247
 
 	public YOrdineVenditaRigaPrm() {
 		setIdAzienda(Azienda.getAziendaCorrente());
@@ -279,20 +280,23 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	@Override
 	public void completaBO() {
 		super.completaBO();
-		if(getTipoRiga() == TipoRiga.MERCE)
+		//72247
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)
 			caricaAllegati(false);
+		//72247
 	}
 
+	//72247
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void caricaAllegati(boolean controlloPresenti) {
 		Vector associazioniDef = AssocHdrTpDocDgt.recuperaAssociazioniDefault("OrdineVenditaRigaPrm", true);
 		if(associazioniDef != null && associazioniDef.size() > 0) {
 			for (Iterator iterator = associazioniDef.iterator(); iterator.hasNext();) {
 				AssocHdrTpDocDgt associazione = (AssocHdrTpDocDgt) iterator.next();
-				
+
 				if(controlloPresenti && isAssociazioneAllegatoPresente(associazione.getIdTipoDocumentoDigitale()))
 					continue;
-				
+
 				YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) Factory.createObject(YAllegatiOrdVenRigPrm.class);
 				allegato.setOrdinevenditarigaprm(this);
 				allegato.setAssociazionedocumento(associazione);
@@ -302,7 +306,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public boolean isAssociazioneAllegatoPresente(String idTipoDocDgt) {
 		Iterator iterAllegati = getYAllegati().iterator();
@@ -313,6 +317,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		}
 		return false;
 	}
+	//72247
 
 	@Override
 	protected void copiaValoriInOldRiga() {
@@ -367,8 +372,9 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		if(!isOnDB() && getIdAreaApplicativa() == null) {
 			setIdAreaApplicativa(getArticolo().getIdClasseD());
 		}
-		
-		caricaAllegati(true);
+
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)
+			caricaAllegati(true);
 
 		int rc = super.save();
 
@@ -403,7 +409,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	@Override
 	public int saveOwnedObjects(int rc) throws SQLException {
 		rc = super.saveOwnedObjects(rc);
-		rc = iYAllegati.save(rc);
+		rc = iYAllegati.save(rc); //72247
 		return rc;
 	}
 
@@ -412,9 +418,10 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 		if (ret < ErrorCodes.NO_ROWS_UPDATED) {
 			return ret;
 		}
-		return getYAllegatiInternal().delete();
+		return getYAllegatiInternal().delete(); //72247
 	}
 
+	//72247
 	@SuppressWarnings("rawtypes")
 	public List getYAllegati() {
 		return getYAllegatiInternal();
@@ -425,6 +432,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 			iYAllegati.retrieve();
 		return iYAllegati;
 	}
+	//72247
 
 	//72157
 	@SuppressWarnings("rawtypes")
@@ -459,7 +467,7 @@ public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
 	public boolean initializeOwnedObjects(boolean result) {
 		boolean ret = super.initializeOwnedObjects(result);
 		setYCostoUnitario(getCostoUnitario());
-		result = iYAllegati.initialize(result);
+		result = iYAllegati.initialize(result); //72247
 		return ret;
 	}
 	//72141
