@@ -189,7 +189,7 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 		parser.setNumRigheIntestazione(new Integer(numRighe));
 		CSVFile fileCSV = parser.parse();
 		List errori = parser.getErrori();
-		if (fileCSV == null) {
+		if (errori != null && !errori.isEmpty()) {
 			//error in columns
 			printList(errori);
 		}

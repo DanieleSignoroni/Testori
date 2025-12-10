@@ -57,7 +57,7 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 							output.println("Elaborazione file : "+csvFile.getNomeFile());
 							elaboraFile(csvFile);
 							output.println("Termine elaborazione file : "+csvFile.getNomeFile());
-							if (numRigheConErrori == 0 && !moveFileToOutbound(file)) {
+							if (!moveFileToOutbound(file)) {
 								output.println("ATTENZIONE: Fallito lo spostamento del file: " + file.getName());
 							}
 						}
@@ -82,6 +82,9 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 			String risorsa = null;
 			if(rigaCSV.getValori().size() > 3) {
 				risorsa = rigaCSV.getValore(3);
+				if("NULL".equals(risorsa)) {
+					risorsa = null;
+				}
 			}
 			ModelloProduttivo modelloProduttivo = null;
 			try {
@@ -103,6 +106,7 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 								settaTempoUnitarioRisorsa(attivita,risorsa, tempoUnitarioBD);
 							}
 						}
+						attivita.setDirty();
 						int rc = attivita.save();
 						if(rc > 0) {
 							output.println("attivita "+KeyHelper.formatKeyString(attivita.getKey())+" aggiornata correttamente, rc = "+rc);
@@ -110,6 +114,7 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 						}else {
 							ok = false;
 							numRigheConErrori++;
+							output.println("attivita "+KeyHelper.formatKeyString(attivita.getKey())+" aggiornata con errore, rc = "+rc);
 						}
 					}
 				}else{
@@ -124,8 +129,6 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 			output.println("Riga CSV :"+numeroRiga+" errore: "+e.getMessage());
 			numRigheConErrori++;
 		}
-		if (ok)
-			numRigheInserite++;
 		return ok;
 	}
 
