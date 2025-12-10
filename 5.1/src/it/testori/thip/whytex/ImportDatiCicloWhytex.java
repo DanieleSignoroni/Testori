@@ -59,8 +59,22 @@ public class ImportDatiCicloWhytex extends ImportFileWhytex {
 	}
 
 	@Override
-	public boolean elaboraRiga(CSVRiga rigaCSV, Integer integer) {
-		return false;
+	public boolean elaboraRiga(CSVRiga rigaCSV, Integer numeroRiga) {
+		boolean ok = true;
+		try {
+			String idArticolo = rigaCSV.getValore(0);
+			String idOperazione = rigaCSV.getValore(1);
+			String tempo = rigaCSV.getValore(2);
+			String risorsa = rigaCSV.getValore(3);
+		}catch (Exception e) {
+			e.printStackTrace(Trace.excStream);
+			ok = false;
+			output.println("Riga CSV :"+numeroRiga+" errore: "+e.getMessage());
+			numRigheConErrori++;
+		}
+		if (ok)
+			numRigheInserite++;
+		return ok;
 	}
 
 	@Override
