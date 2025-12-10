@@ -3,11 +3,13 @@ package it.testori.thip.whytex;
 import java.io.File;
 import java.io.FileFilter;
 import java.math.BigDecimal;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.batch.BatchJob;
 import com.thera.thermfw.batch.BatchRunnable;
+import com.thera.thermfw.batch.BatchService;
 import com.thera.thermfw.common.ErrorMessage;
 import com.thera.thermfw.security.Authorizable;
 import com.thera.thermfw.type.DecimalType;
@@ -249,6 +252,61 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 		dt.setCorrespondingJavaClass(BigDecimal.class);
 		dt.format(str);
 		return (BigDecimal) dt.stringToObject(str);
+	}
+
+	/**
+	 * sottometto il job che mi arriva e aspetto finchè non finisce
+	 * (senza timeout perchè ci sono operazioni che durano tanto)
+	 * @param job
+	 */
+	protected boolean sottomettiEAspettaLavoro(BatchJob job) {
+		boolean ok = true;
+		try {
+			Socket socket = BatchService.getConnection();
+			BatchService.submitJob(job.getBatchJobId(), socket);
+			Long datetimeInizio = System.currentTimeMillis();
+			Timestamp timestampInizio = new Timestamp(datetimeInizio);
+			output.println("***********" + job.getDescription() + " SOTTOMESSO a: " + timestampInizio);
+			boolean isStop = false;
+			int i = 0;
+			while (!isStop) {
+				if (job.retrieve()) {
+					if (job.getStatus() == BatchJob.COMPLETED || job.getStatus() == BatchJob.COMPLETED_ERROR) {
+						isStop = true;
+						if (job.getStatus() == BatchJob.COMPLETED_ERROR) {
+							ok = false;
+						}
+						if (job.getApplStatus() == BatchJob.WITH_WARNING) {
+						}
+					}
+					int msAttesa = 1000;
+					if(i == 60) //dopo un minuto di controlli ogni secondo inizio i controlli ogni 5 secondi
+						msAttesa = 5000;
+					if(i == 72) //dopo un minuto di controlli ogni 5 sec passo a 10
+						msAttesa = 10000;
+					if(i == 90) // dopo 3 minuti di controlli ogni 10 sec passo a 30
+						msAttesa = 30000;
+					if(i == 100) // dopo 5 minuti di controlli ogni 30 sec passo a 1min
+						msAttesa = 60000;
+					Thread.sleep(msAttesa); // attendo prima di rieseguire la retrieve (sennò spamma...)
+				} else {
+					isStop = true;
+				}
+				i++;
+			}
+			Long datetimeFine = System.currentTimeMillis();
+			Timestamp timestampFine = new Timestamp(datetimeFine);
+			output.println("***********" + job.getDescription() + " TERMINATO a: " + timestampFine);
+			long seconds = (timestampFine.getTime()-timestampInizio.getTime())/1000;
+			output.println("***********" + job.getDescription() + " DURATA DI " + seconds + " secondi");
+		}catch(Exception e) {
+			e.printStackTrace(Trace.excStream);
+			ok = false;
+		}
+		if(!ok) { //lo metto qui perchè potrebbe essere a false per motivi diversi
+			output.println("***********" + job.getDescription() + " ("+job.getBatchJobId()+") terminato con errore, non procedo con altro.");
+		}
+		return ok;
 	}
 
 	public static class ColumnWrapper {

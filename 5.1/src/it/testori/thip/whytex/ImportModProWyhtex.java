@@ -3,7 +3,6 @@ package it.testori.thip.whytex;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -19,7 +18,6 @@ import java.util.Set;
 import com.thera.thermfw.base.Trace;
 import com.thera.thermfw.batch.BatchJob;
 import com.thera.thermfw.batch.BatchOptions;
-import com.thera.thermfw.batch.BatchService;
 import com.thera.thermfw.batchload.RunBatchLoader;
 import com.thera.thermfw.persist.ConnectionManager;
 import com.thera.thermfw.persist.Database;
@@ -127,8 +125,7 @@ public class ImportModProWyhtex extends ImportFileWhytex {
 						int resSave = cmSempl.save();
 						if (resSave >= ErrorCodes.NO_ROWS_UPDATED) {
 							ConnectionManager.commit();
-							Socket socket = BatchService.getConnection();
-							BatchService.submitJob(cmSempl.getBatchJob().getBatchJobId(), socket);
+							ok = sottomettiEAspettaLavoro(job);
 						}
 						else
 							ConnectionManager.rollback();
