@@ -14,7 +14,8 @@ import it.thera.thip.cs.CSVFile;
 import it.thera.thip.cs.CSVRiga;
 
 /**
- *
+ * Importazione dei dati relativi all'anagrafica articolo.<br>
+ * La classe legge una cartella di 'inbound', processa i file e li sposta in una cartella di 'outbound'.
  * <p></p>
  *
  * <p>

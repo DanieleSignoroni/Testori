@@ -35,19 +35,23 @@ import it.thera.thip.datiTecnici.modpro.CMModproSempl;
 import it.thera.thip.datiTecnici.modpro.CMModproSemplTM;
 
 /**
+ * Importazione dei dati relativi alla distinta base di un modello produttivo.<br></br>
+ * Il lavoro legge il .csv e popola la tabella dei cm modelli produttivi semplificati {@value CMModproSemplTM#TABLE_NAME}.<br>
+ * Al termine della popolazioene viene lanciato il lavoro batch che importa i modelli produttivi.<br></br>
+ * La classe legge una cartella di 'inbound', processa i file e li sposta in una cartella di 'outbound'.
  * <p></p>
  *
  * <p>
  * Company: Softre Solutions<br>
  * Author: Daniele Signoroni<br>
- * Date: 18/11/2025
+ * Date: 10/12/2025
  * </p>
  */
 
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72250    18/11/2025  DSSOF3   Prima stesura
+ * 72250    10/12/2025  DSSOF3   Prima stesura
  */
 
 @SuppressWarnings("unchecked")
