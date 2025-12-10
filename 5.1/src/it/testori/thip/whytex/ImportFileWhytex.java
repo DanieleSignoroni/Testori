@@ -39,7 +39,7 @@ import it.thera.thip.cs.GestoreCommit;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    18/11/2025  DSSOF3   Prima stesura
+ * 72250    18/11/2025  DSSOF3   Prima stesura
  */
 
 public class ImportFileWhytex extends BatchRunnable implements Authorizable {
@@ -134,6 +134,7 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 
 	@Override
 	protected boolean run() {
+		output.println();
 		boolean isOk = true;
 		try {
 			retrieveFiles();
@@ -142,6 +143,7 @@ public class ImportFileWhytex extends BatchRunnable implements Authorizable {
 			e.printStackTrace(Trace.excStream);
 			isOk = false;
 		}
+		output.println();
 		return isOk;
 	}
 

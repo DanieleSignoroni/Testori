@@ -27,7 +27,7 @@ import it.thera.thip.cs.CSVRiga;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    10/12/2025  DSSOF3   Prima stesura
+ * 72250    10/12/2025  DSSOF3   Prima stesura
  */
 
 public class ImportDatiAnagrafica extends ImportFileWhytex {
@@ -86,6 +86,7 @@ public class ImportDatiAnagrafica extends ImportFileWhytex {
 				art.setAltezza(altezzaMinBD);
 				int rc = art.getArticoloDatiTecnici().save();
 				if(rc > 0) {
+					output.println("articolo "+KeyHelper.formatKeyString(art.getKey())+" aggiornato correttamente, rc = "+rc);
 					numRigheInserite++;
 				}else {
 					ok = false;

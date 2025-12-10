@@ -22,7 +22,7 @@ import it.thera.thip.cs.CSVRiga;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    10/12/2025  DSSOF3   Prima stesura
+ * 72250    10/12/2025  DSSOF3   Prima stesura
  */
 
 public class ImportDatiCicloWhytex extends ImportFileWhytex {

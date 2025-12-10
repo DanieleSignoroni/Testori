@@ -47,7 +47,7 @@ import it.thera.thip.datiTecnici.modpro.CMModproSemplTM;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    18/11/2025  DSSOF3   Prima stesura
+ * 72250    18/11/2025  DSSOF3   Prima stesura
  */
 
 @SuppressWarnings("unchecked")
