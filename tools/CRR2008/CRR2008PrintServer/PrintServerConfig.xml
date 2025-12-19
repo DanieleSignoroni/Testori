@@ -2,7 +2,7 @@
 <!-- Print Server Configuration -->
 <PrintServerConfiguration xsi:noNamespaceSchemaLocation="PrintServerConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">  
     <ServerConfiguration>        
-        <Port>10131</Port>
+        <Port>10231</Port>
         <RptRoot>W:/PthDev/Projects/Panthera/Testori/5.1/rpt/cr2008</RptRoot>
         <LogPath>W:/PthDev/works/CRR2008/Testori</LogPath>
         <LogLevel>0</LogLevel>
