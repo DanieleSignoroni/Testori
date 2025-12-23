@@ -45,6 +45,7 @@ import it.thera.thip.produzione.raccoltaDati.RilevazioneDatiProdTes;
  * 72060	23/07/2025	DSSOF3	 Gestione compilazione dati lotti subbi-pezze
  * 72249	12/12/2025	DSSOF3	 Gestione versamento materiali
  * 72252	15/12/2025	DSSOF3	 Correzione nullPointer per gestione bolla cucita
+ * 72267	23/12/2025	DSSOF3	 Aggiunta YQtaPrlUmPrmOrig (1-20).
  */
 
 public class YRilevDatiPrdTS extends RilevDatiPrdTS {
@@ -63,6 +64,7 @@ public class YRilevDatiPrdTS extends RilevDatiPrdTS {
 		this.iLottiFilatiManufatti = iLottiFilatiManufatti;
 	}
 
+	//72267
 	@SuppressWarnings("rawtypes")
 	public void setYQtaPrlUmPrmOrig(Map map){
 		iYQtaPrlUmPrmOrig = map;
@@ -261,6 +263,7 @@ public class YRilevDatiPrdTS extends RilevDatiPrdTS {
 	public BigDecimal getYQtaPrlUmPrmOrig20() {
 		return (BigDecimal)iYQtaPrlUmPrmOrig.get(new Integer(19 + (iCurrentNumPag - 1) * 20));
 	}
+	//72267
 
 	@Override
 	public int SaveSospensioneFine() throws SQLException {

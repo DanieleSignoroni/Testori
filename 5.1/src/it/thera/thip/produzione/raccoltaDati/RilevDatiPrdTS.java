@@ -835,7 +835,7 @@ public class RilevDatiPrdTS extends BusinessObjectAdapter implements Authorizabl
   //protected Map iQtaPrlUmSec = new Hashtable(); //Fix 27421
   protected Map iQtaPrlUmPrm = new HashMap(); //Fix 27421
   protected Map iQtaPrlUmSec = new HashMap(); //Fix 27421
-  protected Map iYQtaPrlUmPrmOrig = new HashMap(); //72XXX Softre
+  protected Map iYQtaPrlUmPrmOrig = new HashMap(); //72267 Softre
 
   protected Map iProdotto = new Hashtable();
   protected Map iDescrizioneProdotto = new Hashtable();
