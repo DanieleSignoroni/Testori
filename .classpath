@@ -16,5 +16,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/PTH_5.1.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SQLServer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="K:/Thip/thip_jars/apache_commons_fileupload_jdk1_3.jar"/>
 	<classpathentry kind="output" path="lib"/>
 </classpath>
