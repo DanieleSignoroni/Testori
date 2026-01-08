@@ -1,0 +1,704 @@
+package it.testori.thip.vendite.ordineVE;
+
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
+import com.thera.thermfw.base.Trace;
+import com.thera.thermfw.common.BaseComponentsCollection;
+import com.thera.thermfw.common.ErrorMessage;
+import com.thera.thermfw.persist.CachedStatement;
+import com.thera.thermfw.persist.ConnectionManager;
+import com.thera.thermfw.persist.CopyException;
+import com.thera.thermfw.persist.Copyable;
+import com.thera.thermfw.persist.Database;
+import com.thera.thermfw.persist.ErrorCodes;
+import com.thera.thermfw.persist.Factory;
+import com.thera.thermfw.persist.KeyHelper;
+import com.thera.thermfw.persist.OneToMany;
+import com.thera.thermfw.persist.Proxy;
+
+import it.testori.thip.base.articolo.YArticoloCosto;
+import it.testori.thip.base.generale.AssocHdrTpDocDgt;
+import it.testori.thip.base.generaleVE.web.YCalcoloMarkup;
+import it.testori.thip.vendite.generaleVE.GestioneCalcoloCosti;
+import it.thera.thip.base.articolo.Articolo;
+import it.thera.thip.base.articolo.ArticoloCosto;
+import it.thera.thip.base.articolo.ClasseD;
+import it.thera.thip.base.azienda.Azienda;
+import it.thera.thip.base.comuniVenAcq.ContenitoreRiga;
+import it.thera.thip.base.comuniVenAcq.DocumentoOrdineRiga;
+import it.thera.thip.base.comuniVenAcq.OrdineRigaLotto;
+import it.thera.thip.base.comuniVenAcq.StatoEvasione;
+import it.thera.thip.base.comuniVenAcq.TipoRiga;
+import it.thera.thip.base.documenti.StatoAvanzamento;
+import it.thera.thip.base.generale.ImportoInValutaEstera;
+import it.thera.thip.cs.ThipException;
+import it.thera.thip.magazzino.generalemag.Lotto;
+import it.thera.thip.vendite.generaleVE.PersDatiVen;
+import it.thera.thip.vendite.ordineVE.OrdineVendita;
+import it.thera.thip.vendite.ordineVE.OrdineVenditaRigaPrm;
+
+/**
+ * <p></p>
+ *
+ * <p>
+ * Company: Softre Solutions<br>
+ * Author: Daniele Signoroni<br>
+ * Date: 28/08/2025
+ * </p>
+ */
+
+/*
+ * Revisions:
+ * Number   Date        Owner    Description
+ * 72097    28/08/2025  DSSOF3   Prima stesura
+ * 72105	02/09/2025	DSSOF3   Gestione prima data promessa
+ * 72141	24/09/2025  DSSOF3   Introduzione markup, errore articolo costo
+ * 72157	08/10/2025	DSSOF3	 Aggiunta note cambio data consegna, modifiche generiche alla gestione date
+ * 72238	03/12/2025	DSSOF3   Check per non lasciar rendere definitivo senza data consegna confermata, calcolo markup forzato.
+ * 72242    10/12/2025  DSSOF3   Righe spesa, disabilitare personalizzazioni.
+ * 72247	10/12/2025	DSSOF3	 Gestione allegati ordine vendita riga.
+ * 72269	07/01/2026	DSSOF3	 Nuova gestione quadratura lotti
+ * 72272	07/01/2026	DSSOF3	 Aggiunta valore totale ordinato in valuta a db.
+ */
+
+public class YOrdineVenditaRigaPrm extends OrdineVenditaRigaPrm {
+
+	private static final String STMT_CLEAN_CAU_CAMBIO_DT_CONS = "UPDATE "+YOrdineVenditaRigaPrmTM.TABLE_NAME_EXT+"  "
+			+ "SET "+YOrdineVenditaRigaPrmTM.R_COD_CAMBIO_DT_CONS+" = NULL "
+			+ "WHERE "+YOrdineVenditaRigaPrmTM.ID_AZIENDA+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_ANNO_ORD+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_NUMERO_ORD+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_RIGA_ORD+" = ?";
+	public static CachedStatement cCleanCausaleCambioDtCons = new CachedStatement(STMT_CLEAN_CAU_CAMBIO_DT_CONS);
+
+	//72157
+	private static final String STMT_CLEAN_NOTE_CAMBIO_DT_CONS = "UPDATE "+YOrdineVenditaRigaPrmTM.TABLE_NAME_EXT+"  "
+			+ "SET "+YOrdineVenditaRigaPrmTM.NOTE_CAMBIO_DT_CONS+" = NULL "
+			+ "WHERE "+YOrdineVenditaRigaPrmTM.ID_AZIENDA+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_ANNO_ORD+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_NUMERO_ORD+" = ? "
+			+ "AND "+YOrdineVenditaRigaPrmTM.ID_RIGA_ORD+" = ?";
+	public static CachedStatement cCleanNoteCambioDtCons = new CachedStatement(STMT_CLEAN_NOTE_CAMBIO_DT_CONS);
+	//72157
+
+	protected java.sql.Date iDataConsegnaCfmStorica;
+
+	//72141
+	protected BigDecimal iMarkup;
+
+	/**
+	 * Attributo di servizio, e' la copia del {@link #getCostoUnitario()}.<br>
+	 */
+	protected BigDecimal iYCostoUnitario;
+	//72141
+
+	protected Proxy iCausaleCambioDataConsegna = new Proxy(
+			it.testori.thip.vendite.ordineVE.YCausaleCambioDataCons.class);
+
+	protected String iNoteCambioDataCons; //72157
+
+	protected BigDecimal iPrezzoEuro;
+
+	protected String iAltezzaRichiesta;
+	protected String iLunghezzaRichiesta;
+
+	protected Proxy iAreaApplicativa = new Proxy(it.thera.thip.base.articolo.ClasseD.class);
+
+	protected OneToMany iYAllegati = new OneToMany(YAllegatiOrdVenRigPrm.class, this, 15, false); //72247
+
+	protected BigDecimal iYValoreOrdinatoVA; //72272
+
+	public YOrdineVenditaRigaPrm() {
+		setIdAzienda(Azienda.getAziendaCorrente());
+	}
+
+	public void setDataConsegnaCfmStorica(java.sql.Date dataConsegnaCfmStorica) {
+		this.iDataConsegnaCfmStorica = dataConsegnaCfmStorica;
+		setDirty();
+	}
+
+	public java.sql.Date getDataConsegnaCfmStorica() {
+		return iDataConsegnaCfmStorica;
+	}
+
+	public void setCausaleCambioDataConsegna(YCausaleCambioDataCons causalecambiodataconsegna) {
+		String oldObjectKey = getKey();
+		this.iCausaleCambioDataConsegna.setObject(causalecambiodataconsegna);
+		setDirty();
+		if (!KeyHelper.areEqual(oldObjectKey, getKey())) {
+			setOnDB(false);
+		}
+	}
+
+	public YCausaleCambioDataCons getCausaleCambioDataConsegna() {
+		return (YCausaleCambioDataCons) iCausaleCambioDataConsegna.getObject();
+	}
+
+	public void setCausaleCambioDataConsegnaKey(String key) {
+		String oldObjectKey = getKey();
+		iCausaleCambioDataConsegna.setKey(key);
+		setDirty();
+		if (!KeyHelper.areEqual(oldObjectKey, getKey())) {
+			setOnDB(false);
+		}
+	}
+
+	public String getCausaleCambioDataConsegnaKey() {
+		return iCausaleCambioDataConsegna.getKey();
+	}
+
+	public void setIdAzienda(String idAzienda) {
+		super.setIdAzienda(idAzienda);
+		if (iCausaleCambioDataConsegna != null) {
+			String key = iCausaleCambioDataConsegna.getKey();
+			iCausaleCambioDataConsegna.setKey(KeyHelper.replaceTokenObjectKey(key, 1, idAzienda));
+		}
+		if(iAreaApplicativa != null) {
+			String key = iAreaApplicativa.getKey();
+			iAreaApplicativa.setKey(KeyHelper.replaceTokenObjectKey(key, 1, idAzienda));
+		}
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	@Override
+	public void setAnnoDocumento(String annoDocumento) {
+		super.setAnnoDocumento(annoDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	@Override
+	public void setNumeroDocumento(String numeroDocumento) {
+		super.setNumeroDocumento(numeroDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	@Override
+	public void setNumeroRigaDocumento(Integer numeroRigaDocumento) {
+		super.setNumeroRigaDocumento(numeroRigaDocumento);
+		if (iYAllegati != null) {
+			iYAllegati.setFatherKeyChanged();
+		}
+	}
+
+	public void setIdCodiceCambioDtCons(String idCodiceCambioDtCons) {
+		String key = iCausaleCambioDataConsegna.getKey();
+		iCausaleCambioDataConsegna.setKey(KeyHelper.replaceTokenObjectKey(key, 2, idCodiceCambioDtCons));
+		setDirty();
+	}
+
+	public String getIdCodiceCambioDtCons() {
+		String key = iCausaleCambioDataConsegna.getKey();
+		String objIdCodiceCambioDtCons = KeyHelper.getTokenObjectKey(key, 2);
+		return objIdCodiceCambioDtCons;
+	}
+
+	//72141
+	public void setMarkup(BigDecimal markup) {
+		this.iMarkup = markup;
+		setDirty();
+	}
+
+	public BigDecimal getMarkup() {
+		return iMarkup;
+	}
+
+	public BigDecimal getYCostoUnitario() {
+		return iYCostoUnitario;
+	}
+
+	public void setYCostoUnitario(BigDecimal iYCostoUnitario) {
+		this.iYCostoUnitario = iYCostoUnitario;
+		setDirty();
+	}
+	//72141
+
+	//72157
+	public String getNoteCambioDataCons() {
+		return iNoteCambioDataCons;
+	}
+
+	public void setNoteCambioDataCons(String iNoteCambioDataCons) {
+		this.iNoteCambioDataCons = iNoteCambioDataCons;
+		setDirty();
+	}
+	//72157
+
+	public BigDecimal getPrezzoEuro() {
+		return iPrezzoEuro;
+	}
+
+	public void setPrezzoEuro(BigDecimal iPrezzoEuro) {
+		this.iPrezzoEuro = iPrezzoEuro;
+		setDirty();
+	}
+
+	public String getAltezzaRichiesta() {
+		return iAltezzaRichiesta;
+	}
+
+	public void setAltezzaRichiesta(String iAltezzaRichiesta) {
+		this.iAltezzaRichiesta = iAltezzaRichiesta;
+		setDirty();
+	}
+
+	public String getLunghezzaRichiesta() {
+		return iLunghezzaRichiesta;
+	}
+
+	public void setLunghezzaRichiesta(String iLunghezzaRichiesta) {
+		this.iLunghezzaRichiesta = iLunghezzaRichiesta;
+		setDirty();
+	}
+
+	public void setAreaApplicativa(ClasseD classeD) {
+		this.iAreaApplicativa.setObject(classeD);
+		setDirty();
+	}
+
+	public ClasseD getAreaApplicativa() {
+		return (ClasseD)iAreaApplicativa.getObject();
+	}
+
+	public void setAreaApplicativaKey(String key) {
+		iAreaApplicativa.setKey(key);
+		setDirty();
+	}
+
+	public String getAreaApplicativaKey() {
+		return iAreaApplicativa.getKey();
+	}
+
+	public void setIdAreaApplicativa(String idAreaApplicativa) {
+		iAreaApplicativa.setKey(KeyHelper.replaceTokenObjectKey(iAreaApplicativa.getKey(),2,idAreaApplicativa));
+		setDirty();
+	}
+
+	public String getIdAreaApplicativa() {
+		return KeyHelper.getTokenObjectKey(iAreaApplicativa.getKey(),2);
+	}
+
+	//72272
+	public BigDecimal getYValoreOrdinatoVA() {
+		return iYValoreOrdinatoVA;
+	}
+
+	public void setYValoreOrdinatoVA(BigDecimal iYValoreOrdinatoVA) {
+		this.iYValoreOrdinatoVA = iYValoreOrdinatoVA;
+		setDirty();
+	}
+	//72272
+
+	@Override
+	public void completaBO() {
+		super.completaBO();
+		//72247
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)
+			caricaAllegati(false);
+		//72247
+	}
+
+	//72247
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected void caricaAllegati(boolean controlloPresenti) {
+		Vector associazioniDef = AssocHdrTpDocDgt.recuperaAssociazioniDefault("OrdineVenditaRigaPrm", true);
+		if(associazioniDef != null && associazioniDef.size() > 0) {
+			for (Iterator iterator = associazioniDef.iterator(); iterator.hasNext();) {
+				AssocHdrTpDocDgt associazione = (AssocHdrTpDocDgt) iterator.next();
+
+				if(controlloPresenti && isAssociazioneAllegatoPresente(associazione.getIdTipoDocumentoDigitale()))
+					continue;
+
+				YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) Factory.createObject(YAllegatiOrdVenRigPrm.class);
+				allegato.setOrdineVenditaRigaPrm(this);
+				allegato.setAssociazionedocumento(associazione);
+				allegato.setVincolo(associazione.getVincolo());
+
+				getYAllegati().add(allegato);
+
+			}
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public boolean isAssociazioneAllegatoPresente(String idTipoDocDgt) {
+		Iterator iterAllegati = getYAllegati().iterator();
+		while(iterAllegati.hasNext()) {
+			YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) iterAllegati.next();
+			if(allegato.getIdTipoDocDgt().equals(idTipoDocDgt))
+				return true;
+		}
+		return false;
+	}
+	//72247
+
+	@Override
+	protected void copiaValoriInOldRiga() {
+		super.copiaValoriInOldRiga();
+		YOrdineVenditaRigaPrm ovr = (YOrdineVenditaRigaPrm) iOldRiga;
+		ovr.setDataConsegnaCfmStorica(getDataConsegnaCfmStorica());
+		ovr.setCausaleCambioDataConsegna(getCausaleCambioDataConsegna());
+	}
+
+	@Override
+	public int save() throws SQLException {
+		if(getYCostoUnitario() != null) { //72141
+			setCostoUnitario(getYCostoUnitario());
+		}
+		if(!isOnDB() //72157
+				&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+			setDataConsegnaConfermata(null);
+			setSettConsegnaConfermata(null);
+			setDataConsegnaProduzione(null);
+			setSettConsegnaProduzione(null);
+			setDataConsegnaCfmStorica(null);
+		}
+		if(!isOnDB()) {
+			//72157 remmare
+			//setDataConsegnaCfmStorica(getDataConsegnaConfermata()); //Storicizzo sul nuovo la data consegna confermata
+			//72105 Inizio
+		}else {
+			//72157
+			if(isOnDB() 
+					&& getDataConsegnaConfermata() != null 
+					&& getDataConsegnaCfmStorica() == null
+					&& getStatoAvanzamento() == StatoAvanzamento.DEFINITIVO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+				setDataConsegnaCfmStorica(getDataConsegnaConfermata());
+			}
+			//72157
+			if (getCausaleCambioDataConsegna() != null
+					&& getCausaleCambioDataConsegna().isModificaDataOrigine()
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+				setDataConsegnaCfmStorica(getDataConsegnaConfermata());
+			}
+			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
+			if(ovr != null && isQuantitaCambiata() && getStatoEvasione() != StatoEvasione.SALDATO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+				setDataConsegnaConfermata(null);
+				setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
+			}
+			if (ovr != null
+					&& !datiUguali(ovr.getDataConsegnaRichiesta(), getDataConsegnaRichiesta())
+					&& getStatoEvasione() != StatoEvasione.SALDATO
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)){ //72242
+				setDataConsegnaConfermata(null);
+				setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
+			}
+		}
+		//72105 Fine
+		if(!isOnDB() && getIdAreaApplicativa() == null) {
+			setIdAreaApplicativa(getArticolo().getIdClasseD());
+		}
+
+		//72238
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO) //72242
+			calcoloMarkup();
+		//72238
+
+		if(getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)
+			caricaAllegati(true);
+
+		//72272
+		if(!isOnDB()) {
+			calcolaImportiRiga();
+			setYValoreOrdinatoVA(getValoreOrdinatoVA());
+		}
+		//72272
+
+		int rc = super.save();
+
+		//..Se l'utente ha cambiato data consegna tramite il campo della causale allora svuoto la causale (fatto cosi perche' almeno registro i log del campo)
+		if(rc > 0 && isOnDB()) {
+			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
+			if (ovr != null
+					&& !datiUguali(ovr.getDataConsegnaConfermata(), getDataConsegnaConfermata())
+					&& getCausaleCambioDataConsegna() != null
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+				svuotaCausaleCambioDataConsegna();
+			}
+			//72157
+			if(ovr != null && getNoteCambioDataCons() != null && !getNoteCambioDataCons().isEmpty()
+					&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+				String oldIdCambioCau = ((YOrdineVenditaRigaPrm)ovr).getIdCodiceCambioDtCons();
+				boolean cleanNotes = false;
+				if((oldIdCambioCau == null && getIdCodiceCambioDtCons() != null)){
+					cleanNotes = true;
+				}else if(oldIdCambioCau != null && getIdCodiceCambioDtCons() == null) {
+					cleanNotes = true;
+				}else if(oldIdCambioCau != null && getIdCodiceCambioDtCons() != null && !oldIdCambioCau.equals(getIdCodiceCambioDtCons())) {
+					cleanNotes = true;
+				}
+				if(cleanNotes) {
+					svuotaNoteCambioDataConsegna();
+				}
+			}
+			//72157
+		}
+		return rc;
+	}
+
+	//72238
+	protected void calcoloMarkup() {
+		try {
+			OrdineVendita tes = (OrdineVendita) getTestata();
+			BigDecimal costoUnitario = getCostoUnitario() != null ? getCostoUnitario() : BigDecimal.ZERO;
+			BigDecimal prezzo = getPrezzo() != null ? getPrezzo() : BigDecimal.ZERO;
+			BigDecimal markup = null;
+			if(!tes.getIdValuta().equals("EUR") && prezzo != null) {
+				ImportoInValutaEstera imp = (ImportoInValutaEstera) Factory.createObject(ImportoInValutaEstera.class);
+				imp.setFattCambioOper(tes.getCambio());
+				imp.convertiEstPrim(tes.getIdValuta(), prezzo, tes.getDataDocumento());
+				prezzo = imp.getImportaValPrim();
+			}
+			if (prezzo != null && costoUnitario != null && costoUnitario.compareTo(BigDecimal.ZERO) > 0) {
+				markup = YCalcoloMarkup.calcolaMarkup(costoUnitario, prezzo);
+				setMarkup(markup);
+			}
+		}catch (Exception e) {
+			e.printStackTrace(Trace.excStream);
+		}
+	}
+	//72238
+
+	@Override
+	public int saveOwnedObjects(int rc) throws SQLException {
+		rc = super.saveOwnedObjects(rc);
+		rc = iYAllegati.save(rc); //72247
+		return rc;
+	}
+
+	public int deleteOwnedObjects() throws SQLException {
+		int ret = super.deleteOwnedObjects();
+		if (ret < ErrorCodes.NO_ROWS_UPDATED) {
+			return ret;
+		}
+		return getYAllegatiInternal().delete(); //72247
+	}
+
+	//72247
+	@SuppressWarnings("rawtypes")
+	public List getYAllegati() {
+		return getYAllegatiInternal();
+	}
+
+	protected OneToMany getYAllegatiInternal() {
+		if (iYAllegati.isNew())
+			iYAllegati.retrieve();
+		return iYAllegati;
+	}
+	//72247
+
+	//72157
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected void aggiornaDatiTestata() throws ThipException {
+		super.aggiornaDatiTestata();
+		OrdineVendita tes = (OrdineVendita) getTestata();
+		if(tes.getStatoEvasione() != StatoEvasione.SALDATO) {
+			boolean tutteDefinitive = true;
+			Iterator iterRighe = getTestata().getRighe().iterator();
+			while(iterRighe.hasNext()) {
+				YOrdineVenditaRigaPrm riga = (YOrdineVenditaRigaPrm) iterRighe.next();
+				if(!riga.getKey().equals(getKey()) 
+						&& riga.getStatoAvanzamento() != StatoAvanzamento.DEFINITIVO) {
+					tutteDefinitive = false;
+				}
+			}
+			if(getStatoAvanzamento() != StatoAvanzamento.DEFINITIVO) {
+				tutteDefinitive = false;
+			}
+
+			if(tutteDefinitive)
+				tes.setStatoAvanzamento(StatoAvanzamento.DEFINITIVO);
+			else
+				tes.setStatoAvanzamento(StatoAvanzamento.PROVVISORIO);
+		}
+	}
+	//72157
+
+	//72141
+	@Override
+	public boolean initializeOwnedObjects(boolean result) {
+		boolean ret = super.initializeOwnedObjects(result);
+		setYCostoUnitario(getCostoUnitario());
+		result = iYAllegati.initialize(result); //72247
+		return ret;
+	}
+	//72141
+
+	protected int svuotaCausaleCambioDataConsegna() throws SQLException {
+		PreparedStatement ps = cCleanCausaleCambioDtCons.getStatement();
+		Database db = ConnectionManager.getCurrentDatabase();
+		db.setString(ps, 1, getIdAzienda());
+		db.setString(ps, 2, getAnnoDocumento());
+		db.setString(ps, 3, getNumeroDocumento());
+		db.setString(ps, 4, getNumeroRigaDocumento().toString());
+		ps.execute();
+		if (ps.executeUpdate() >= 0)
+			return 1;
+		return -100;
+	}
+
+	//72157
+	protected int svuotaNoteCambioDataConsegna() throws SQLException {
+		PreparedStatement ps = cCleanNoteCambioDtCons.getStatement();
+		Database db = ConnectionManager.getCurrentDatabase();
+		db.setString(ps, 1, getIdAzienda());
+		db.setString(ps, 2, getAnnoDocumento());
+		db.setString(ps, 3, getNumeroDocumento());
+		db.setString(ps, 4, getNumeroRigaDocumento().toString());
+		ps.execute();
+		if (ps.executeUpdate() >= 0)
+			return 1;
+		return -100;
+	}
+	//72157
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Vector checkAll(BaseComponentsCollection components) {
+		Vector errors = super.checkAll(components);
+
+		//..Se la data di consegna e' cambiata  ma non ho indicato un codice di cambio causale non permetto la validazione dell'oggetto
+		if(isOnDB() && (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+			DocumentoOrdineRiga ovr = (DocumentoOrdineRiga) iOldRiga;
+			if (ovr != null
+					&& ((YOrdineVenditaRigaPrm)ovr).getDataConsegnaCfmStorica() != null
+					&& !datiUguali(ovr.getDataConsegnaConfermata(), getDataConsegnaConfermata())
+					&& getCausaleCambioDataConsegna() == null) {
+				errors.add(new ErrorMessage("YT_0000001"));
+			}
+			if((isQuantitaCambiata() || (ovr != null
+					&& !datiUguali(ovr.getDataConsegnaRichiesta(), getDataConsegnaRichiesta())))
+					&& getRilascioOrdineProd() == RILASCIO_ORD_PRD_RILASCIATO) {
+				errors.add(new ErrorMessage("BAS0000078","Ordine gia' rilasciato in produzione, impossibile cambiare quantita o data consegna richiesta"));
+			}
+		}
+
+		//72238
+		if(getStatoAvanzamento() == StatoAvanzamento.DEFINITIVO
+				&& getDataConsegnaConfermata() == null
+				&& (getTipoRiga() == TipoRiga.MERCE || getTipoRiga() == TipoRiga.OMAGGIO)) { //72242
+			errors.add(new ErrorMessage("BAS0000078","Non e' possibile rendere la riga definitiva senza data consegna confermata"));
+		}
+		//72238
+		/*ErrorMessage emArtCos = controllaArticoloCosto();
+		if(emArtCos != null)
+			errors.add(emArtCos);
+		 */
+
+		return errors;
+	}
+
+	//72269
+	@SuppressWarnings("rawtypes")
+	@Override
+	public ErrorMessage checkQuadraturaLotti() {
+		Articolo articolo = getArticolo();
+		if (articolo != null && articolo.isArticLotto()) {
+			if (isOnDB()) {
+				OrdineRigaLotto ordRigaLotto = (OrdineRigaLotto)getUnicoLottoEffettivo();
+				if(ordRigaLotto == null && getRigheLotto().size() > 1) {
+					//..se la quantita' tra riga e lotti non quadra allora decremento la quantita dell'ultimo lotto
+					BigDecimal qtaInUMRif = getQuantitaOrdinata().getQuantitaInUMRif();
+					BigDecimal tot = BigDecimal.ZERO;
+					Iterator iterLotti = getRigheLotto().iterator();
+					while(iterLotti.hasNext()) {
+						OrdineRigaLotto orl = (OrdineRigaLotto) iterLotti.next();
+						if(orl.getIdLotto().equals(Lotto.LOTTO_DUMMY))
+							continue;
+						BigDecimal qta = orl.getQuantitaOrdinata().getQuantitaInUMRif();
+
+						tot = tot.add(qta);
+
+						// Se sono all'ultimo record e i conti non tornano
+						if(!iterLotti.hasNext() && qtaInUMRif.compareTo(tot) != 0) {
+
+							// 1. Calcolo quanto valgono tutti i lotti precedenti (Totale accumulato - quello attuale)
+							BigDecimal sommaLottiPrecedenti = tot.subtract(qta);
+
+							// 2. La nuova quantità è la differenza tra il totale riga e la somma dei precedenti
+							BigDecimal qtaAQuadratura = qtaInUMRif.subtract(sommaLottiPrecedenti);
+							if (qtaAQuadratura.compareTo(BigDecimal.ZERO) <= 0) {
+								return new ErrorMessage("BAS0000078","La quadratura dell'ultimo lotto e' 0 o negativa, sistemare a mano");
+							}
+							// 3. Imposto la nuova quantità
+							orl.getQuantitaOrdinata().setQuantitaInUMRif(qtaAQuadratura);
+							orl.getQuantitaOrdinata().setQuantitaInUMPrm(orl.getArticolo().convertiUM(qtaAQuadratura, getUMRif(), getUMPrm(), getArticoloVersRichiesta()));
+						}
+					}
+				}
+			}
+		}
+		return super.checkQuadraturaLotti();
+	}
+	//72269
+
+	//72141
+	public ErrorMessage controllaArticoloCosto() {
+		Integer idVersione = (getArticoloVersRichiesta() == null) ? ContenitoreRiga.VERSIONE_DUMMY : getArticoloVersRichiesta().getIdVersione();
+		Integer idConfigurazione = (getConfigurazione() == null) ? null : getConfigurazione().getIdConfigurazione();
+		ArticoloCosto articoloCosto =
+				ArticoloCosto.elementWithKey(
+						Azienda.getAziendaCorrente(),
+						getIdArticolo(),
+						idVersione,
+						idConfigurazione,
+						PersDatiVen.getCurrentPersDatiVen().getTipoCosto() != null ? PersDatiVen.getCurrentPersDatiVen().getTipoCosto().getIdTipoCosto() : ""
+						);
+		if (articoloCosto != null 
+				&& articoloCosto instanceof YArticoloCosto
+				&& ((YArticoloCosto)articoloCosto).getRilevatoErrore()
+				&& ((YArticoloCosto)articoloCosto).getMessaggioErrore() != null) {
+			return new ErrorMessage(GestioneCalcoloCosti.YT_0000003,new String[] {((YArticoloCosto)articoloCosto).getMessaggioErrore()});
+		}
+		return null;
+	}
+	//72141
+
+	@SuppressWarnings("rawtypes")
+	public ArrayList caricaQuantitaLottoPublic(List righeLotto) {
+		return caricaQuantitaLotto(righeLotto);
+	}
+
+	//72247
+	@SuppressWarnings("rawtypes")
+	public ErrorMessage checkObbligatorietaAllegati(char vincolo) {
+		ErrorMessage em = null;
+		Iterator iterAllegati = getYAllegati().iterator();
+		while(iterAllegati.hasNext()) {
+			YAllegatiOrdVenRigPrm allegato = (YAllegatiOrdVenRigPrm) iterAllegati.next();
+			if(allegato.getVincolo() == vincolo) {
+				boolean allegatoPresente = allegato.presenzaAllegato();
+				if(!allegatoPresente) {
+					return new ErrorMessage("BAS0000078",allegato.getAssociazionedocumento().getTipodocdgt().getDescrizione().getDescrizione()+" - " +allegato.descrizioneVincolo());
+				}
+			}
+		}
+		return em;
+	}
+	//72247
+
+	public void setEqual(Copyable obj) throws CopyException {
+		super.setEqual(obj);
+		YOrdineVenditaRigaPrm yOrdineVenditaRigaPrm = (YOrdineVenditaRigaPrm) obj;
+		if (yOrdineVenditaRigaPrm.iDataConsegnaCfmStorica != null)
+			iDataConsegnaCfmStorica = (java.sql.Date) yOrdineVenditaRigaPrm.iDataConsegnaCfmStorica.clone();
+		iCausaleCambioDataConsegna.setEqual(yOrdineVenditaRigaPrm.iCausaleCambioDataConsegna);
+		iAreaApplicativa.setEqual(yOrdineVenditaRigaPrm.iAreaApplicativa);
+		iYAllegati.setEqual(yOrdineVenditaRigaPrm.iYAllegati);
+	}
+
+}
