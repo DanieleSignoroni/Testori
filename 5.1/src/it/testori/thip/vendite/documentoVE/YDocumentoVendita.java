@@ -1,5 +1,7 @@
 package it.testori.thip.vendite.documentoVE;
 
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +19,7 @@ import it.testori.thip.produzione.rifornLinea.YPsnDatiRifornimentoLinea;
 import it.thera.thip.base.azienda.Azienda;
 import it.thera.thip.base.generale.CfgLogTxMov;
 import it.thera.thip.base.generale.CfgLogTxMovTM;
+import it.thera.thip.base.generale.ImportoInValutaEstera;
 import it.thera.thip.base.generale.IntegrazioneThipLogis;
 import it.thera.thip.cs.ThipException;
 import it.thera.thip.logis.fis.CambioUbicazioneUds;
@@ -49,14 +52,24 @@ import it.thera.thip.produzione.rifornLinea.PianoRifornimento;
 
 public class YDocumentoVendita extends DocumentoVendita {
 
+	//72273
+	private static final String STMT_UPDATE_VLR_TOT_DOC_VA = "UPDATE "+YDocumentoVenditaTM.TABLE_NAME_EXT+"  "
+			+ "SET "+YDocumentoVenditaTM.YVLR_TOT_DOC_VA+" = ? "
+			+ "WHERE "+YDocumentoVenditaTM.ID_AZIENDA+" = ? "
+			+ "AND "+YDocumentoVenditaTM.ID_ANNO_DOC+" = ? "
+			+ "AND "+YDocumentoVenditaTM.ID_NUMERO_DOC+" = ? ";
+	public static CachedStatement cUpdateValoreDocVA = new CachedStatement(STMT_UPDATE_VLR_TOT_DOC_VA);
+	//72273
+
 	protected Proxy iClienteFinale = new Proxy(YClienteFinale.class);
 
 	protected Proxy iPianoRifornimento = new Proxy(it.thera.thip.produzione.rifornLinea.PianoRifornimento.class);
 
 	protected OneToMany iRigheUdsDocumento = new OneToMany(YUdsOfDocVen.class, this, 7, false);
-	
+
 	protected boolean iSalvataggioDaTtlLogis = false; //72273
-	
+	protected BigDecimal iYValoreTotDocVA; //72273
+
 	public YDocumentoVendita() {
 		super();
 		setIdAzienda(Azienda.getAziendaCorrente());
@@ -187,7 +200,7 @@ public class YDocumentoVendita extends DocumentoVendita {
 		}
 		return iRigheUdsDocumento;
 	}
-	
+
 	//72273
 	public boolean isSalvataggioDaTtlLogis() {
 		return iSalvataggioDaTtlLogis;
@@ -195,6 +208,62 @@ public class YDocumentoVendita extends DocumentoVendita {
 
 	public void setSalvataggioDaTtlLogis(boolean iSalavataggioDaTtlLogis) {
 		this.iSalvataggioDaTtlLogis = iSalavataggioDaTtlLogis;
+	}
+
+	public BigDecimal getYValoreTotDocVA() {
+		return iYValoreTotDocVA;
+	}
+
+	public void setYValoreTotDocVA(BigDecimal iYValoreTotDocVA) {
+		this.iYValoreTotDocVA = iYValoreTotDocVA;
+		setDirty();
+	}
+	//72273
+
+	@Override
+	public int save() throws SQLException {
+		int rc = super.save();
+		if(rc > 0 && isOnDB()) {
+			//72273
+			BigDecimal valoreDocumento = getValoreDocumentoInValAz();
+			if(valoreDocumento != null) {
+				aggiornaValoreTotDocVA(valoreDocumento);
+			}
+			//72273
+		}
+		return rc;
+	}
+
+	//72273
+	public BigDecimal getValoreDocumentoInValAz(){
+		ImportoInValutaEstera imp = null;
+		if (imp==null)
+			imp = new ImportoInValutaEstera();
+
+		imp.setFattCambioOper(getCambio());
+		if (getIdValuta()!=null && getTotaleDocumento()!=null && getDataDocumento()!=null){
+			imp.convertiEstPrim(getIdValuta(), getValoreDocumento(), getDataDocumento());
+			if (imp.getImportaValPrim()!=null){
+				return imp.getImportaValPrim();
+			}
+			else{
+				return new BigDecimal(0);
+			}
+		}
+		else
+			return new BigDecimal(0);
+	}
+
+	protected int aggiornaValoreTotDocVA(BigDecimal val) throws SQLException {
+		PreparedStatement ps = cUpdateValoreDocVA.getStatement();
+		Database db = ConnectionManager.getCurrentDatabase();
+		ps.setBigDecimal(1, val);
+		db.setString(ps, 2, getIdAzienda());
+		db.setString(ps, 3, getAnnoDocumento());
+		db.setString(ps, 4, getNumeroDocumento());
+		if (ps.executeUpdate() >= 0)
+			return 1;
+		return -100;
 	}
 	//72273
 
@@ -293,7 +362,7 @@ public class YDocumentoVendita extends DocumentoVendita {
 					}
 					if(errors.isEmpty())
 						cuds.getUds().setUbicazione(cuds.getUbicazioneDest());
-						errors = cuds.fineNoDB();
+					errors = cuds.fineNoDB();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 						| SQLException e) {
 					e.printStackTrace(Trace.excStream);
@@ -320,7 +389,7 @@ public class YDocumentoVendita extends DocumentoVendita {
 		}
 		return false;
 	}
-	
+
 	//72226
 	public boolean isSerieCausaleTrasferimentoPianoRifornimento() {
 		YPsnDatiRifornimentoLinea psnDati = YPsnDatiRifornimentoLinea.getCurrentYPsnDatiRifornimentoLinea();

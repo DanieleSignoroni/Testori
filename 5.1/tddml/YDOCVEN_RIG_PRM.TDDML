@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <AlterTable schema="THIPPERS" name="YDOCVEN_RIG_PRM">
+    <AddColumn>
+      <Column name="YVLR_RIGA_VA" shortname="YVLR_RIGA_VA" type="decimal" length="15" scale="2" nullable="yes"/>
+    </AddColumn>
+  </AlterTable>
+</TDDML>
