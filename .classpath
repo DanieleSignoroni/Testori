@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="lib" path="conf/db/SQLServer"/>
 	<classpathentry kind="lib" path="conf/commons"/>
-	<classpathentry kind="src" path="5.1/src"/>
 	<classpathentry kind="lib" path="WebContent/dtd"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/classes"/>
 	<classpathentry kind="lib" path="5.1/lib"/>

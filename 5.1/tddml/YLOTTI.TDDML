@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
-<TDDML>
-  <AlterTable schema="THIPPERS" name="YLOTTI">
-    <AddColumn>
-      <Column name="NOTE_PIAN_QLT" shortname="NOTE_PIAN_QLT" type="varchar" length="250" nullable="yes"/>
-    </AddColumn>
-  </AlterTable>
-</TDDML>
