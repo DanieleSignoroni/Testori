@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="5.1/src"/>
 	<classpathentry kind="lib" path="conf/db/SQLServer"/>
 	<classpathentry kind="lib" path="conf/commons"/>
 	<classpathentry kind="lib" path="WebContent/dtd"/>
