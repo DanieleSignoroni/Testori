@@ -1,1 +1,20 @@
-/lib/
+# Ignora TUTTO
+*
+
+# Tranne la cartella 5.1
+!5.1/
+
+# Dentro 5.1 ignora tutto
+5.1/*
+
+# Tranne queste cartelle
+!5.1/src/
+!5.1/sql/
+!5.1/websrc/
+!5.1/tddml/
+
+# Versiona tutto il contenuto di quelle cartelle
+!5.1/src/**
+!5.1/sql/**
+!5.1/websrc/**
+!5.1/tddml/**
