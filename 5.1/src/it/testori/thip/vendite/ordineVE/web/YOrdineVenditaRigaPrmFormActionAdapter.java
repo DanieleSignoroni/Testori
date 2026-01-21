@@ -72,6 +72,7 @@ public class YOrdineVenditaRigaPrmFormActionAdapter extends OrdineVenditaRigaPrm
 			if(riga != null){
 				String url = se.getServletPath() + "it.thera.thip.vendite.generaleVE.web.SelezioneMultiplaLottoTestori";
 				url += SelezioneMultiplaLottoTestori.getParamsShowGrid("LottoSaldoRicerca", riga);
+				url += "&" + SelezioneMultiplaLottoTestori.getRestrictConditionsShowGrid(getStringParameter(se.getRequest(), CLASS_NAME),riga);
 				se.sendRequest(getServletContext(), url, false);
 			}
 		} catch (SQLException e) {
