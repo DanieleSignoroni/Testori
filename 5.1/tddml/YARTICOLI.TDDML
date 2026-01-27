@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE TDDML SYSTEM "../../../TDDML.dtd">
+<TDDML>
+  <AlterTable schema="THIPPERS" name="YARTICOLI">
+    <AddColumn>
+      <Column name="FLOOR_STOCK_CLAV" shortname="FLOOR_STOCK_CLAV" type="char" length="1" nullable="no" default="N"/>
+    </AddColumn>
+  </AlterTable>
+</TDDML>
