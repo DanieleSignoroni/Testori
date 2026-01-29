@@ -34,6 +34,8 @@ public class YThipRptModelSelectorFormModifier extends ThipRptModelSelectorFormM
 	@Override
 	protected void writeSSD(JspWriter out, String classHdrName, Vector models, String action) throws IOException {
 		super.writeSSD(out, classHdrName, models, action);
+		out.println("<script language='JavaScript1.2'>");
 		out.println("setInnerText(document.getElementById('AllegatiDigitaliComLbl'), '" + ResourceLoader.getString(RES_PERS,"AllegatiDigitaliComLbl") + "');");
+		out.println("</script>");
 	}
 }

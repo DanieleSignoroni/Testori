@@ -11,8 +11,8 @@
     <ClientServerMapping>      
         <CSMap>
             <ClientIp>127.0.0.1</ClientIp>
-            <ClientDBAlias>Testori</ClientDBAlias>            
-            <ServerDBAlias>Testori</ServerDBAlias>
+            <ClientDBAlias>TESTORI</ClientDBAlias>            
+            <ServerDBAlias>TESTORI</ServerDBAlias>
             <ServerRptRelativePath></ServerRptRelativePath>
         </CSMap>                
     </ClientServerMapping>   
