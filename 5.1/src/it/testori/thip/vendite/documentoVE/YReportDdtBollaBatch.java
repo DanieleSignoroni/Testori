@@ -31,10 +31,12 @@ import it.thera.thip.vendite.documentoVE.ReportDdtBollaBatch;
  * Revisions:
  * Number   Date        Owner    Description
  * 72214    11/11/2025  DSSOF3   Prima stesura
+ * 72327	30/01/2025	DSSOF3	 Gestione allegati ordine vendita.
  */
 
 public class YReportDdtBollaBatch extends ReportDdtBollaBatch {
 
+	//72327 <
 	protected boolean iAllegatiDigitaliCom;
 
 	public boolean isAllegatiDigitaliCom() {
@@ -44,10 +46,11 @@ public class YReportDdtBollaBatch extends ReportDdtBollaBatch {
 	public void setAllegatiDigitaliCom(boolean iAllegatiDigitaliCom) {
 		this.iAllegatiDigitaliCom = iAllegatiDigitaliCom;
 	}
+	//72327 >
 
 	public YReportDdtBollaBatch() {
 		super();
-		setAllegatiDigitaliCom(false);
+		setAllegatiDigitaliCom(false); //72327
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

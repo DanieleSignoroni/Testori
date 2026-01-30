@@ -38,7 +38,7 @@ import it.thera.thip.vendite.documentoVE.GeneraDocumentiGRD;
 /*
  * Revisions:
  * Number   Date        Owner    Description
- * 72XXX    29/01/2026  DSSOF3   Prima stesura
+ * 72327    29/01/2026  DSSOF3   Prima stesura
  */
 
 public class YGeneraDocumentiGRD extends GeneraDocumentiGRD {
@@ -49,7 +49,7 @@ public class YGeneraDocumentiGRD extends GeneraDocumentiGRD {
 		HashMap mapOggetti = super.aggiungiAllegati(dSSD);
 		if(mapOggetti == null)
 			mapOggetti = new HashMap();
-		if(getAvailableReport() != null && getAvailableReport().getBatchJob() != null) {
+		if(getAvailableReport() != null && getAvailableReport().getBatchJob() != null && dSSD.isOnDB()) {
 			BatchJob job = getAvailableReport().getBatchJob();
 			if(job.getRunnerClassName().equals("it.testori.thip.vendite.documentoVE.YReportDdtBollaBatch")) {
 				BODataCollector boDC = (BODataCollector) Factory.createObject(BODataCollector.class);
@@ -95,7 +95,7 @@ public class YGeneraDocumentiGRD extends GeneraDocumentiGRD {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected HashMap recuperaAllegatiCommessa(List righe, DocumentoSSD dSSD) {
 		HashMap mapAllegati = new HashMap();
-		int sequenza = 1;
+		int sequenza = dSSD.getAttachmentColl().size() + 1;
 		for (Iterator iterator = righe.iterator(); iterator.hasNext();) {
 			DocumentoVenRigaPrm docVenRig = (DocumentoVenRigaPrm) iterator.next();
 			if(docVenRig.getRigaOrdine() != null) {
@@ -114,7 +114,7 @@ public class YGeneraDocumentiGRD extends GeneraDocumentiGRD {
 									Iterator itg = docDgt.getOggetti().iterator();
 									while (itg.hasNext()) {
 										DocumentoDgtOggetto docDgtOggetto = (DocumentoDgtOggetto) itg.next();
-										if(!isEsisteallegatiAgg(dSSD.getAttachmentColl(),docDgtOggetto.getFilename())) {//Fix 32917 ini
+										if(!isEsisteallegatiAgg(dSSD.getAttachmentColl(),docDgtOggetto.getFilename())) {
 											AllegatoSSD allegatoSSD = createAllegatoSSD(docDgtOggetto, dSSD);
 											allegatoSSD.setSequence((short) sequenza);
 											sequenza++;
@@ -137,6 +137,7 @@ public class YGeneraDocumentiGRD extends GeneraDocumentiGRD {
 													mapAllegati.put(allegatoSSD.getKey(), allegatoSSD);
 												}
 											} catch (Exception e) {
+												output.println("Exc in aggiunta allegati: "+e.getMessage());
 												e.printStackTrace(Trace.excStream);
 											}
 										}

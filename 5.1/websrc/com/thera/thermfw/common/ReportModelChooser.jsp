@@ -295,7 +295,7 @@ label.write(out); }%>
 																</td>
 																<td style="white-space:nowrap"><input id="enableSSD" name="enableSSD" style="display:none;" type="checkbox">
 																<label id="enableSSDLbl" name="enableSSDLbl" style="display:none;"></label></td>
-																<!-- 72XXX Softre Inizio -->
+																<!-- 72327 Softre Inizio -->
 																<td>
 																			<% { 
    WebFormCustomization fc = new com.thera.thermfw.web.WebFormCustomization("FORM", "YAllegatiDigitaliCom"); 
@@ -304,7 +304,7 @@ label.write(out); }%>
 %>
 <!--<span class="formcustomization" id="SSDCustomization"></span>-->
 																</td>
-																<!-- 72XXX Softre Fine -->
+																<!-- 72327 Softre Fine -->
 															</tr>
 														</table>
 														</td>

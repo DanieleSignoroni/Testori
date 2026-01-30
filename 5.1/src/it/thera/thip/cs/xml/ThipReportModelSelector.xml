@@ -7,12 +7,12 @@
 		<label id="enableDocDgtLbl" name="enableDocDgtLbl" style="display: none;"></label></td>
 		</tr></table>
 	</formcustomization>
-	<!-- 72XXX Softre Inizio -->
+	<!-- 72327 Softre Inizio -->
 	<formcustomization customizePosition="FORM" customizeName="YAllegatiDigitaliCom">
 		<table><tr>
 		<td style="white-space:nowrap"><input id="AllegatiDigitaliCom" name="AllegatiDigitaliCom" type="checkbox" style="display: none;"/>
 		<label id="AllegatiDigitaliComLbl" name="AllegatiDigitaliComLbl" style="display: none;"></label></td>
 		</tr></table>
 	</formcustomization>
-	<!-- 72XXX Softre Fine -->
+	<!-- 72327 Softre Fine -->
 </customization>
